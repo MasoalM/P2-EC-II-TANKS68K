@@ -1,0 +1,31 @@
+*-----------------------------------------------------------
+* CONSTANTES DEL JUEGO
+*-----------------------------------------------------------
+    
+; --- CONSTANTES RELACIONADAS CON LA BALA DEL TANQUE -------
+
+BULRAD      EQU     4           ; RADIO DE LA BALA
+BULPCOL     EQU     $0031494D   ; COLOR DE CONTORNO DE LA BALA        
+BULFCOL     EQU     $007CB4BA   ; COLOR DE RELLENO DE LA BALA  
+BULSPEED    EQU     5           ; MAGNITUD DE LA VELOCIDAD X E Y DE LA BALA
+
+; --- CONSTANTES RELACIONADAS CON EL TANQUE ----------------
+
+TANWIDTH    EQU     24          ; ANCHURA DEL TANQUE
+TANHEIGH    EQU     24          ; ALTURA DEL TANQUE
+TANSPEED    EQU     3           ; MAGNITUD DE LA VELOCIDAD X E Y DEL TANQUE
+TANPCOL     EQU     $00344D31   ; COLOR DE CONTORNO DEL TANQUE   
+TANFCOL     EQU     $00608C59   ; COLOR DE RELLENO DEL TANQUE
+
+; --- CONSTANTES RELACIONADAS CON EL MARCADOR --------------
+
+SCOFCOL     EQU     $00000000   ; COLOR DE FONDO DEL TEXTO
+            ; podríamos poner una cte del color del texto
+SCOLINE     EQU     $0101       ; COORDENADAS DE LA LÍNEA DE TEXTO ($CXCY)
+
+
+
+*~Font name~Courier New~
+*~Font size~12~
+*~Tab type~1~
+*~Tab size~4~

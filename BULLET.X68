@@ -1,0 +1,118 @@
+*-----------------------------------------------------------
+* BULLET MANAGEMENT
+*-----------------------------------------------------------
+
+; ----------------------------------------------------------
+BULINIT
+; INITIALITZE BULLET
+; INPUT     : NONE
+; OUTPUT    : NONE
+; MODIFIES  : NONE
+; ----------------------------------------------------------
+            MOVE.W  #SCRWIDTH/3,(BULPOSX)
+            MOVE.W  #SCRHEIGH/3,(BULPOSY)
+            MOVE.W  #BULSPEED,(BULVELX)
+            MOVE.W  #BULSPEED,(BULVELY)
+            
+            RTS
+; ----------------------------------------------------------
+BULUPD
+; UPDATE THE BULLET
+; INPUT     : NONE
+; OUTPUT    : NONE
+; MODIFIES  : NONE
+; ----------------------------------------------------------
+            
+            MOVEM.W D0-D1,-(A7)            
+
+            ; UPDATE BALL COORDINATES
+            MOVE.W  (BULPOSX),D0
+            MOVE.W  (BULPOSY),D1
+            ADD.W   (BULVELX),D0
+            ADD.W   (BULVELY),D1
+            
+            ; CHECK HORIZONTAL COLLISIONS
+            CMP.W   #SCRWIDTH-BULRAD,D0
+            BGT     .COLRGT
+            CMP.W   #BULRAD,D0
+            BLT     .COLLFT
+            
+            ; CHECK VERTICAL COLLISIONS
+.CHKVERT    CMP.W   #SCRHEIGH-BULRAD,D1
+            BGT     .COLBOT
+            CMP.W   #BULRAD,D1
+            BLT     .COLTOP
+            BRA     .DONE   
+            
+            ; RIGHT SIDE COLLISION    
+.COLRGT     NEG.W   (BULVELX)
+            MOVE.W  #SCRWIDTH-BULRAD,D0
+            BRA     .CHKVERT
+
+            ; LEFT SIDE COLLISION
+.COLLFT     NEG.W   (BULVELX)
+            MOVE.W  #BULRAD,D0
+            BRA     .CHKVERT  
+
+            ; BOTTOM COLLISION
+.COLBOT     NEG.W   (BULVELY)
+            MOVE.W  #SCRHEIGH-BULRAD,D1
+            BRA     .DONE
+
+            ; TOP COLLISION
+.COLTOP     NEG.W   (BULVELY)
+            MOVE.W  #BULRAD,D1
+            
+            ; STORE POSITION
+.DONE       MOVE.W  D0,(BULPOSX)
+            MOVE.W  D1,(BULPOSY)
+            
+            MOVEM.W (A7)+,D0-D1
+            
+            RTS
+            
+; ----------------------------------------------------------
+BULPLOT
+; PLOT THE BULLET
+; INPUT     : NONE
+; OUTPUT    : NONE
+; MODIFIES  : NONE
+; ----------------------------------------------------------
+            MOVEM.L D0-D4,-(A7)            
+
+            ; SET PEN COLOR
+            MOVE.B  #80,D0
+            MOVE.L  #BULPCOL,D1
+            TRAP    #15
+            
+            ; SET FILL COLOR
+            MOVE.B  #81,D0
+            MOVE.L  #BULFCOL,D1
+            TRAP    #15
+            
+            ; DEFINE COORDINATES
+            MOVE.W  (BULPOSX),D1
+            SUB.W   #BULRAD,D1
+            MOVE.W  (BULPOSY),D2
+            SUB.W   #BULRAD,D2
+            MOVE.W  D1,D3
+            ADD.W   #2*BULRAD,D3
+            MOVE.W  D2,D4
+            ADD.W   #2*BULRAD,D4
+            
+            ; DRAW CIRCLE
+            MOVE.B  #88,D0
+            TRAP    #15 
+            
+            MOVEM.L (A7)+,D0-D4 
+
+            RTS
+            
+                        
+            
+
+
+*~Font name~Courier New~
+*~Font size~12~
+*~Tab type~1~
+*~Tab size~4~
