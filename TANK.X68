@@ -45,15 +45,15 @@ TANUPD
 
             ; CHECK HORIZONTAL COLLISIONS
             CMP.W   #SCRWIDTH-TANWIDTH/2,D0
-            BGT     .COLRGT
+            BGE     .COLRGT
             CMP.W   #TANWIDTH,D0
-            BLT     .COLLFT
+            BLE     .COLLFT
             
             ; CHECK VERTICAL COLLISIONS
 .CHKVERT    CMP.W   #SCRHEIGH-TANHEIGH/2,D1
-            BGT     .COLBOT
+            BGE     .COLBOT
             CMP.W   #TANHEIGH,D1
-            BLT     .COLTOP
+            BLE     .COLTOP
             BRA     .DONE   
             
             ; RIGHT SIDE COLLISION    
@@ -119,8 +119,3 @@ TANPLOT
             RTS    
 
 
-
-*~Font name~Courier New~
-*~Font size~12~
-*~Tab type~1~
-*~Tab size~4~
