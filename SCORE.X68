@@ -43,7 +43,8 @@ SCOPLOT
 
             RTS
 .TXT        DC.B    'PUNTUACIÓN: ',0   
-            DC.W    0                   ; PARA QUE LAS INSTRUCCIONES ESTÉN ALINEADAS
+            DS.W    0                   ; PARA QUE LAS INSTRUCCIONES ESTÉN ALINEADAS
+
 
 *~Font name~Courier New~
 *~Font size~12~

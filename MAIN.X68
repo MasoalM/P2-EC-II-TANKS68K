@@ -28,6 +28,8 @@ START:
 
 ; READ INPUT DEVICES
 
+            TRAP    #1
+
 ; UPDATE GAME LOGIC
 
     JSR     BULUPD
@@ -35,11 +37,19 @@ START:
 
 ; --- SYNC -------------------------------------------------
 
+            ; sincronismo incorrecto para salir del paso
+            MOVE.B  #23,D0
+            MOVE.L  #1,D1
+            TRAP    #15
+
+
 ; --- PLOT -------------------------------------------------
     
     JSR     SCOPLOT    
     JSR     BULPLOT
     JSR     TANPLOT
+    
+    TRAP    #0              ; UPDATE DOUBLE BUFFER
 
     BRA     .LOOP
 
@@ -49,6 +59,7 @@ START:
     INCLUDE "SYSVARS.X68"
 
     END    START
+
 
 
 

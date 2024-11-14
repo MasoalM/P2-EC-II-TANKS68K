@@ -20,6 +20,63 @@ TANUPD
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
+
+            MOVEM.W  D0-D1,-(A7)
+
+            ; UPDATE COORDINATES
+            MOVE.W  (TANPOSX),D0
+            MOVE.W  (TANPOSY),D1
+            
+            BTST.B  #0,(KBDVAL)
+            BEQ     .CHKLEFT
+            SUB.W   #TANSPEED,D0
+.CHKLEFT    BTST.B  #2,(KBDVAL)
+            BEQ     .CONT1
+            ADD.W   #TANSPEED,D0  
+.CONT1            
+            BTST.B  #1,(KBDVAL)
+            BEQ     .CHKDWN 
+            SUB.W   #TANSPEED,D1
+.CHKDWN     BTST.B  #3,(KBDVAL)
+            BEQ     .CONT2
+            ADD.W   #TANSPEED,D1     
+   
+.CONT2
+
+            ; CHECK HORIZONTAL COLLISIONS
+            CMP.W   #SCRWIDTH-TANWIDTH/2,D0
+            BGT     .COLRGT
+            CMP.W   #TANWIDTH,D0
+            BLT     .COLLFT
+            
+            ; CHECK VERTICAL COLLISIONS
+.CHKVERT    CMP.W   #SCRHEIGH-TANHEIGH/2,D1
+            BGT     .COLBOT
+            CMP.W   #TANHEIGH,D1
+            BLT     .COLTOP
+            BRA     .DONE   
+            
+            ; RIGHT SIDE COLLISION    
+.COLRGT     MOVE.W  #SCRWIDTH-TANWIDTH/2,D0
+            BRA     .CHKVERT
+
+            ; LEFT SIDE COLLISION
+.COLLFT     MOVE.W  #TANWIDTH/2,D0
+            BRA     .CHKVERT  
+
+            ; BOTTOM COLLISION
+.COLBOT     MOVE.W  #SCRHEIGH-TANHEIGH/2,D1
+            BRA     .DONE
+
+            ; TOP COLLISION
+.COLTOP     MOVE.W  #TANHEIGH/2,D1
+            
+            ; STORE POSITION
+.DONE       MOVE.W  D0,(TANPOSX)
+            MOVE.W  D1,(TANPOSY)
+            
+            MOVEM.W (A7)+,D0-D1
+
             RTS
             
 ; ----------------------------------------------------------            
@@ -60,6 +117,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
 
 
 *~Font name~Courier New~
