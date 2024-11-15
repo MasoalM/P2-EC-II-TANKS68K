@@ -23,7 +23,7 @@ BULUPD
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
             
-            MOVEM.W D0-D1,-(A7)            
+            MOVEM.W D0-D2,-(A7)            
 
             ; UPDATE BALL COORDINATES
             MOVE.W  (BULPOSX),D0
@@ -42,7 +42,7 @@ BULUPD
             BGT     .COLBOT
             CMP.W   #BULRAD,D1
             BLT     .COLTOP
-            BRA     .DONE   
+            BRA     .CHKTAN   
             
             ; RIGHT SIDE COLLISION    
 .COLRGT     NEG.W   (BULVELX)
@@ -57,17 +57,38 @@ BULUPD
             ; BOTTOM COLLISION
 .COLBOT     NEG.W   (BULVELY)
             MOVE.W  #SCRHEIGH-BULRAD,D1
-            BRA     .DONE
+            BRA     .CHKTAN
 
             ; TOP COLLISION
 .COLTOP     NEG.W   (BULVELY)
             MOVE.W  #BULRAD,D1
             
+            ; CHECK TANK COLLISIONS (solo para el tanque del jugador por ahora, para comprobar todos los tanques habría que hacer un bucle y comprobar con todas las posiciones de todos los tanques)
+.CHKTAN     MOVE.W  (TANPOSX),D2
+            SUB.W   D0,D2
+            BPL     .ISPOS
+            NEG.W   D2    
+.ISPOS      CMP.W   #TANWIDTH/2+BULRAD,D2
+            BGT     .DONE
+            MOVE.W  (TANPOSY),D2
+            SUB.W   D1,D2
+            BPL     .ISPOS2
+            NEG.W   D2
+.ISPOS2     CMP.W   #TANHEIGH/2+BULRAD,D2
+            BGT     .DONE
+
+            ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET AND SPAWN PARTICLES)           
+            ; (Por ahora he puesto que sume puntuación para comprobar que se detecte correctamente la colisión)
+            NEG.W   (BULVELX)
+            NEG.W   (BULVELY)
+            ADDQ.W  #1,(SCORE)
+            
+            
             ; STORE POSITION
 .DONE       MOVE.W  D0,(BULPOSX)
             MOVE.W  D1,(BULPOSY)
             
-            MOVEM.W (A7)+,D0-D1
+            MOVEM.W (A7)+,D0-D2
             
             RTS
             
@@ -110,6 +131,7 @@ BULPLOT
             
                         
             
+
 
 
 *~Font name~Courier New~

@@ -29,31 +29,31 @@ TANUPD
             
             BTST.B  #0,(KBDVAL)
             BEQ     .CHKLEFT
-            SUB.W   #TANSPEED,D0
+            SUB.W   #TANSPEED,D0  ;RESTAMOS LA DISTANCIA X
 .CHKLEFT    BTST.B  #2,(KBDVAL)
             BEQ     .CONT1
-            ADD.W   #TANSPEED,D0  
+            ADD.W   #TANSPEED,D0  ;SUMAMOS LA DISTANCIA X
 .CONT1            
             BTST.B  #1,(KBDVAL)
             BEQ     .CHKDWN 
-            SUB.W   #TANSPEED,D1
+            SUB.W   #TANSPEED,D1  ;SUMAMOS LA VELOCIDAD AL EJE Y
 .CHKDWN     BTST.B  #3,(KBDVAL)
             BEQ     .CONT2
-            ADD.W   #TANSPEED,D1     
+            ADD.W   #TANSPEED,D1  ;RESTAMOS LA VELOCIDAD AL EJE Y
    
 .CONT2
 
             ; CHECK HORIZONTAL COLLISIONS
             CMP.W   #SCRWIDTH-TANWIDTH/2,D0
             BGE     .COLRGT
-            CMP.W   #TANWIDTH,D0
-            BLE     .COLLFT
+            CMP.W   #TANWIDTH/2,D0            ;#TANWIDTH,D0
+            BLT     .COLLFT                 ;BLE
             
             ; CHECK VERTICAL COLLISIONS
 .CHKVERT    CMP.W   #SCRHEIGH-TANHEIGH/2,D1
             BGE     .COLBOT
-            CMP.W   #TANHEIGH,D1
-            BLE     .COLTOP
+            CMP.W   #TANHEIGH/2,D1
+            BLT     .COLTOP                 ;BLE
             BRA     .DONE   
             
             ; RIGHT SIDE COLLISION    
@@ -61,7 +61,7 @@ TANUPD
             BRA     .CHKVERT
 
             ; LEFT SIDE COLLISION
-.COLLFT     MOVE.W  #TANWIDTH/2,D0
+.COLLFT     MOVE.W  #TANWIDTH/2,D0                   
             BRA     .CHKVERT  
 
             ; BOTTOM COLLISION
@@ -69,7 +69,7 @@ TANUPD
             BRA     .DONE
 
             ; TOP COLLISION
-.COLTOP     MOVE.W  #TANHEIGH/2,D1
+.COLTOP     MOVE.W  #TANHEIGH/2,D1                   
             
             ; STORE POSITION
 .DONE       MOVE.W  D0,(TANPOSX)
@@ -119,3 +119,12 @@ TANPLOT
             RTS    
 
 
+
+
+
+
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~0~
+*~Tab size~4~
