@@ -17,6 +17,7 @@ START:
 
 ; --- INITIALIZATION ---------------------------------------
 
+    ORI.W   #$0700,SR   ; DESHABILITAR INTERRUPCIONES
     JSR     SYSINIT
     JSR     BULINIT
     JSR     TANINIT
@@ -37,10 +38,9 @@ START:
 
 ; --- SYNC -------------------------------------------------
 
-            ; sincronismo incorrecto para salir del paso
-            MOVE.B  #23,D0
-            MOVE.L  #1,D1
-            TRAP    #15
+.WINT       TST.B   (SCRINTCT)
+            BEQ     .WINT
+            CLR.B   (SCRINTCT)
 
 
 ; --- PLOT -------------------------------------------------
@@ -59,6 +59,7 @@ START:
     INCLUDE "SYSVARS.X68"
 
     END    START
+
 
 
 

@@ -6,8 +6,13 @@
 ; --- KEYBOARD RELATED VARIABLES ---------------------------
 
 KBDVAL      DS.B    1       ; KEY STATE (1 BYTE -> 8 TECLAS MAX)
-                            
 KBDEDGE     DS.B    1       ; KEY EDGE
+
+; --- TIMED INTERRUPT RELATED VARIABLES --------------------
+
+SCRINTCT    DS.B    1       ; INTERRUPT COUNTER
+            DS.W    0
+
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~
