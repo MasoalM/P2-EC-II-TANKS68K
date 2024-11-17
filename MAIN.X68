@@ -8,7 +8,11 @@
     
     INCLUDE "CONST.X68"
     INCLUDE "SYSCONST.X68"
+    INCLUDE "LIB/DMMCONST.X68"
+    INCLUDE "LIB/DMMCODE.X68"
     INCLUDE "SYSTEM.X68"
+    INCLUDE "LIB/AGLCODE.X68"
+    INCLUDE "LIB/UTLCODE.X68"
     INCLUDE "BULLET.X68"
     INCLUDE "TANK.X68"
     INCLUDE "SCORE.X68"
@@ -19,6 +23,7 @@ START:
 
     ORI.W   #$0700,SR   ; DESHABILITAR INTERRUPCIONES
     JSR     SYSINIT
+    JSR     UTLINIT
     JSR     BULINIT
     JSR     TANINIT
     JSR     SCOINIT 
@@ -27,9 +32,12 @@ START:
 
 ; --- UPDATE -----------------------------------------------
 
+            ;MOVE.B  #SNDMUSIC,D7
+            ;TRAP    #SNDPLTN
+
 ; READ INPUT DEVICES
 
-            TRAP    #1
+            TRAP    #KBDUPTN
 
 ; UPDATE GAME LOGIC
 
@@ -49,16 +57,19 @@ START:
     JSR     BULPLOT
     JSR     TANPLOT
     
-    TRAP    #0              ; UPDATE DOUBLE BUFFER
+    TRAP    #SCRUPTN            ; UPDATE DOUBLE BUFFER
 
     BRA     .LOOP
 
     SIMHALT
     
     INCLUDE "VARS.X68"  
+    INCLUDE "LIB/UTLVARS.X68"
     INCLUDE "SYSVARS.X68"
+    INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
 
 
 

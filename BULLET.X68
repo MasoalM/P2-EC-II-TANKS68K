@@ -11,10 +11,11 @@ BULINIT
 ; ----------------------------------------------------------
             MOVE.W  #SCRWIDTH/3,(BULPOSX)
             MOVE.W  #SCRHEIGH/3,(BULPOSY)
+            
             MOVE.W  #BULSPEED,(BULVELX)
             MOVE.W  #BULSPEED,(BULVELY)
-            
             RTS
+            
 ; ----------------------------------------------------------
 BULUPD
 ; UPDATE THE BULLET
@@ -47,21 +48,29 @@ BULUPD
             ; RIGHT SIDE COLLISION    
 .COLRGT     NEG.W   (BULVELX)
             MOVE.W  #SCRWIDTH-BULRAD,D0
+            MOVE.B  #SNDWALL,D7
+            TRAP    #SNDPLTN
             BRA     .CHKVERT
 
             ; LEFT SIDE COLLISION
 .COLLFT     NEG.W   (BULVELX)
             MOVE.W  #BULRAD,D0
-            BRA     .CHKVERT  
+            MOVE.B  #SNDWALL,D7
+            TRAP    #SNDPLTN
+            BRA     .CHKVERT    
 
             ; BOTTOM COLLISION
 .COLBOT     NEG.W   (BULVELY)
             MOVE.W  #SCRHEIGH-BULRAD,D1
+            MOVE.B  #SNDWALL,D7
+            TRAP    #SNDPLTN
             BRA     .CHKTAN
 
             ; TOP COLLISION
 .COLTOP     NEG.W   (BULVELY)
             MOVE.W  #BULRAD,D1
+            MOVE.B  #SNDWALL,D7
+            TRAP    #SNDPLTN
             
             ; CHECK TANK COLLISIONS (solo para el tanque del jugador por ahora, para comprobar todos los tanques habría que hacer un bucle y comprobar con todas las posiciones de todos los tanques)
 .CHKTAN     MOVE.W  (TANPOSX),D2
@@ -82,6 +91,8 @@ BULUPD
             NEG.W   (BULVELX)
             NEG.W   (BULVELY)
             ADDQ.W  #1,(SCORE)
+            MOVE.B  #SNDHIT,D7
+            TRAP    #SNDPLTN
             
             
             ; STORE POSITION
@@ -131,6 +142,7 @@ BULPLOT
             
                         
             
+
 
 
 

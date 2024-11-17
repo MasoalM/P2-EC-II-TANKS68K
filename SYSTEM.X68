@@ -10,15 +10,58 @@ SYSINIT
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
             
-            MOVE.L  #SCRPLOT,($80)
-            MOVE.L  #KBDUPD,($84)
-            MOVE.L  #SCRTIM,($64) ; INTERRUPCIÓN DE TIPO 1
+            MOVE.L  #SCRPLOT,($80+SCRUPTN*4)
+            MOVE.L  #KBDUPD,($80+KBDUPTN*4) 
+            MOVE.L  #SNDPLAY,($80+SNDPLTN*4)
+            MOVE.L  #SCRTIM,($60+SCRINTN*4) ; INTERRUPCIÓN DE TIPO 1
             
             JSR     SCRINIT
             JSR     KBDINIT
+            JSR     SNDINIT
+            JSR     DMMINIT
             
             MOVE.W  SR,-(A7)
             ANDI.W  #$D8FF,(A7) ; MODO USUARIO Y HABILITAR INTERRUPCIONES
+            RTE
+
+; ----------------------------------------------------------            
+SNDINIT
+; SOUND SYSTEM INIT
+; INPUT     : NONE
+; OUTPUT    : NONE
+; MODIFIES  : NONE
+; ----------------------------------------------------------
+
+            MOVEM.L D0-D1/A0-A1,-(A7)
+
+            CLR.B   D1
+            LEA     .SNDLIST,A0
+.LOOP       MOVE.L  (A0)+,D0    ; SI HICIESEMOS MOVEA (PASAR DE A0 A A1 DIRECTAMENTE) NO ACTUALIZARÍA EL FLAG Z
+            BEQ     .DONE
+            MOVE.L  D0,A1
+            MOVE.B  #71,D0
+            TRAP    #15
+            ADDQ.B  #1,D1
+            BRA     .LOOP
+.DONE       MOVEM.L (A7)+,D0-D1/A0-A1   
+            RTS
+.SNDMUSIC   DC.B    'SND/MUSIC.wav',0
+.SNDWALL    DC.B    'SND/WALL.wav',0
+.SNDHIT     DC.B    'SND/HIT.wav',0
+.SNDLIST    DC.L    .SNDMUSIC,.SNDWALL,.SNDHIT,0
+            
+; ----------------------------------------------------------
+SNDPLAY
+; PLAY SOUND
+; INPUT     : D7 SOUND ID
+; OUTPUT    : NONE
+; MODIFIES  : NONE
+; ----------------------------------------------------------
+            MOVEM.W D0-D1,-(A7)
+            MOVE.B  #72,D0
+            MOVE.B  D7,D1
+            TRAP    #15
+            MOVEM.W (A7)+,D0-D1
             RTE
             
 ; ----------------------------------------------------------
@@ -54,8 +97,8 @@ SCRINIT
             ; ENABLE TIMED INTERRUPT
             MOVE.B  #32,D0
             MOVE.B  #6,D1
-            MOVE.B  #$81,D2 ; BIT 7 = 1 TO ENABLE INDIVIDUAL IRQ, BITS 6-0 = NUMBER OF INTERRUPT (1)
-            MOVE.L  #20,D3  ; 50 FPS (UNA INTERRUPCIÓN CADA 20 ms)
+            MOVE.B  #$80|SCRINTN,D2 ; BIT 7 = 1 TO ENABLE INDIVIDUAL IRQ, BITS 6-0 = NUMBER OF INTERRUPT (1)
+            MOVE.L  #1000/SCRFPS,D3
             TRAP    #15
             
             ; CLEAR INTERRUPT COUNTER
@@ -158,6 +201,7 @@ KBDUPD
             ROXL.B  #1,D2
             DBRA.W  D3,.LOOP
             RTS
+
 
 
 *~Font name~Courier New~
