@@ -1,25 +1,36 @@
 *-----------------------------------------------------------
-* BULLET MANAGEMENT
+* BULLET MANAGEMENT (AGENT)
+* BULPOSX (W) (A0)
+* BULPOSY (W) 2(A0)
+* BULVELX (W) 4(A0)     ; por ahora es una cte así que no habría que ponerlo aquí
+* BULVELY (W) 6(A0)     ; idem
+* TANPOSX (W) D1
+* TANPOSY (W) D2
 *-----------------------------------------------------------
 
 ; ----------------------------------------------------------
 BULINIT
 ; INITIALITZE BULLET
-; INPUT     : NONE
+; INPUT     : A0 POINTER TO THE INSTANCE VARIABLES
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
-            MOVE.W  #SCRWIDTH/3,(BULPOSX)
-            MOVE.W  #SCRHEIGH/3,(BULPOSY)
             
-            MOVE.W  #BULSPEED,(BULVELX)
-            MOVE.W  #BULSPEED,(BULVELY)
+            MOVE.W  (TANPOSX),D0
+            MOVE.W  (TANPOSY),D1
+            ADD.W   #20,D0
+            ADD.W   #20,D1
+            MOVE.W  D0,(A0)
+            MOVE.W  D1,2(A0)
+            
+            MOVE.W  #BULSPEED,4(A0)             ; hacer que bulspeed sea variable y que sea 0 o el bulspeed actual (para que se mueva en 8 direcciones)
+            MOVE.W  #BULSPEED,6(A0)
             RTS
             
 ; ----------------------------------------------------------
 BULUPD
 ; UPDATE THE BULLET
-; INPUT     : NONE
+; INPUT     : A0 POINTER TO THE INSTANCE VARIABLES
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
@@ -27,10 +38,10 @@ BULUPD
             MOVEM.W D0-D2,-(A7)            
 
             ; UPDATE BALL COORDINATES
-            MOVE.W  (BULPOSX),D0
-            MOVE.W  (BULPOSY),D1
-            ADD.W   (BULVELX),D0
-            ADD.W   (BULVELY),D1
+            MOVE.W  (A0),D0
+            MOVE.W  2(A0),D1
+            ADD.W   4(A0),D0
+            ADD.W   6(A0),D1
             
             ; CHECK HORIZONTAL COLLISIONS
             CMP.W   #SCRWIDTH-BULRAD,D0
@@ -46,28 +57,28 @@ BULUPD
             BRA     .CHKTAN   
             
             ; RIGHT SIDE COLLISION    
-.COLRGT     NEG.W   (BULVELX)
+.COLRGT     NEG.W   4(A0)
             MOVE.W  #SCRWIDTH-BULRAD,D0
             MOVE.B  #SNDWALL,D7
             TRAP    #SNDPLTN
             BRA     .CHKVERT
 
             ; LEFT SIDE COLLISION
-.COLLFT     NEG.W   (BULVELX)
+.COLLFT     NEG.W   4(A0)
             MOVE.W  #BULRAD,D0
             MOVE.B  #SNDWALL,D7
             TRAP    #SNDPLTN
             BRA     .CHKVERT    
 
             ; BOTTOM COLLISION
-.COLBOT     NEG.W   (BULVELY)
+.COLBOT     NEG.W   6(A0)
             MOVE.W  #SCRHEIGH-BULRAD,D1
             MOVE.B  #SNDWALL,D7
             TRAP    #SNDPLTN
             BRA     .CHKTAN
 
             ; TOP COLLISION
-.COLTOP     NEG.W   (BULVELY)
+.COLTOP     NEG.W   6(A0)
             MOVE.W  #BULRAD,D1
             MOVE.B  #SNDWALL,D7
             TRAP    #SNDPLTN
@@ -87,17 +98,16 @@ BULUPD
             BGT     .DONE
 
             ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET AND SPAWN PARTICLES)           
-            ; (Por ahora he puesto que sume puntuación para comprobar que se detecte correctamente la colisión)
-            NEG.W   (BULVELX)
-            NEG.W   (BULVELY)
-            ADDQ.W  #1,(SCORE)
+            
+            ;ADDQ.W  #1,(SCORE)
+            JSR     AGLKILL 
             MOVE.B  #SNDHIT,D7
             TRAP    #SNDPLTN
             
             
             ; STORE POSITION
-.DONE       MOVE.W  D0,(BULPOSX)
-            MOVE.W  D1,(BULPOSY)
+.DONE       MOVE.W  D0,(A0)
+            MOVE.W  D1,2(A0)
             
             MOVEM.W (A7)+,D0-D2
             
@@ -106,7 +116,7 @@ BULUPD
 ; ----------------------------------------------------------
 BULPLOT
 ; PLOT THE BULLET
-; INPUT     : NONE
+; INPUT     : A0 POINTER TO THE INSTANCE VARIABLES
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
@@ -123,9 +133,9 @@ BULPLOT
             TRAP    #15
             
             ; DEFINE COORDINATES
-            MOVE.W  (BULPOSX),D1
+            MOVE.W  (A0),D1
             SUB.W   #BULRAD,D1
-            MOVE.W  (BULPOSY),D2
+            MOVE.W  2(A0),D2
             SUB.W   #BULRAD,D2
             MOVE.W  D1,D3
             ADD.W   #2*BULRAD,D3
@@ -142,6 +152,12 @@ BULPLOT
             
                         
             
+
+
+
+
+
+
 
 
 

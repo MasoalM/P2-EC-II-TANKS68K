@@ -16,18 +16,19 @@
     INCLUDE "BULLET.X68"
     INCLUDE "TANK.X68"
     INCLUDE "SCORE.X68"
+    INCLUDE "MAP.X68"
+    INCLUDE "DATA/MAPDATA.X68"
     
 START:
 
 ; --- INITIALIZATION ---------------------------------------
 
-    ORI.W   #$0700,SR   ; DESHABILITAR INTERRUPCIONES
-    JSR     SYSINIT
-    JSR     UTLINIT
-    JSR     BULINIT
-    JSR     TANINIT
-    JSR     SCOINIT 
-
+            ORI.W   #$0700,SR   ; DESHABILITAR INTERRUPCIONES
+            JSR     SYSINIT
+            JSR     UTLINIT
+            JSR     TANINIT
+            JSR     SCOINIT 
+    
 .LOOP
 
 ; --- UPDATE -----------------------------------------------
@@ -40,9 +41,22 @@ START:
             TRAP    #KBDUPTN
 
 ; UPDATE GAME LOGIC
-
-    JSR     BULUPD
-    JSR     TANUPD
+    
+            ; no reiniciamos registros con MOVEM?
+            BTST.B  #4,(KBDEDGE)    ; ESPACIO PULSADO
+            BEQ     .GOUPD
+            
+            LEA     BULINIT,A1
+            LEA     BULUPD,A2
+            LEA     BULPLOT,A3
+            
+            MOVE.W  #1,D0
+            JSR     AGLADD 
+    
+.GOUPD      JSR     AGLUPD
+            JSR     TANUPD
+            
+            
 
 ; --- SYNC -------------------------------------------------
 
@@ -53,13 +67,14 @@ START:
 
 ; --- PLOT -------------------------------------------------
     
-    JSR     SCOPLOT    
-    JSR     BULPLOT
-    JSR     TANPLOT
+            JSR     MAPPLOT
+            JSR     AGLPLOT    
+            JSR     SCOPLOT    
+            JSR     TANPLOT
     
-    TRAP    #SCRUPTN            ; UPDATE DOUBLE BUFFER
+            TRAP    #SCRUPTN            ; UPDATE DOUBLE BUFFER
 
-    BRA     .LOOP
+            BRA     .LOOP
 
     SIMHALT
     
@@ -69,6 +84,12 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
+
+
+
+
+
 
 
 
