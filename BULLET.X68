@@ -83,28 +83,57 @@ BULUPD
             MOVE.B  #SNDWALL,D7
             TRAP    #SNDPLTN
             
-            ; CHECK TANK COLLISIONS (solo para el tanque del jugador por ahora, para comprobar todos los tanques habría que hacer un bucle y comprobar con todas las posiciones de todos los tanques)
-.CHKTAN     ;MOVE.W  (TANPOSX),D2
-;            SUB.W   D0,D2
-;            BPL     .ISPOS
-;            NEG.W   D2    
-;.ISPOS      CMP.W   #TANWIDTH/2+BULRAD,D2
-;            BGT     .DONE
-;            MOVE.W  (TANPOSY),D2
-;            SUB.W   D1,D2
-;            BPL     .ISPOS2
-;            NEG.W   D2
-;.ISPOS2     CMP.W   #TANHEIGH/2+BULRAD,D2
-;            BGT     .DONE
+            ; CHECK TANK COLLISIONS
+.CHKTAN     ; ENEMY TANK COLLISIONS
+            MOVEM.L A0-A1/D0-D7,-(A7)
+            MOVE.W  (A0),D2                 ; PREPARE SHOT COORDINATES FOR
+            MOVE.W  2(A0),D3                ; COLLISION CHECK
+            MOVE.W  #BULRAD,D5
+            MOVE.W  #BULRAD,D7
+            MOVE.L  A0,A1
+            MOVE.W  #TANENEM,D0
+            JSR     DMMFRSTO
+.LOOP       CMP.L   #0,A0
+            BEQ     .CHKPLAY
+            MOVE.W  8(A0),D0    ;??
+            MOVE.W  10(A0),D1   ;??
+            SUB.W   #TANWIDTH/2,D0
+            SUB.W   #TANHEIGH/2,D1
+            MOVE.W  #TANWIDTH,D4
+            MOVE.W  #TANHEIGH,D6
+            JSR     UTLCHCOL
+            TST.B   D0
+            BNE     .EXPLO
+            MOVE.W  #TANENEM,D0
+            JSR     DMMNEXTO
+            BRA     .LOOP  
+.CHKPLAY    ; PLAYER TANK COLLISIONS
+            MOVE.W  #TANPLAY,D0
+            JSR     DMMFRSTO
+            CMP.L   #0,A0
+            BEQ     .END
+            MOVE.W  8(A0),D0    ;??
+            MOVE.W  10(A0),D1   ;??
+            SUB.W   #TANWIDTH/2,D0
+            SUB.W   #TANHEIGH/2,D1
+            MOVE.W  #TANWIDTH,D4
+            MOVE.W  #TANHEIGH,D6
+            JSR     UTLCHCOL
+            TST.B   D0
+            BNE     .EXPLO
+            BRA     .END
 
-;            ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET AND SPAWN PARTICLES)           
-            
-            ;ADDQ.W  #1,(SCORE)
-;            JSR     AGLKILL 
-;            MOVE.B  #SNDHIT,D7
-;            TRAP    #SNDPLTN
-            
-            
+            ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET AND SPAWN PARTICLES)           
+.EXPLO          
+            MOVE.L  A1,A0  
+            ADDQ.W  #1,(SCORE)
+            JSR     AGLKILL 
+            MOVE.B  #SNDHIT,D7
+            TRAP    #SNDPLTN 
+
+.END        MOVEM.L (A7)+,A0-A1/D0-D7
+            BRA     .DONE   
+              
             ; STORE POSITION
 .DONE       MOVE.W  D0,(A0)
             MOVE.W  D1,2(A0)
@@ -152,6 +181,7 @@ BULPLOT
             
                         
             
+
 
 
 
