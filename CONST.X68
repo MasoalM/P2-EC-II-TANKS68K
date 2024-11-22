@@ -30,6 +30,13 @@ MAPPIEY     EQU     15          ; NÚMERO DE CASILLAS EN EL EJE Y
 PIESIZX     EQU     32          ; TAMAÑO DE LAS CASILLAS EN EL EJE X
 PIESIZY     EQU     32          ; TAMAÑO DE LAS CASILLAS EN EL EJE Y 
 
+; --- CONSTANTES RELACIONADAS CON EL TIPO DE AGENTE ---------
+
+BULTYPE     EQU     1           ; BALA
+TANPLAY     EQU     2           ; TANQUE JUGADOR
+TANENEM     EQU     3           ; TANQUE ENEMIGO
+
+
 
 
 

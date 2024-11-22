@@ -12,7 +12,7 @@ AGLADD
 ; INPUT    - A1 - POINTER TO AGENT INIT FUNCTION
 ;            A2 - POINTER TO AGENT UPDATE FUNCTION
 ;            A3 - POINTER TO AGENT PLOT FUNCTION
-;            D0 - AGENT TYPE (USED AS OWNED BY DMM)
+;            D0 - AGENT TYPE (USED AS OWNED BY DMM) - MUST NOT BE ZERO
 ;            D1 - AGENT INITIALIZATION PARAMETER 1
 ;            D2 - AGENT INITIALIZATION PARAMETER 2
 ;            D3 - AGENT INITIALIZATION PARAMETER 3
@@ -77,3 +77,7 @@ AGLKILL     EQU     DMMFREE
 ; MODIFIES - NONE
 ; NOTE     - IT IS JUST A WRAPPER FOR DMMFREE
 ; -----------------------------------------------------------------------------
+*~Font name~Courier New~
+*~Font size~12~
+*~Tab type~1~
+*~Tab size~4~

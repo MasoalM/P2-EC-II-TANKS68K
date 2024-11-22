@@ -16,12 +16,12 @@ BULINIT
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
             
-            MOVE.W  (TANPOSX),D0
-            MOVE.W  (TANPOSY),D1
-            ADD.W   #20,D0
+            ; PARA QUE LA BALA NO APAREZCA ENCIMA DEL TANQUE (modificar para que sea hacia donde apunta)
             ADD.W   #20,D1
-            MOVE.W  D0,(A0)
-            MOVE.W  D1,2(A0)
+            ADD.W   #20,D2
+            ; BALA SPAWNEA DONDE EL TANQUE QUE LA GENERA
+            MOVE.W  D1,(A0) 
+            MOVE.W  D2,2(A0)
             
             MOVE.W  #BULSPEED,4(A0)             ; hacer que bulspeed sea variable y que sea 0 o el bulspeed actual (para que se mueva en 8 direcciones)
             MOVE.W  #BULSPEED,6(A0)
@@ -84,25 +84,25 @@ BULUPD
             TRAP    #SNDPLTN
             
             ; CHECK TANK COLLISIONS (solo para el tanque del jugador por ahora, para comprobar todos los tanques habría que hacer un bucle y comprobar con todas las posiciones de todos los tanques)
-.CHKTAN     MOVE.W  (TANPOSX),D2
-            SUB.W   D0,D2
-            BPL     .ISPOS
-            NEG.W   D2    
-.ISPOS      CMP.W   #TANWIDTH/2+BULRAD,D2
-            BGT     .DONE
-            MOVE.W  (TANPOSY),D2
-            SUB.W   D1,D2
-            BPL     .ISPOS2
-            NEG.W   D2
-.ISPOS2     CMP.W   #TANHEIGH/2+BULRAD,D2
-            BGT     .DONE
+.CHKTAN     ;MOVE.W  (TANPOSX),D2
+;            SUB.W   D0,D2
+;            BPL     .ISPOS
+;            NEG.W   D2    
+;.ISPOS      CMP.W   #TANWIDTH/2+BULRAD,D2
+;            BGT     .DONE
+;            MOVE.W  (TANPOSY),D2
+;            SUB.W   D1,D2
+;            BPL     .ISPOS2
+;            NEG.W   D2
+;.ISPOS2     CMP.W   #TANHEIGH/2+BULRAD,D2
+;            BGT     .DONE
 
-            ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET AND SPAWN PARTICLES)           
+;            ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET AND SPAWN PARTICLES)           
             
             ;ADDQ.W  #1,(SCORE)
-            JSR     AGLKILL 
-            MOVE.B  #SNDHIT,D7
-            TRAP    #SNDPLTN
+;            JSR     AGLKILL 
+;            MOVE.B  #SNDHIT,D7
+;            TRAP    #SNDPLTN
             
             
             ; STORE POSITION
@@ -152,6 +152,9 @@ BULPLOT
             
                         
             
+
+
+
 
 
 

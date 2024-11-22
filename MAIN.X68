@@ -16,6 +16,7 @@
     INCLUDE "BULLET.X68"
     INCLUDE "TANK.X68"
     INCLUDE "SCORE.X68"
+    INCLUDE "GAME.X68"
     INCLUDE "MAP.X68"
     INCLUDE "DATA/MAPDATA.X68"
     
@@ -26,8 +27,7 @@ START:
             ORI.W   #$0700,SR   ; DESHABILITAR INTERRUPCIONES
             JSR     SYSINIT
             JSR     UTLINIT
-            JSR     TANINIT
-            JSR     SCOINIT 
+            JSR     GAMINIT
     
 .LOOP
 
@@ -42,22 +42,8 @@ START:
 
 ; UPDATE GAME LOGIC
     
-            ; no reiniciamos registros con MOVEM?
-            BTST.B  #4,(KBDEDGE)    ; ESPACIO PULSADO
-            BEQ     .GOUPD
+            JSR     GAMUPD
             
-            LEA     BULINIT,A1
-            LEA     BULUPD,A2
-            LEA     BULPLOT,A3
-            
-            MOVE.W  #1,D0
-            JSR     AGLADD 
-    
-.GOUPD      JSR     AGLUPD
-            JSR     TANUPD
-            
-            
-
 ; --- SYNC -------------------------------------------------
 
 .WINT       TST.B   (SCRINTCT)
@@ -67,11 +53,7 @@ START:
 
 ; --- PLOT -------------------------------------------------
     
-            JSR     MAPPLOT
-            JSR     AGLPLOT    
-            JSR     SCOPLOT    
-            JSR     TANPLOT
-    
+            JSR     GAMPLOT
             TRAP    #SCRUPTN            ; UPDATE DOUBLE BUFFER
 
             BRA     .LOOP
@@ -84,6 +66,12 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
+
+
+
+
+
 
 
 
