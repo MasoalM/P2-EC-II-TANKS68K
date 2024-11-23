@@ -104,14 +104,46 @@ TANUPD
             MOVE.W  D4,D1
 
 .BOT2       ; ELSE (TANK IS A BOT)
-            ; AI ALGORITHM
+            ; AI ALGORITHM (greedy por ahora para testear)
+            ;MOVEM.L D0-D5,-(A7)             ; MOVEM.L D0-D3/A0-A1,-(A7)
+            
+            MOVE.W  (A0),D1
+            MOVE.W  2(A0),D2
+            MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no haría falta (por si la velocidad en un futuro la cambiamos a variable según el tanque)
+            
+            MOVE.L  A0,A1
+            MOVE.W  #TANPLAY,D0
+            JSR     DMMFRSTO
+            
+            CMP.W   8(A0),D1
+            BHI     .NEGVELX                ; XENEM > XPLAY
+            BLO     .POSVELX                ; XENEM < XPLAY
+            BRA     .VELY                   ; XENEM = XPLAY
+            
+.NEGVELX    SUB.W   D3,D1
+            BRA     .VELY
+.POSVELX    ADD.W   D3,D1
 
+.VELY       CMP.W   10(A0),D2
+            BHI     .NEGVELY                ; YENEM > YPLAY
+            BLO     .POSVELY                ; YENEM < YPLAY
+            BRA     .ENDALG                 ; YENEM = YPLAY
+
+.NEGVELY    SUB.W   D3,D2
+            BRA     .ENDALG
+.POSVELY    ADD.W   D3,D2                            
+       
+.ENDALG     MOVE.L  A1,A0
+
+            MOVE.W  D1,(A0)
+            MOVE.W  D2,2(A0)
+            
+            MOVE.W  D1,D0
+            MOVE.W  D2,D1
+            ;MOVEM.L (A7)+,D0-D5            ; MOVEM.L (A7)+,D0-D3/A0-A1
 
 .CONT2
-
-            
-
-;TRY2
+  
             ;INICIALIZAMOS
             LEA.L   MAPDATA,A1
             ;SUBQ.L  #2,A1
@@ -252,6 +284,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
 
 
 

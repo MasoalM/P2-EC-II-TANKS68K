@@ -2,7 +2,7 @@
 * BULLET MANAGEMENT (AGENT)
 * BULPOSX (W) (A0)
 * BULPOSY (W) 2(A0)
-* BULVELX (W) 4(A0)     ; por ahora es una cte así que no habría que ponerlo aquí
+* BULVELX (W) 4(A0)     ; por ahora es una cte as? que no habr?a que ponerlo aqu?
 * BULVELY (W) 6(A0)     ; idem
 * TANPOSX (W) D1
 * TANPOSY (W) D2
@@ -178,23 +178,6 @@ BULPLOT
             MOVEM.L (A7)+,D0-D4 
 
             RTS
-            
-                        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~

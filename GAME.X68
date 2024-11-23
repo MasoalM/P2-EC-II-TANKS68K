@@ -42,22 +42,7 @@ GAMUPD
 ; MODIFIES : NONE
 ; ----------------------------------------------------------
 
-             ;MOVEM.L D0/A1-A3,-(A7)  ; D0-D2
-;            BTST.B  #4,(KBDEDGE)    ; ESPACIO PULSADO
-;            BEQ     .AGLUPD         ; BEQ     .GOUPD            
-;            LEA     BULINIT,A1
-;            LEA     BULUPD,A2
-;            LEA     BULPLOT,A3            
-             ;MOVE.W  #BULTYPE,D0
-            ;MOVE.W  (TANPOSX),D1
-            ;MOVE.W  (TANPOSY),D2
-;            JSR     AGLADD
-             ;MOVE.W  #TANPLAY,(AGENTID)    
-             JSR     AGLUPD             ; BRA?
-             ;MOVE.W  #TANENEM,(AGENTID)
-             ;BRA     AGLUPD
-             ;MOVEM.L (A7)+,D0/A1-A3  ; D0;D2
- 
+            JSR     AGLUPD
             
 ; ----------------------------------------------------------
 GAMPLOT
@@ -71,6 +56,7 @@ GAMPLOT
             JSR     AGLPLOT
     
             BRA     SCOPLOT    
+
 
 
 
