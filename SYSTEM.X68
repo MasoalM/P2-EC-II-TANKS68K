@@ -48,7 +48,9 @@ SNDINIT
 .SNDMUSIC   DC.B    'SND/MUSIC.wav',0
 .SNDWALL    DC.B    'SND/WALL.wav',0
 .SNDHIT     DC.B    'SND/HIT.wav',0
-.SNDLIST    DC.L    .SNDMUSIC,.SNDWALL,.SNDHIT,0
+.SNDKILL    DC.B    'SND/ENEMKILL.wav',0
+.SNDWAA     DC.B    'SND/WAA.wav',0
+.SNDLIST    DC.L    .SNDMUSIC,.SNDWALL,.SNDHIT,.SNDKILL,.SNDWAA,0
             
 ; ----------------------------------------------------------
 SNDPLAY
@@ -201,6 +203,7 @@ KBDUPD
             ROXL.B  #1,D2
             DBRA.W  D3,.LOOP
             RTS
+
 
 
 

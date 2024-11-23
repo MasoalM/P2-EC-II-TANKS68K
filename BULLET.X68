@@ -125,12 +125,31 @@ BULUPD
 
             ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET AND SPAWN PARTICLES)           
 .EXPLO          
-            MOVE.L  A1,A0  
-            ADDQ.W  #1,(SCORE)
+            SUB.W   #BULDMG,24(A0)
+            ; IF TANK LIFE IS 0
+            CMP.W   #0,24(A0)
+            BHI     .ALIVE
+            
+            CMP.W   #TANPLAY,D0
+            
+            BNE.W   .BOTSNDKILL
+            ; IF TANK IS NOT A BOT (PLAYER)
+            MOVE.B  #SNDWAA,D7
+            TRAP    #SNDPLTN
+            JSR     AGLKILL
+            BRA     .KILBUL   
+.BOTSNDKILL ; IF TANK IS A BOT  
+            MOVE.B  #SNDKILL,D7
+            TRAP    #SNDPLTN
+            JSR     AGLKILL
+            BRA     .KILBUL
+.ALIVE
+            MOVE.B  #SNDHIT,D7  ; HIT SOUND IF TANK DOESN'T DIE
+            TRAP    #SNDPLTN
+.KILBUL            
+            MOVE.L  A1,A0              
             JSR     AGLKILL 
-            MOVE.B  #SNDHIT,D7
-            TRAP    #SNDPLTN 
-
+             
 .END        MOVEM.L (A7)+,A0-A1/D0-D7
             BRA     .DONE   
               
@@ -178,6 +197,7 @@ BULPLOT
             MOVEM.L (A7)+,D0-D4 
 
             RTS
+
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~

@@ -7,6 +7,7 @@
 * TANPCOL (L)       6(A0)
 * TANFCOL (L)       10(A0)
 * TANID   (W)       14(A0)
+* TANLIFE (W)       16(A0)
 *-----------------------------------------------------------
 
 ; ----------------------------------------------------------
@@ -19,7 +20,7 @@ TANINIT
             
             ;MOVEM.L D0/A1,-(A7)
             ;JSR     UTLRAND
-            ;AND.L   #$0000000C,D0           ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 4 (ALEATORIOS)
+            ;AND.L   #$0000000C,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 4 (ALEATORIOS)
             ;LEA     .POSVEC,A1
             ;MOVE.L  (A1,D0),(A0)       ; INITIAL TANK POSITION X AND Y    
             ;MOVEM.L (A7)+,D0/A1
@@ -32,9 +33,10 @@ TANINIT
             BNE.W   .BOT
             MOVE.W  #SCRWIDTH/2,(A0)
             MOVE.W  #SCRHEIGH/2,2(A0)
-            MOVE.L  #$00344D31,6(A0)     ; COLOR DE CONTORNO DEL TANQUE   
-            MOVE.L  #$00608C59,10(A0)    ; COLOR DE RELLENO DEL TANQUE
-            MOVE.W  #TANPLAY,14(A0)      ; EL TANQUE ES EL JUGADOR 
+            MOVE.L  #$00344D31,6(A0)        ; COLOR DE CONTORNO DEL TANQUE   
+            MOVE.L  #$00608C59,10(A0)       ; COLOR DE RELLENO DEL TANQUE
+            MOVE.W  #TANPLAY,14(A0)         ; EL TANQUE ES EL JUGADOR 
+            MOVE.W  #PLRINILF,16(A0)        ; VIDA INICIAL DEL TANQUE JUGADOR
             RTS 
             
             ; ELSE (TANK IS A BOT)
@@ -42,7 +44,8 @@ TANINIT
             MOVE.W  D2,2(A0)
             MOVE.L  #$000B2187,6(A0)  
             MOVE.L  #$00081658,10(A0)
-            MOVE.W  #TANENEM,14(A0)      ; EL TANQUE ES UN BOT
+            MOVE.W  #TANENEM,14(A0)         ; EL TANQUE ES UN BOT
+            MOVE.W  #ENEINILF,16(A0)        ; VIDA INICIAL DEL TANQUE ENEMIGO
             RTS
             
             ; 4 posiciones aleatorias ( modificar para que no dependa de este vector )
@@ -280,10 +283,29 @@ TANPLOT
             ; DRAW RECTANGLE (TANK)
             MOVE.B  #87,D0
             TRAP    #15
-            
+        
+            ; PLOT LIFE
+            ; IF TANK IS NOT A BOT (PLAYER)
+            CMP.W   #TANPLAY,14(A0)
+            BNE.W   .END
+
+            UTLSPEN #$00FFFFFF 
+            UTLSFIL #PLRLIFEC
+            MOVE.W  #(SCRWIDTH-PLRINILF)/2,D1
+            MOVE.W  #PLRLIFEY,D2
+            MOVE.W  16(A0),D3
+            ADD.W   D1,D3
+            MOVE.W  #PLRLIFEY+PLRLIFEH,D4
+            MOVE.B  #87,D0
+            TRAP    #15
+            MOVE.W  #(SCRWIDTH+PLRINILF)/2,D3
+            MOVE.B  #90,D0
+            TRAP    #15
+.END            
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
 
 
 

@@ -6,8 +6,8 @@
 *-----------------------------------------------------------
     ORG    $1000
     
-    INCLUDE "CONST.X68"
     INCLUDE "SYSCONST.X68"
+    INCLUDE "CONST.X68"
     INCLUDE "LIB/DMMCONST.X68"
     INCLUDE "LIB/DMMCODE.X68"
     INCLUDE "SYSTEM.X68"
@@ -68,6 +68,7 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
 
 
 

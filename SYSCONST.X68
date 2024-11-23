@@ -22,6 +22,8 @@ KBDPAUSE    EQU     'P'
 SNDMUSIC    EQU     0
 SNDWALL     EQU     1
 SNDHIT      EQU     2
+SNDKILL     EQU     3
+SNDWAA      EQU     4
 
 ; --- TRAP NUMBERS -----------------------------------------
 
@@ -32,6 +34,7 @@ SNDPLTN     EQU     2           ; SOUND PLAY TRAP NUMBER
 ; --- INTERRUPT NUMBERS ------------------------------------
 
 SCRINTN     EQU     1           ; TIMED INTERRUPT NUMBER
+
 
 
 
