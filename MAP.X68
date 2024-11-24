@@ -59,19 +59,7 @@ MAPPLOT
             MOVE.B  #81,D0
             MOVE.L  #$0042C0FF,D1
             TRAP    #15
-            BRA     .SOLEADO
-.PARED                   
-            ; SET CONTOUR COLOR
-            MOVE.B  #80,D0
-            MOVE.L  #$000076AC,D1
-            TRAP    #15
             
-            ; SET FILL COLOR
-            MOVE.B  #81,D0
-            MOVE.L  #$000076AC,D1
-            TRAP    #15
-.SOLEADO
-
             ; DEFINE COORDINATES (D2 ESTÁ ARRIBA)
             ADD.W  #PIESIZX, D7
             MOVE.W  D7, D1
@@ -82,12 +70,42 @@ MAPPLOT
             MOVE.B  #87,D0
             TRAP    #15
             
+            BRA     .SOLEADO
+
+.PARED                   
+            ; SET CONTOUR COLOR
+            MOVE.B  #80,D0
+            MOVE.L  #$000076AC,D1
+            TRAP    #15
+            
+            ; SET FILL COLOR
+            MOVE.B  #81,D0
+            MOVE.L  #$000076AC,D1
+            TRAP    #15
+            
+            ; DEFINE COORDINATES (D2 ESTÁ ARRIBA)
+            ADD.W  #PIESIZX, D7
+            MOVE.W  D7, D1
+            ADD.W   #PIESIZX, D3
+            ADD.W   #PIESIZY, D4 
+            
+            ; DRAW RECTANGLE (CASILLA)
+            MOVE.B  #87,D0
+            TRAP    #15
+            
+            ;JSR     CASPLOT
+
+.SOLEADO
+
+                        
             DBRA D5, .LINEX
             DBRA D6, .LINEY
             
             MOVEM.L (A7)+,D0/A0
 
             RTS
+
+
 
 
 

@@ -42,46 +42,110 @@ BULUPD
             MOVE.W  2(A0),D1
             ADD.W   4(A0),D0
             ADD.W   6(A0),D1
+
+
+
+            ;INICIALIZAMOS
+            LEA.L   MAPDATA,A1
+            ;SUBQ.L  #2,A1
+            MOVE.W  D0,D4
+            MOVE.W  D1,D5
+            MOVE.W  #0,D2
+            MOVE.W  #0,D3
+            
+            ;SACAMOS LA POSICIÓN RELATIVA DE X
+            BRA .CHKX
+.NOORGX
+            SUB.W   #PIESIZX,D4
+            ADDQ.L  #2,A1
+            ADD.W   #PIESIZX,D2
+.CHKX            
+            CMP.W   #PIESIZX,D4
+            BGT     .NOORGX             
+            
+            ;SACAMOS LA POSICIÓN RELATIVA DE Y
+            BRA .CHKY
+.NOORGY
+            SUB.W   #PIESIZY,D5
+            ADD.L  #40,A1
+            ADD.W   #PIESIZY,D3
+.CHKY            
+            CMP.W   #PIESIZX,D5
+            BGT     .NOORGY
+            
+
+            ;COLISIONES
             
             ; CHECK HORIZONTAL COLLISIONS
-            CMP.W   #SCRWIDTH-BULRAD,D0
-            BGT     .COLRGT
-            CMP.W   #BULRAD,D0
-            BLT     .COLLFT
+            CMP.W   #PIESIZX-BULRAD/2,D4
+            BGE     .COLRGT
+.RECX
+            CMP.W   #BULRAD+2,D4            
+            BLT     .COLLFT                 
             
             ; CHECK VERTICAL COLLISIONS
-.CHKVERT    CMP.W   #SCRHEIGH-BULRAD,D1
-            BGT     .COLBOT
-            CMP.W   #BULRAD,D1
-            BLT     .COLTOP
-            BRA     .CHKTAN   
+.CHKVERT    CMP.W   #PIESIZY-BULRAD/2,D5
+            BGE     .COLBOT
+.RECY            
+            CMP.W   #BULRAD+2,D5
+            BLT     .COLTOP                
+            BRA     .DONA   
+            
+            
             
             ; RIGHT SIDE COLLISION    
-.COLRGT     NEG.W   4(A0)
-            MOVE.W  #SCRWIDTH-BULRAD,D0
-            MOVE.B  #SNDWALL,D7
-            TRAP    #SNDPLTN
-            BRA     .CHKVERT
+.COLRGT     
+            ADDQ.L  #2,A1
+            CMP.W   #$01,(A1)
+            BNE     .FARSC
+            MOVE.W  #PIESIZX-BULRAD,D0
+            ADD.W   D2,D0
+            NEG.W   4(A0)
+.FARSC
+            SUBQ.L  #2,A1
+            BRA     .RECX
 
             ; LEFT SIDE COLLISION
-.COLLFT     NEG.W   4(A0)
+.COLLFT     
+            SUBQ.L  #2,A1
+            CMP.W   #$01,(A1)
+            BNE     .FALSC
             MOVE.W  #BULRAD,D0
-            MOVE.B  #SNDWALL,D7
-            TRAP    #SNDPLTN
-            BRA     .CHKVERT    
+            ADD.W   D2,D0
+            NEG.W   4(A0)                   
+.FALSC
+            ADDQ.L  #2,A1
+            BRA     .CHKVERT  
 
             ; BOTTOM COLLISION
-.COLBOT     NEG.W   6(A0)
-            MOVE.W  #SCRHEIGH-BULRAD,D1
-            MOVE.B  #SNDWALL,D7
-            TRAP    #SNDPLTN
-            BRA     .CHKTAN
+.COLBOT     
+            ADD.L   #40,A1
+            CMP.W   #$01,(A1)
+            BNE     .FABSC
+            MOVE.W  #PIESIZY-BULRAD,D1
+            ADD.W   D3,D1
+            NEG.W   6(A0)
+.FABSC
+            SUB.L  #40,A1            
+            BRA     .RECY
 
             ; TOP COLLISION
-.COLTOP     NEG.W   6(A0)
+.COLTOP     
+            SUB.L   #40,A1
+            CMP.W   #$01,(A1)
+            BNE     .FATSC
             MOVE.W  #BULRAD,D1
-            MOVE.B  #SNDWALL,D7
-            TRAP    #SNDPLTN
+            ADD.W   D3,D1         
+            NEG.W   6(A0)
+.FATSC
+            SUB.L  #40,A1          
+
+
+.DONA      
+
+
+
+
             
             ; CHECK TANK COLLISIONS
 .CHKTAN     ; ENEMY TANK COLLISIONS
@@ -197,6 +261,9 @@ BULPLOT
             MOVEM.L (A7)+,D0-D4 
 
             RTS
+
+
+
 
 *~Font name~Courier New~
 *~Font size~12~

@@ -5,17 +5,17 @@
 * Description:
 *-----------------------------------------------------------
 
-CASPLOT:
+CASPLOT
 
-    MOVEM.W D5-D7/A0-A6, -(A7) 
+
     
     ;LEEMOS LA CASILLA EN MEMORIA
-    LEA.L   CASDATA,A0
+    LEA.L   CASDATA,A2
     
     ;GUARDAMOS LOS REGISTROS, EL MÉTODO PRINCIPAL LOS USA
     MOVE.W  D1,D5
     MOVE.W  D2,D6
-    MOVE.W  D3,D7
+    MOVE.W  D3,A4
     MOVE.W  D4,A1
     
     ;AJUSTAMOS UNOS VALORES
@@ -29,19 +29,19 @@ CASPLOT:
     SUBQ.W  #1,D4
         
     ;MIRAMOS DE QUE COLOR ES EL PÍXEL    
-    CMP.W   #$00,(A0)
+    CMP.W   #$00,(A2)
     BEQ     .MARMOS
-    CMP.W   #$01,(A0)
+    CMP.W   #$01,(A2)
     BEQ     .OCRTRA
-    CMP.W   #$02,(A0)
+    CMP.W   #$02,(A2)
     BEQ     .MADNOG
-    CMP.W   #$03,(A0)
+    CMP.W   #$03,(A2)
     BEQ     .CAFTSTINT
-    CMP.W   #$04,(A0)
+    CMP.W   #$04,(A2)
     BEQ     .TRAHUM
-    CMP.W   #$05,(A0)
+    CMP.W   #$05,(A2)
     BEQ     .MADCBZ
-    CMP.W   #$06,(A0)
+    CMP.W   #$06,(A2)
     BEQ     .BRZVEJ
     
     ;SEGÚN EL COLOR, COLOCAMOS LA BROCHA
@@ -141,21 +141,22 @@ CASPLOT:
     TRAP    #15
            
     ;INCREMENTAMOS A0
-    ADDQ.L  #2,A0       
+    ADDQ.L  #2,A2       
            
     ;COMPROBAMOS EL BUCLE 
-    CMP.W   D3,D7
+    CMP.W   D3,A4
     BNE     .SEG
     CMP.W   D4,A1
     BNE     .SEGX
     ;RESTAURAMOS
     MOVE.W  D5,D1
     MOVE.W  D6,D2
-    MOVE.W  D7,D3
+    MOVE.W  A4,D3
     MOVE.W  A1,D4
 
-    MOVEM.W (A7)+,D5-D7/A0-A6
+
 RTS
+
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~
