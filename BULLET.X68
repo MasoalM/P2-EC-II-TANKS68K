@@ -4,8 +4,11 @@
 * BULPOSY (W) 2(A0)
 * BULVELX (W) 4(A0)     ; por ahora es una cte as? que no habr?a que ponerlo aqu?
 * BULVELY (W) 6(A0)     ; idem
-* TANPOSX (W) D1
-* TANPOSY (W) D2
+* BULFATH (W) 8(A0)     ; IDENTIFICADOR DEL PADRE DE LA BALA
+* TOUCHLFT(W) 10(A0)    ; TOQUES RESTANTES PARA QUE LA BALA EXPLOTE
+* TANPOSX     D1
+* TANPOSY     D2
+* FATHID      D3
 *-----------------------------------------------------------
 
 ; ----------------------------------------------------------
@@ -22,6 +25,10 @@ BULINIT
             ; BALA SPAWNEA DONDE EL TANQUE QUE LA GENERA
             MOVE.W  D1,(A0) 
             MOVE.W  D2,2(A0)
+            ; GUARDAMOS EL ID DEL PADRE DE LA BALA
+            MOVE.W  D3,8(A0)
+            ; TOQUES DE LA BALA DISPONIBLES CON LAS PAREDES EMPIEZAN SIENDO EL MÁXIMO
+            MOVE.W  #MAXTOUCH,10(A0)
             
             MOVE.W  #BULSPEED,4(A0)             ; hacer que bulspeed sea variable y que sea 0 o el bulspeed actual (para que se mueva en 8 direcciones)
             MOVE.W  #BULSPEED,6(A0)
@@ -42,9 +49,7 @@ BULUPD
             MOVE.W  2(A0),D1
             ADD.W   4(A0),D0
             ADD.W   6(A0),D1
-
-
-
+            
             ;INICIALIZAMOS
             LEA.L   MAPDATA,A1
             ;SUBQ.L  #2,A1
@@ -67,14 +72,11 @@ BULUPD
             BRA .CHKY
 .NOORGY
             SUB.W   #PIESIZY,D5
-            ADD.L  #40,A1
+            ADD.L   #40,A1
             ADD.W   #PIESIZY,D3
 .CHKY            
             CMP.W   #PIESIZX,D5
             BGT     .NOORGY
-            
-
-            ;COLISIONES
             
             ; CHECK HORIZONTAL COLLISIONS
             CMP.W   #PIESIZX-BULRAD/2,D4
@@ -82,17 +84,15 @@ BULUPD
 .RECX
             CMP.W   #BULRAD+2,D4            
             BLT     .COLLFT                 
-            
+
             ; CHECK VERTICAL COLLISIONS
 .CHKVERT    CMP.W   #PIESIZY-BULRAD/2,D5
             BGE     .COLBOT
 .RECY            
             CMP.W   #BULRAD+2,D5
             BLT     .COLTOP                
-            BRA     .DONA   
-            
-            
-            
+            BRA     .CHKTAN   
+
             ; RIGHT SIDE COLLISION    
 .COLRGT     
             ADDQ.L  #2,A1
@@ -101,6 +101,9 @@ BULUPD
             MOVE.W  #PIESIZX-BULRAD,D0
             ADD.W   D2,D0
             NEG.W   4(A0)
+            SUBQ.W  #1,10(A0)
+            MOVE.B  #SNDWALL,D7
+            TRAP    #SNDPLTN
 .FARSC
             SUBQ.L  #2,A1
             BRA     .RECX
@@ -112,7 +115,10 @@ BULUPD
             BNE     .FALSC
             MOVE.W  #BULRAD,D0
             ADD.W   D2,D0
-            NEG.W   4(A0)                   
+            NEG.W   4(A0) 
+            SUBQ.W  #1,10(A0)
+            MOVE.B  #SNDWALL,D7
+            TRAP    #SNDPLTN                  
 .FALSC
             ADDQ.L  #2,A1
             BRA     .CHKVERT  
@@ -125,8 +131,11 @@ BULUPD
             MOVE.W  #PIESIZY-BULRAD,D1
             ADD.W   D3,D1
             NEG.W   6(A0)
+            SUBQ.W  #1,10(A0)
+            MOVE.B  #SNDWALL,D7
+            TRAP    #SNDPLTN
 .FABSC
-            SUB.L  #40,A1            
+            SUB.L   #40,A1            
             BRA     .RECY
 
             ; TOP COLLISION
@@ -137,16 +146,18 @@ BULUPD
             MOVE.W  #BULRAD,D1
             ADD.W   D3,D1         
             NEG.W   6(A0)
+            SUBQ.W  #1,10(A0)
+            MOVE.B  #SNDWALL,D7
+            TRAP    #SNDPLTN
 .FATSC
-            SUB.L  #40,A1          
+            SUB.L   #40,A1  
 
-
-.DONA      
-
-
-
-
-            
+            CMP.W   #0,10(A0)
+            BNE     .CHKTAN
+            JSR     AGLKILL
+            MOVEM.W (A7)+,D0-D2
+            RTS 
+        
             ; CHECK TANK COLLISIONS
 .CHKTAN     ; ENEMY TANK COLLISIONS
             MOVEM.L A0-A1/D0-D7,-(A7)
@@ -201,18 +212,43 @@ BULUPD
             MOVE.B  #SNDWAA,D7
             TRAP    #SNDPLTN
             JSR     AGLKILL
-            BRA     .KILBUL   
+            BRA     .BULFINAL   
 .BOTSNDKILL ; IF TANK IS A BOT  
             MOVE.B  #SNDKILL,D7
             TRAP    #SNDPLTN
             JSR     AGLKILL
-            BRA     .KILBUL
+            BRA     .BULFINAL
 .ALIVE
             MOVE.B  #SNDHIT,D7  ; HIT SOUND IF TANK DOESN'T DIE
             TRAP    #SNDPLTN
-.KILBUL            
-            MOVE.L  A1,A0              
+.BULFINAL    
+            MOVE.L  A1,A0
+            MOVE.W  8(A0),D3    ; ALMACENAR EL FATHER ID
+            MOVE.L  A0,A1        
+            ; SUMARLE UNA BALA DISPONIBLE AL TANQUE
+            ; COMPROBAR SI EL TANQUE PADRE DE LA BALA ES UN BOT, RECORRER TODOS Y COMPROBAR CON CUÁL COINCIDE EL TANID
+            MOVE.W  #TANENEM,D0 ;22(A0)
+            CLR.W   D2          ; CONTADOR
+            JSR     DMMFRSTO
+.LOOP2      CMP.L   #0,A0
+            BEQ     .PLAYBULL   ; NO ENCONTRADO NINGÚN TANQUE ENEMIGO QUE SEA PADRE DE LA BALA, COMPROBAR JUGADOR
+            ADDQ.W  #1,D2       ; AGREGAR 1 AL CONTADOR
+            CMP.W   D2,D3
+            BNE     .LOOP2      ; SEGUIR CON EL BUCLE SI NO ES EL PADRE
+            ADDQ.W  #1,26(A0)   ; SI ES EL PADRE LE SUMAMOS UNA BALA DISPONIBLE
+            BRA     .KILLBULL
+
+
+.PLAYBULL   ; EL TANQUE PADRE DE LA BALA ES EL JUGADOR
+            MOVE.W  #TANPLAY,D0 ;22(A0)
+            JSR     DMMFRSTO
+            ADDQ.W  #1,26(A0)
+            
+.KILLBULL
+            MOVE.L  A1,A0             
             JSR     AGLKILL 
+            
+                 
              
 .END        MOVEM.L (A7)+,A0-A1/D0-D7
             BRA     .DONE   
@@ -261,7 +297,6 @@ BULPLOT
             MOVEM.L (A7)+,D0-D4 
 
             RTS
-
 
 
 

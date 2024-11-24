@@ -1,13 +1,18 @@
 *-----------------------------------------------------------
 * TANK MANAGEMENT (AGENT)
 *
-* TANPOSX (W)       (A0)
-* TANPOSY (W)       2(A0)
-* TANSPEED(W)       4(A0)
-* TANPCOL (L)       6(A0)
-* TANFCOL (L)       10(A0)
-* TANID   (W)       14(A0)
-* TANLIFE (W)       16(A0)
+* TANPOSX (W)             (A0)
+* TANPOSY (W)             2(A0)
+* TANSPEED(W)             4(A0)
+* TANPCOL (L)             6(A0)
+* TANFCOL (L)             10(A0)
+* TANTYPE (W)             14(A0)
+* TANLIFE (W)             16(A0)
+* BULLEFT (W)             18(A0)
+* TANID   (W)             20(A0)            ; IDENTIFICADOR ÚNICO DE CADA TANQUE
+* INITIAL TANK X POSITION D1
+* INITIAL TANK Y POSITION D2
+* ENEMY TANK ID           D3
 *-----------------------------------------------------------
 
 ; ----------------------------------------------------------
@@ -26,17 +31,20 @@ TANINIT
             ;MOVEM.L (A7)+,D0/A1
             ;RTS      
 
-            MOVE.W  #TANSPEED,4(A0)     
+            MOVE.W  D1,(A0)
+            MOVE.W  D2,2(A0)
+            MOVE.W  #TANSPEED,4(A0)
+            MOVE.W  #MAXBULL,18(A0)    
             
-            ; IF TANK IS NOT A BOT (PLAYER)
             CMP.W   #TANPLAY,D0
             BNE.W   .BOT
-            MOVE.W  #SCRWIDTH/2,(A0)
-            MOVE.W  #SCRHEIGH/2,2(A0)
+            
+            ; IF TANK IS NOT A BOT (PLAYER)
             MOVE.L  #$00344D31,6(A0)        ; COLOR DE CONTORNO DEL TANQUE   
             MOVE.L  #$00608C59,10(A0)       ; COLOR DE RELLENO DEL TANQUE
             MOVE.W  #TANPLAY,14(A0)         ; EL TANQUE ES EL JUGADOR 
             MOVE.W  #PLRINILF,16(A0)        ; VIDA INICIAL DEL TANQUE JUGADOR
+            MOVE.W  #0,20(A0)               ; TANID DEL JUGADOR SERÁ 0
             RTS 
             
             ; ELSE (TANK IS A BOT)
@@ -46,6 +54,7 @@ TANINIT
             MOVE.L  #$00081658,10(A0)
             MOVE.W  #TANENEM,14(A0)         ; EL TANQUE ES UN BOT
             MOVE.W  #ENEINILF,16(A0)        ; VIDA INICIAL DEL TANQUE ENEMIGO
+            MOVE.W  D3,20(A0)               ; IDENTIFICADOR DEL TANQUE ENEMIGO
             RTS
             
             ; 4 posiciones aleatorias ( modificar para que no dependa de este vector )
@@ -89,8 +98,11 @@ TANUPD
 .DISP          
             ; COMPROBAR SI ESTÁ DISPARANDO  
         
-            BTST.B  #4,(KBDEDGE)    ; ESPACIO PULSADO
+            BTST.B  #4,(KBDEDGE)            ; ESPACIO PULSADO
             BEQ     .CONT2  
+            
+            CMP.W   #0,18(A0)
+            BEQ     .CONT2                  ; NO QUEDAN BALAS DISPONIBLES                  
             
             MOVE.W  D0,D3
             MOVE.W  D1,D4
@@ -101,11 +113,14 @@ TANUPD
             MOVE.W  #BULTYPE,D0
             MOVE.W  (A0),D1                 ;MOVE.W  D3,D1
             MOVE.W  2(A0),D2                ;MOVE.W  D4,D2
+            MOVE.W  20(A0),D3
             JSR     AGLADD
                             
             MOVE.W  D3,D0
             MOVE.W  D4,D1
+            SUBQ.W  #1,18(A0)               ; UNA BALA DISPONIBLE MENOS
 
+; no llega aquí siendo el jugador?
 .BOT2       ; ELSE (TANK IS A BOT)
             ; AI ALGORITHM (greedy por ahora para testear)
             ;MOVEM.L D0-D5,-(A7)             ; MOVEM.L D0-D3/A0-A1,-(A7)
@@ -305,6 +320,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
 
 
 

@@ -10,6 +10,11 @@ SCORE       DS.W    1       ; NÚMERO DE TANQUES DESTRUIDOS // (cuidado con si ll
 
 NUMENELIV   DS.W    1       ; NÚMERO DE ENEMIGOS VIVOS EN EL NIVEL
 
+; --- VARIABLES RELACIONADAS CON EL TANQUE -----------------
+
+TANID       DS.W    1
+
+
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~
