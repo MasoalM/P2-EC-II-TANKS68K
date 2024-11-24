@@ -5,7 +5,7 @@
 * BULVELX (W) 4(A0)     ; por ahora es una cte as? que no habr?a que ponerlo aqu?
 * BULVELY (W) 6(A0)     ; idem
 * BULFATH (W) 8(A0)     ; IDENTIFICADOR DEL PADRE DE LA BALA
-* TOUCHLFT(W) 10(A0)    ; TOQUES RESTANTES PARA QUE LA BALA EXPLOTE
+* TOUCHLFT(W) 10(A0)    ; TOQUES RESTANTES PARA QUE EXPLOTE LA BALA
 * TANPOSX     D1
 * TANPOSY     D2
 * FATHID      D3
@@ -42,7 +42,7 @@ BULUPD
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
             
-            MOVEM.W D0-D2,-(A7)            
+            MOVEM.W D0-D4,-(A7)            
 
             ; UPDATE BALL COORDINATES
             MOVE.W  (A0),D0
@@ -102,8 +102,11 @@ BULUPD
             ADD.W   D2,D0
             NEG.W   4(A0)
             SUBQ.W  #1,10(A0)
-            MOVE.B  #SNDWALL,D7
-            TRAP    #SNDPLTN
+            CMP.W   #0,10(A0)
+            BNE     .BULWALL
+            MOVE.W  8(A0),D3
+            JSR     AGLKILL
+            BRA     .BULFACHK  
 .FARSC
             SUBQ.L  #2,A1
             BRA     .RECX
@@ -116,9 +119,13 @@ BULUPD
             MOVE.W  #BULRAD,D0
             ADD.W   D2,D0
             NEG.W   4(A0) 
-            SUBQ.W  #1,10(A0)
-            MOVE.B  #SNDWALL,D7
-            TRAP    #SNDPLTN                  
+            SUBQ.W  #1,10(A0)  
+            CMP.W   #0,10(A0)
+            BNE     .BULWALL
+            MOVE.W  8(A0),D3
+            JSR     AGLKILL
+            BRA     .BULFACHK            
+                
 .FALSC
             ADDQ.L  #2,A1
             BRA     .CHKVERT  
@@ -132,34 +139,64 @@ BULUPD
             ADD.W   D3,D1
             NEG.W   6(A0)
             SUBQ.W  #1,10(A0)
-            MOVE.B  #SNDWALL,D7
-            TRAP    #SNDPLTN
+            CMP.W   #0,10(A0)
+            BNE     .BULWALL
+            MOVE.W  8(A0),D3
+            JSR     AGLKILL
+            BRA     .BULFACHK
 .FABSC
-            SUB.L   #40,A1            
+            ;SUB.L   #40,A1            
             BRA     .RECY
 
             ; TOP COLLISION
 .COLTOP     
             SUB.L   #40,A1
             CMP.W   #$01,(A1)
-            BNE     .FATSC
+            BNE     .CHKTAN
             MOVE.W  #BULRAD,D1
             ADD.W   D3,D1         
             NEG.W   6(A0)
             SUBQ.W  #1,10(A0)
-            MOVE.B  #SNDWALL,D7
-            TRAP    #SNDPLTN
-.FATSC
-            SUB.L   #40,A1  
-
             CMP.W   #0,10(A0)
-            BNE     .CHKTAN
+            BNE     .BULWALL
             JSR     AGLKILL
-            MOVEM.W (A7)+,D0-D2
+            MOVE.W  8(A0),D3
+            JSR     AGLKILL
+            BRA     .BULFACHK
+
+.BULFACHK   CLR.W   D4              ; CONTADOR
+            MOVE.W  #TANENEM,D0
+            JSR     DMMFRSTO
+.LOOP31     CMP.L   #0,A0
+            BEQ     .CHKPLAY2
+            ADDQ.W  #1,D4
+            CMP.W   D3,D4
+            BNE     .LOOP32
+            ADDQ.W  #1,26(A0)       ; AGREGAR UNA BALA DISPONIBLE AL TANQUE SI ES EL PADRE
+            BRA     .ENDCOLEX
+.LOOP32     JSR     DMMNEXTO
+            BRA     .LOOP31
+
+.CHKPLAY2   MOVE.W  #TANPLAY,D0
+            JSR     DMMFRSTO
+            ;CMP.L   #0,A0           ; COMPROBACIÓN POR SI ACASO
+            ;BEQ     .ENDCOLEX
+            ADDQ.W  #1,26(A0)
+            BRA     .ENDCOLEX
+
+.ENDCOLEX   ; FINAL EN EL QUE LA BALA EXPLOTA POR TENER X COLISIONES CON BLOQUES         
+            MOVE.B  #SNDBULEX,D7
+            TRAP    #SNDPLTN
+            MOVEM.W (A7)+,D0-D4
             RTS 
-        
+
+
+.BULWALL    MOVE.B  #SNDWALL,D7 ; BULLET WALL SOUND
+            TRAP    #SNDPLTN           
+            
+.CHKTAN     
             ; CHECK TANK COLLISIONS
-.CHKTAN     ; ENEMY TANK COLLISIONS
+            ; ENEMY TANK COLLISIONS
             MOVEM.L A0-A1/D0-D7,-(A7)
             MOVE.W  (A0),D2                 ; PREPARE SHOT COORDINATES FOR
             MOVE.W  2(A0),D3                ; COLLISION CHECK
@@ -206,7 +243,6 @@ BULUPD
             BHI     .ALIVE
             
             CMP.W   #TANPLAY,D0
-            
             BNE.W   .BOTSNDKILL
             ; IF TANK IS NOT A BOT (PLAYER)
             MOVE.B  #SNDWAA,D7
@@ -233,6 +269,7 @@ BULUPD
 .LOOP2      CMP.L   #0,A0
             BEQ     .PLAYBULL   ; NO ENCONTRADO NINGÚN TANQUE ENEMIGO QUE SEA PADRE DE LA BALA, COMPROBAR JUGADOR
             ADDQ.W  #1,D2       ; AGREGAR 1 AL CONTADOR
+            JSR     DMMNEXTO
             CMP.W   D2,D3
             BNE     .LOOP2      ; SEGUIR CON EL BUCLE SI NO ES EL PADRE
             ADDQ.W  #1,26(A0)   ; SI ES EL PADRE LE SUMAMOS UNA BALA DISPONIBLE
@@ -248,8 +285,6 @@ BULUPD
             MOVE.L  A1,A0             
             JSR     AGLKILL 
             
-                 
-             
 .END        MOVEM.L (A7)+,A0-A1/D0-D7
             BRA     .DONE   
               
@@ -257,9 +292,9 @@ BULUPD
 .DONE       MOVE.W  D0,(A0)
             MOVE.W  D1,2(A0)
             
-            MOVEM.W (A7)+,D0-D2
+            MOVEM.W (A7)+,D0-D4
             
-            RTS
+            RTS     
             
 ; ----------------------------------------------------------
 BULPLOT
@@ -297,6 +332,10 @@ BULPLOT
             MOVEM.L (A7)+,D0-D4 
 
             RTS
+            
+
+
+
 
 
 
