@@ -27,7 +27,7 @@ BULINIT
             MOVE.W  D2,2(A0)
             ; GUARDAMOS EL ID DEL PADRE DE LA BALA
             MOVE.W  D3,8(A0)
-            ; TOQUES DE LA BALA DISPONIBLES CON LAS PAREDES EMPIEZAN SIENDO EL M¡XIMO
+            ; TOQUES DE LA BALA DISPONIBLES CON LAS PAREDES EMPIEZAN SIENDO EL M√ÅXIMO
             MOVE.W  #MAXTOUCH,10(A0)
             
             MOVE.W  #BULSPEED,4(A0)             ; hacer que bulspeed sea variable y que sea 0 o el bulspeed actual (para que se mueva en 8 direcciones)
@@ -58,7 +58,7 @@ BULUPD
             MOVE.W  #0,D2
             MOVE.W  #0,D3
             
-            ;SACAMOS LA POSICI”N RELATIVA DE X
+            ;SACAMOS LA POSICI√ìN RELATIVA DE X
             BRA .CHKX
 .NOORGX
             SUB.W   #PIESIZX,D4
@@ -68,7 +68,7 @@ BULUPD
             CMP.W   #PIESIZX,D4
             BGT     .NOORGX             
             
-            ;SACAMOS LA POSICI”N RELATIVA DE Y
+            ;SACAMOS LA POSICI√ìN RELATIVA DE Y
             BRA .CHKY
 .NOORGY
             SUB.W   #PIESIZY,D5
@@ -179,7 +179,7 @@ BULUPD
 
 .CHKPLAY2   MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            ;CMP.L   #0,A0           ; COMPROBACI”N POR SI ACASO
+            ;CMP.L   #0,A0           ; COMPROBACI√ìN POR SI ACASO
             ;BEQ     .ENDCOLEX
             ADDQ.W  #1,26(A0)
             BRA     .ENDCOLEX
@@ -242,7 +242,7 @@ BULUPD
             CMP.W   #0,24(A0)
             BHI     .ALIVE
             
-            CMP.W   #TANPLAY,D0
+            CMP.W   #TANPLAY,22(A0)
             BNE.W   .BOTSNDKILL
             ; IF TANK IS NOT A BOT (PLAYER)
             MOVE.B  #SNDWAA,D7
@@ -262,12 +262,12 @@ BULUPD
             MOVE.W  8(A0),D3    ; ALMACENAR EL FATHER ID
             MOVE.L  A0,A1        
             ; SUMARLE UNA BALA DISPONIBLE AL TANQUE
-            ; COMPROBAR SI EL TANQUE PADRE DE LA BALA ES UN BOT, RECORRER TODOS Y COMPROBAR CON CU¡L COINCIDE EL TANID
+            ; COMPROBAR SI EL TANQUE PADRE DE LA BALA ES UN BOT, RECORRER TODOS Y COMPROBAR CON CU√ÅL COINCIDE EL TANID
             MOVE.W  #TANENEM,D0 ;22(A0)
             CLR.W   D2          ; CONTADOR
             JSR     DMMFRSTO
 .LOOP2      CMP.L   #0,A0
-            BEQ     .PLAYBULL   ; NO ENCONTRADO NING⁄N TANQUE ENEMIGO QUE SEA PADRE DE LA BALA, COMPROBAR JUGADOR
+            BEQ     .PLAYBULL   ; NO ENCONTRADO NING√öN TANQUE ENEMIGO QUE SEA PADRE DE LA BALA, COMPROBAR JUGADOR
             ADDQ.W  #1,D2       ; AGREGAR 1 AL CONTADOR
             JSR     DMMNEXTO
             CMP.W   D2,D3
