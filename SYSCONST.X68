@@ -30,11 +30,13 @@ SNDBULEX    EQU     5
 
 SCRUPTN     EQU     0           ; SCREEN UPDATE TRAP NUMBER
 KBDUPTN     EQU     1           ; KEYBOARD UPDATE TRAP NUMBER
-SNDPLTN     EQU     2           ; SOUND PLAY TRAP NUMBER
+MOUUPTN     EQU     2           ; MOUSE UPDATE TRAP NUMBER
+SNDPLTN     EQU     3           ; SOUND PLAY TRAP NUMBER
 
 ; --- INTERRUPT NUMBERS ------------------------------------
 
 SCRINTN     EQU     1           ; TIMED INTERRUPT NUMBER
+
 
 
 

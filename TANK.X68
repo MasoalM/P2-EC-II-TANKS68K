@@ -33,27 +33,28 @@ TANINIT
 
             MOVE.W  D1,(A0)
             MOVE.W  D2,2(A0)
-            MOVE.W  #TANSPEED,4(A0)
-            MOVE.W  #MAXBULL,18(A0)    
-            
+
             CMP.W   #TANPLAY,D0
             BNE.W   .BOT
             
             ; IF TANK IS NOT A BOT (PLAYER)
+            MOVE.W  #PLRSPEED,4(A0)
             MOVE.L  #$00344D31,6(A0)        ; COLOR DE CONTORNO DEL TANQUE   
             MOVE.L  #$00608C59,10(A0)       ; COLOR DE RELLENO DEL TANQUE
             MOVE.W  #TANPLAY,14(A0)         ; EL TANQUE ES EL JUGADOR 
             MOVE.W  #PLRINILF,16(A0)        ; VIDA INICIAL DEL TANQUE JUGADOR
+            MOVE.W  #PLMAXBUL,18(A0)        ; MÁXIMAS BALAS DISPONIBLES PARA DISPARAR
             MOVE.W  #0,20(A0)               ; TANID DEL JUGADOR SERÁ 0
             RTS 
             
             ; ELSE (TANK IS A BOT)
-.BOT        MOVE.W  D1,(A0)
-            MOVE.W  D2,2(A0)
+.BOT
+            MOVE.W  #ENESPEED,4(A0)
             MOVE.L  #$000B2187,6(A0)  
             MOVE.L  #$00081658,10(A0)
             MOVE.W  #TANENEM,14(A0)         ; EL TANQUE ES UN BOT
             MOVE.W  #ENEINILF,16(A0)        ; VIDA INICIAL DEL TANQUE ENEMIGO
+            MOVE.W  #ENMAXBUL,18(A0)        ; MÁXIMAS BALAS DISPONIBLES PARA DISPARAR
             MOVE.W  D3,20(A0)               ; IDENTIFICADOR DEL TANQUE ENEMIGO
             RTS
             
@@ -99,13 +100,13 @@ TANUPD
             ; COMPROBAR SI ESTÁ DISPARANDO  
         
             BTST.B  #4,(KBDEDGE)            ; ESPACIO PULSADO
-            BEQ     .CONT2  
+            BEQ     .CONT2
             
             CMP.W   #0,18(A0)
             BEQ     .CONT2                  ; NO QUEDAN BALAS DISPONIBLES                  
             
-            MOVE.W  D0,D3
-            MOVE.W  D1,D4
+            MOVE.W  D0,D4
+            MOVE.W  D1,D5
                    
             LEA     BULINIT,A1
             LEA     BULUPD,A2
@@ -116,11 +117,11 @@ TANUPD
             MOVE.W  20(A0),D3
             JSR     AGLADD
                             
-            MOVE.W  D3,D0
-            MOVE.W  D4,D1
+            MOVE.W  D4,D0
+            MOVE.W  D5,D1
             SUBQ.W  #1,18(A0)               ; UNA BALA DISPONIBLE MENOS
-
-; no llega aquí siendo el jugador?
+            BRA .CONT2
+            
 .BOT2       ; ELSE (TANK IS A BOT)
             ; AI ALGORITHM (greedy por ahora para testear)
             ;MOVEM.L D0-D5,-(A7)             ; MOVEM.L D0-D3/A0-A1,-(A7)
@@ -128,6 +129,18 @@ TANUPD
             MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
             MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no haría falta (por si la velocidad en un futuro la cambiamos a variable según el tanque)
+            
+            ; -> HACER QUE EL TANQUE A VECES HAGA UN MOVIMIENTO ALEATORIO Y A VECES SE ACERQUE AL JUGADOR.
+            ; -> HACER QUE NO SE PUEDA ACERCAR AL JUGADOR A MÁS DE ? POSICIÓN
+            ; -> HACER QUE DISPARE
+            
+            ;MOVEM.L D0/A1,-(A7)
+            ;JSR     UTLRAND
+            ;AND.L   #$0000000C,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 4 (ALEATORIOS)
+            ;LEA     .POSVEC,A1
+            ;MOVE.L  (A1,D0),(A0)       ; RANDOM MOVEMENT    
+            ;MOVEM.L (A7)+,D0/A1
+            ;RTS
             
             MOVE.L  A0,A1
             MOVE.W  #TANPLAY,D0
@@ -149,7 +162,7 @@ TANUPD
 
 .NEGVELY    SUB.W   D3,D2
             BRA     .ENDALG
-.POSVELY    ADD.W   D3,D2                            
+.POSVELY    ADD.W   D3,D2           
        
 .ENDALG     MOVE.L  A1,A0
 
@@ -158,7 +171,27 @@ TANUPD
             
             MOVE.W  D1,D0
             MOVE.W  D2,D1
-            ;MOVEM.L (A7)+,D0-D5            ; MOVEM.L (A7)+,D0-D3/A0-A1
+            
+            ; DISPARO
+            MOVE.W  D0,D4
+            MOVE.W  D1,D5
+            CMP.W   #0,18(A0)
+            BEQ     .CONT2                  ; NO QUEDAN BALAS DISPONIBLES                  
+
+            LEA     BULINIT,A1
+            LEA     BULUPD,A2
+            LEA     BULPLOT,A3            
+            MOVE.W  #BULTYPE,D0
+            MOVE.W  (A0),D1                 ;MOVE.W  D3,D1
+            MOVE.W  2(A0),D2                ;MOVE.W  D4,D2
+            MOVE.W  20(A0),D3
+            JSR     AGLADD
+
+            SUBQ.W  #1,18(A0)               ; UNA BALA DISPONIBLE MENOS
+            
+            MOVE.W  D4,D0
+            MOVE.W  D5,D1
+            
 
 .CONT2
   
@@ -184,7 +217,7 @@ TANUPD
             BRA .CHKY
 .NOORGY
             SUB.W   #PIESIZY,D5
-            ADD.L  #40,A1
+            ADD.L   #40,A1
             ADD.W   #PIESIZY,D3
 .CHKY            
             CMP.W   #PIESIZX,D5
@@ -252,8 +285,8 @@ TANUPD
             ADD.W   D3,D1         
 .FATSC
             SUB.L  #40,A1          
-
-;.NOCOL
+ 
+.FINCOLS
             
             ; STORE POSITION
 .DONE       MOVE.W  D0,(A0)
@@ -261,10 +294,7 @@ TANUPD
             
             MOVEM.W (A7)+,D0-D7/A1
             RTS
-   
-
-            
-; ----------------------------------------------------------            
+                      
 TANPLOT
 ; PLOT THE TANK
 ; INPUT     : A0 POINTER TO THE INSTANCE VARIABLES
@@ -320,6 +350,10 @@ TANPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
+
+
+
 
 
 

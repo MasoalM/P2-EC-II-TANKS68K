@@ -24,14 +24,14 @@ GAMINIT
             MOVE.W  #TANENEM,D0
             MOVE.W  #SCRWIDTH-100,D1    ; ENEMIGO 1
             MOVE.W  #SCRHEIGH-100,D2
-            ADDQ.W  #1,(TANID)
-            MOVE.W  #TANID,D3
+            ADDQ.W  #1,(TANID)   ; provoca que no sean independientes los tanques enemigos ?
+            MOVE.W  (TANID),D3
             JSR     AGLADD
             
             MOVE.W  #SCRWIDTH-100,D1    ; ENEMIGO 2
             MOVE.W  #SCRHEIGH-300,D2
             ADDQ.W  #1,(TANID)
-            MOVE.W  #TANID,D3
+            MOVE.W  (TANID),D3
             JSR     AGLADD
             
             MOVEM.L (A7)+,D0-D2/A1-A3
@@ -61,6 +61,9 @@ GAMPLOT
             JSR     AGLPLOT
     
             BRA     SCOPLOT    
+
+
+
 
 
 

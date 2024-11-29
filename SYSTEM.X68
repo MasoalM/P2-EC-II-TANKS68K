@@ -17,6 +17,7 @@ SYSINIT
             
             JSR     SCRINIT
             JSR     KBDINIT
+            ;JSR     MOUINIT
             JSR     SNDINIT
             JSR     DMMINIT
             
@@ -204,6 +205,43 @@ KBDUPD
             ROXL.B  #1,D2
             DBRA.W  D3,.LOOP
             RTS
+            
+
+; ----------------------------------------------------------
+MOUINIT
+; INIT MOUSE
+; INPUT     : NONE
+; OUTPUT    : NONE
+; MODIFIES  : NONE
+; ----------------------------------------------------------
+            CLR.L   (MOUPOS)
+            CLR.W   (MOUBUT)
+            RTS
+            
+; ----------------------------------------------------------
+MOUUPD
+; INIT MOUSE
+; INPUT     : NONE
+; OUTPUT    : NONE
+; MODIFIES  : NONE
+; ----------------------------------------------------------
+
+            MOVEM.L D0-D1,-(A7)
+            MOVE.B  #61,D0
+            CLR.B   D1
+            TRAP    #15
+            MOVE.L  D1,(MOUPOS)
+            MOVE.B  (MOUBUT),D1
+            MOVE.B  D0,(MOUBUT)
+            NOT.B   D1
+            AND.B   D1,D0
+            MOVE.B  D0,(MOUEDGE)
+            MOVEM.L (A7)+,D0-D1
+            RTE
+
+
+
+
 
 
 

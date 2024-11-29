@@ -41,6 +41,7 @@ START:
 ; READ INPUT DEVICES
 
             TRAP    #KBDUPTN
+;            TRAP    #MOUUPTN
 
 ; UPDATE GAME LOGIC
     
@@ -68,6 +69,10 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
+
+
+
 
 
 
