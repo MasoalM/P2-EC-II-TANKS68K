@@ -179,8 +179,11 @@ BULUPD
 .LOOP32     JSR     DMMNEXTO
             BRA     .LOOP31
 
-.CHKPLAY2   MOVE.W  #TANPLAY,D0
+.CHKPLAY2   
+            MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
+            CMP.W   #0,D3       ; puede que falle en un futuro que las dos líneas de arriba se ejecuten ?
+            BNE     .ENDCOLEX
             ADDQ.W  #1,26(A0)
             
 .ENDCOLEX   ; FINAL EN EL QUE LA BALA EXPLOTA POR TENER X COLISIONES CON BLOQUES         
@@ -280,9 +283,11 @@ BULUPD
             BRA     .LOOP21     ; SEGUIR CON EL BUCLE YA QUE NO ES EL PADRE            
 
 
-.PLAYBULL   ; EL TANQUE PADRE DE LA BALA ES EL JUGADOR
+.PLAYBULL   ; EL TANQUE PADRE DE LA BALA ES EL JUGADOR (O HA MUERTO)
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
+            CMP.W   #0,D3       ; puede que falle en un futuro que las dos líneas de arriba se ejecuten ?
+            BNE     .ENDCOLEX
             ADDQ.W  #1,26(A0)
             
 .KILLBULL
@@ -337,6 +342,7 @@ BULPLOT
 
             RTS
             
+
 
 
 
