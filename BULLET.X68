@@ -187,14 +187,14 @@ BULUPD
             ADDQ.W  #1,26(A0)
             
 .ENDCOLEX   ; FINAL EN EL QUE LA BALA EXPLOTA POR TENER X COLISIONES CON BLOQUES         
-            MOVE.B  #SNDBULEX,D7
-            TRAP    #SNDPLTN
+            ;MOVE.B  #SNDBULEX,D7
+            ;TRAP    #SNDPLTN
             MOVEM.W (A7)+,D0-D4
             RTS 
 
 
-.BULWALL    MOVE.B  #SNDWALL,D7 ; BULLET WALL SOUND
-            TRAP    #SNDPLTN           
+.BULWALL    ;MOVE.B  #SNDWALL,D7 ; BULLET WALL SOUND
+            ;TRAP    #SNDPLTN           
             
 .CHKTAN     
             ; CHECK TANK COLLISIONS
@@ -287,7 +287,7 @@ BULUPD
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
             CMP.W   #0,D3       ; puede que falle en un futuro que las dos líneas de arriba se ejecuten ?
-            BNE     .ENDCOLEX
+            BNE     .KILLBULL
             ADDQ.W  #1,26(A0)
             
 .KILLBULL
@@ -342,6 +342,7 @@ BULPLOT
 
             RTS
             
+
 
 
 

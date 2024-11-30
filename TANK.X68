@@ -10,6 +10,7 @@
 * TANLIFE (W)             16(A0)
 * BULLEFT (W)             18(A0)
 * TANID   (W)             20(A0)            ; IDENTIFICADOR ÚNICO DE CADA TANQUE
+* TANRTFTI(W)             22(A0)            ; TANK RTF TIME (TIEMPO RESTANTE PARA QUE PUEDA VOLVER A DISPARAR)
 * INITIAL TANK X POSITION D1
 * INITIAL TANK Y POSITION D2
 * ENEMY TANK ID           D3
@@ -56,6 +57,7 @@ TANINIT
             MOVE.W  #ENEINILF,16(A0)        ; VIDA INICIAL DEL TANQUE ENEMIGO
             MOVE.W  #ENMAXBUL,18(A0)        ; MÁXIMAS BALAS DISPONIBLES PARA DISPARAR
             MOVE.W  D3,20(A0)               ; IDENTIFICADOR DEL TANQUE ENEMIGO
+            MOVE.W  #0,22(A0)               ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
             RTS
             
             ; 4 posiciones aleatorias ( modificar para que no dependa de este vector )
@@ -103,8 +105,11 @@ TANUPD
             BEQ     .CONT2
             
             CMP.W   #0,18(A0)
-            BEQ     .CONT2                  ; NO QUEDAN BALAS DISPONIBLES                  
-            
+            BEQ     .CONT2                  ; NO QUEDAN BALAS DISPONIBLES 
+
+            MOVE.B  #SNDDISP,D7             ; SONIDO DISPARO
+            TRAP    #SNDPLTN  
+
             MOVE.W  D0,D4
             MOVE.W  D1,D5
                    
@@ -132,7 +137,7 @@ TANUPD
             
             ; -> HACER QUE EL TANQUE A VECES HAGA UN MOVIMIENTO ALEATORIO Y A VECES SE ACERQUE AL JUGADOR.
             ; -> HACER QUE NO SE PUEDA ACERCAR AL JUGADOR A MÁS DE ? POSICIÓN
-            ; -> HACER QUE DISPARE
+            ; -> HACER QUE DISPARE CON UNA FRECUENCIA ASIGNADA (predecible?)
             
             ;MOVEM.L D0/A1,-(A7)
             ;JSR     UTLRAND
@@ -175,8 +180,17 @@ TANUPD
             ; DISPARO
             MOVE.W  D0,D4
             MOVE.W  D1,D5
+            
+            CMP.W   #0,22(A0)               
+            BHI     .SUBRTF                 ; ENEMIGO AÚN NO TIENE DISPONIBLE DISPARAR     
+
             CMP.W   #0,18(A0)
-            BEQ     .CONT2                  ; NO QUEDAN BALAS DISPONIBLES                  
+            BEQ     .SUBRTF                 ; NO QUEDAN BALAS DISPONIBLES           
+
+            MOVE.W  #ENEMYRTF,22(A0)        ; REINICIAR CONTADOR
+
+            MOVE.B  #SNDDISP,D7             ; SONIDO DISPARO
+            TRAP    #SNDPLTN  
 
             LEA     BULINIT,A1
             LEA     BULUPD,A2
@@ -193,8 +207,11 @@ TANUPD
             MOVE.W  D5,D1
             
 
-.CONT2
-  
+.SUBRTF
+            CMP.W   #0,22(A0)               ; PARA QUE NO PONGA NÚMEROS NEGATIVOS (puede que estas líneas no hagan falta)
+            BEQ     .CONT2
+            SUBQ.W  #1,22(A0)               ; RESTARLE 1 AL RTF DEL TANQUE
+.CONT2 
             ;INICIALIZAMOS
             LEA.L   MAPDATA,A1
             ;SUBQ.L  #2,A1
@@ -350,6 +367,8 @@ TANPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
+
 
 
 

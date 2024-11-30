@@ -52,7 +52,8 @@ SNDINIT
 .SNDKILL    DC.B    'SND/ENEMKILL.wav',0
 .SNDWAA     DC.B    'SND/WAA.wav',0
 .SNDBULEX   DC.B    'SND/BULEXP.wav',0
-.SNDLIST    DC.L    .SNDMUSIC,.SNDWALL,.SNDHIT,.SNDKILL,.SNDWAA,.SNDBULEX,0
+.SNDDISP    DC.B    'SND/DISP.wav',0
+.SNDLIST    DC.L    .SNDMUSIC,.SNDWALL,.SNDHIT,.SNDKILL,.SNDWAA,.SNDBULEX,.SNDDISP,0
             
 ; ----------------------------------------------------------
 SNDPLAY
@@ -238,6 +239,7 @@ MOUUPD
             MOVE.B  D0,(MOUEDGE)
             MOVEM.L (A7)+,D0-D1
             RTE
+
 
 
 
