@@ -244,22 +244,24 @@ TANUPD
             CMP.W   #PIESIZX,D5
             BGT     .NOORGY
             
-            
             ;CMP.L   #$00,(A1)
             ;BNE     .NOCOL
             
+            ;DERECHA : 1 
+            ;IZQUIERDA : 2
+            ;ABAJO : 3
+            ;ARRIBA : 5
+            CLR.L   D6
             
             ; CHECK HORIZONTAL COLLISIONS
             CMP.W   #PIESIZX-TANWIDTH/2,D4
-            BGE     .COLRGT
-.RECX
+            BGT     .COLRGT
             CMP.W   #TANWIDTH/2,D4            
             BLT     .COLLFT                 
             
             ; CHECK VERTICAL COLLISIONS
 .CHKVERT    CMP.W   #PIESIZY-TANHEIGH/2,D5
-            BGE     .COLBOT
-.RECY            
+            BGT     .COLBOT            
             CMP.W   #TANHEIGH/2,D5
             BLT     .COLTOP                
             BRA     .DONE   
@@ -271,9 +273,12 @@ TANUPD
             BNE     .FARSC
             MOVE.W  #PIESIZX-TANWIDTH/2,D0
             ADD.W   D2,D0
-.FARSC
             SUBQ.L  #2,A1
-            BRA     .RECX
+            BRA     .CHKVERT
+.FARSC
+            ADDQ.W  #1,D6
+            SUBQ.L  #2,A1
+            BRA     .CHKVERT
 
             ; LEFT SIDE COLLISION
 .COLLFT     
@@ -281,8 +286,11 @@ TANUPD
             CMP.W   #$01,(A1)
             BNE     .FALSC
             MOVE.W  #TANWIDTH/2,D0
-            ADD.W   D2,D0                   
+            ADD.W   D2,D0 
+            ADDQ.L  #2,A1
+            BRA     .CHKVERT                  
 .FALSC
+            ADDQ.W  #2,D6
             ADDQ.L  #2,A1
             BRA     .CHKVERT  
 
@@ -293,9 +301,51 @@ TANUPD
             BNE     .FABSC
             MOVE.W  #PIESIZY-TANHEIGH/2,D1
             ADD.W   D3,D1
+            SUB.L   #40,A1            
+            BRA     .DONE
 .FABSC
+            CMP.W   #1,D6
+            BNE     .IB
+            ADDQ.L  #2,A1
+            CMP.W   #$01,(A1)
+            BNE     .FDB
+            MOVE.W  #PIESIZY-TANHEIGH/2,D1
+            ADD.W   D3,D1
+            MOVE.W  #PIESIZX-TANWIDTH/2,D0
+            ADD.W   D2,D0
+            BTST.B  #0,(KBDVAL)
+            BEQ     .NOADVR
+            ADD.W   4(A0),D0
+.NOADVR            
+            BTST.B  #1,(KBDVAL)
+            BEQ     .FDB 
+            ADD.W   4(A0),D1
+.FDB            
+            SUBQ.L  #2,A1
+            BRA     .NNB         
+.IB            
+            CMP.W   #2,D6
+            BNE     .NNB
+            SUBQ.L  #2,A1
+            CMP.W   #$01,(A1)
+            BNE     .FIB
+            MOVE.W  #PIESIZY-TANHEIGH/2,D1
+            ADD.W   D3,D1
+            MOVE.W  #TANWIDTH/2,D0
+            ADD.W   D2,D0
+            
+            BTST.B  #2,(KBDVAL)
+            BEQ     .NOADVL
+            SUB.W   4(A0),D0
+.NOADVL            
+            BTST.B  #1,(KBDVAL)
+            BEQ     .FIB 
+            ADD.W   4(A0),D1        
+.FIB            
+            ADDQ.L  #2,A1         
+.NNB            
             SUB.L  #40,A1            
-            BRA     .RECY
+            BRA     .DONE
 
             ; TOP COLLISION
 .COLTOP     
@@ -303,12 +353,52 @@ TANUPD
             CMP.W   #$01,(A1)
             BNE     .FATSC
             MOVE.W  #TANHEIGH/2,D1
-            ADD.W   D3,D1         
-.FATSC
-            SUB.L  #40,A1          
- 
-.FINCOLS
+            ADD.W   D3,D1 
+            BRA     .DONE        
+.FATSC       
+            CMP.W   #1,D6
+            BNE     .IA
+            ADDQ.L  #2,A1
+            CMP.W   #$01,(A1)
+            BNE     .FDA
+            MOVE.W  #TANHEIGH/2,D1
+            ADD.W   D3,D1
+            MOVE.W  #PIESIZX-TANWIDTH/2,D0
+            ADD.W   D2,D0
+            BTST.B  #0,(KBDVAL)
+            BEQ     .NOADVRA
+            ADD.W   4(A0),D0
+.NOADVRA            
+            BTST.B  #3,(KBDVAL)
+            BEQ     .FDA 
+            ADD.W   4(A0),D1
+.FDA           
+            SUBQ.L  #2,A1
+            BRA     .NNA         
+.IA            
+            CMP.W   #2,D6
+            BNE     .NNA
+            SUBQ.L  #2,A1
+            CMP.W   #$01,(A1)
+            BNE     .FIA
+            MOVE.W  #TANHEIGH/2,D1
+            ADD.W   D3,D1
+            MOVE.W  #TANWIDTH/2,D0
+            ADD.W   D2,D0
             
+            BTST.B  #2,(KBDVAL)
+            BEQ     .NOADVLA
+            SUB.W   4(A0),D0
+.NOADVLA            
+            BTST.B  #3,(KBDVAL)
+            BEQ     .FIA 
+            ADD.W   4(A0),D1        
+.FIA            
+            ADDQ.L  #2,A1         
+.NNA            
+            SUB.L  #40,A1            
+            BRA     .DONE
+           
             ; STORE POSITION
 .DONE       MOVE.W  D0,(A0)
             MOVE.W  D1,2(A0)
@@ -371,6 +461,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
 
 
 
