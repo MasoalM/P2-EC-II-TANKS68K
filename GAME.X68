@@ -9,6 +9,8 @@ GAMINIT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ----------------------------------------------------------
+            
+            JSR     DMMINIT
             JSR     SCOINIT 
             
             CLR.W   (TANID)
@@ -49,6 +51,17 @@ GAMUPD
 
             JSR     AGLUPD
             
+            CMP.W   #SCOKILMX,(SCORE)
+            BLT     .CHKLOSS
+            MOVE.W  #3,(STANEXT)
+            BRA     .DONE
+.CHKLOSS            
+            CMP.W   #KILLPLYR,(PLYRDEAD)    ; SI EL JUGADOR TIENE 0 DE VIDA
+            BLT     .DONE
+            MOVE.W  #4,(STANEXT)
+            
+.DONE       RTS
+            
 ; ----------------------------------------------------------
 GAMPLOT
 ; PLOTS THE GAME
@@ -61,6 +74,7 @@ GAMPLOT
             JSR     AGLPLOT
     
             BRA     SCOPLOT    
+
 
 
 

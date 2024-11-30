@@ -46,14 +46,19 @@ SNDINIT
             BRA     .LOOP
 .DONE       MOVEM.L (A7)+,D0-D1/A0-A1   
             RTS
-.SNDMUSIC   DC.B    'SND/MUSIC.wav',0
+.SNDINTRO   DC.B    'SND/INTRO.wav',0
+.SNDINSTR   DC.B    'SND/INSTR.wav',0
 .SNDWALL    DC.B    'SND/WALL.wav',0
 .SNDHIT     DC.B    'SND/HIT.wav',0
 .SNDKILL    DC.B    'SND/ENEMKILL.wav',0
 .SNDWAA     DC.B    'SND/WAA.wav',0
 .SNDBULEX   DC.B    'SND/BULEXP.wav',0
 .SNDDISP    DC.B    'SND/DISP.wav',0
-.SNDLIST    DC.L    .SNDMUSIC,.SNDWALL,.SNDHIT,.SNDKILL,.SNDWAA,.SNDBULEX,.SNDDISP,0
+.SNDGVR1    DC.B    'SND/GOVER1.wav',0
+.SNDGVR2    DC.B    'SND/GOVER2.wav',0
+.SNDWIN     DC.B    'SND/WIN.wav',0
+            DS.W   0
+.SNDLIST    DC.L    .SNDINTRO,.SNDINSTR,.SNDWALL,.SNDHIT,.SNDKILL,.SNDWAA,.SNDBULEX,.SNDDISP,.SNDGVR1,.SNDGVR2,.SNDWIN,0
             
 ; ----------------------------------------------------------
 SNDPLAY
@@ -142,6 +147,7 @@ SCRTIM
 ; ----------------------------------------------------------
             
             ADDQ.B  #1,(SCRINTCT)
+            ADDQ.B  #1,(SCRCYCCT)
             RTE
             
 ; ----------------------------------------------------------
@@ -239,6 +245,7 @@ MOUUPD
             MOVE.B  D0,(MOUEDGE)
             MOVEM.L (A7)+,D0-D1
             RTE
+
 
 
 

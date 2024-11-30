@@ -248,11 +248,13 @@ BULUPD
             CMP.W   #TANPLAY,22(A0)
             BNE.W   .ENSNDKIL
             ; IF HIT TANK IS NOT A BOT (PLAYER)
-            MOVE.B  #SNDWAA,D7
-            TRAP    #SNDPLTN
+            MOVE.W  #KILLPLYR,(PLYRDEAD)
+            ;MOVE.B  #SNDWAA,D7
+            ;TRAP    #SNDPLTN
             JSR     AGLKILL
             BRA     .BULFINAL   
-.ENSNDKIL   ; IF TANK IS A BOT  
+.ENSNDKIL   ; IF TANK IS A BOT 
+            ADDQ.W  #1,(SCORE)  ; SUMAMOS 1 A LA PUNTUACIÓN 
             MOVE.B  #SNDKILL,D7
             TRAP    #SNDPLTN
             JSR     AGLKILL
@@ -283,7 +285,7 @@ BULUPD
             BRA     .LOOP21     ; SEGUIR CON EL BUCLE YA QUE NO ES EL PADRE            
 
 
-.PLAYBULL   ; EL TANQUE PADRE DE LA BALA ES EL JUGADOR (O HA MUERTO)
+.PLAYBULL   ; EL TANQUE PADRE DE LA BALA ES EL JUGADOR (O ES UN ENEMIGO QUE HA MUERTO)
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
             CMP.W   #0,D3       ; puede que falle en un futuro que las dos líneas de arriba se ejecuten ?
@@ -342,6 +344,7 @@ BULPLOT
 
             RTS
             
+
 
 
 

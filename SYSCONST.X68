@@ -19,13 +19,17 @@ KBDPAUSE    EQU     'P'
 
 ; --- SOUND IDENTIFIERS ------------------------------------
 
-SNDMUSIC    EQU     0
-SNDWALL     EQU     1
-SNDHIT      EQU     2
-SNDKILL     EQU     3
-SNDWAA      EQU     4
-SNDBULEX    EQU     5
-SNDDISP     EQU     6
+SNDINTRO    EQU     0
+SNDINSTR    EQU     1
+SNDWALL     EQU     2
+SNDHIT      EQU     3
+SNDKILL     EQU     4
+SNDWAA      EQU     5
+SNDBULEX    EQU     6
+SNDDISP     EQU     7
+SNDGVR1     EQU     8
+SNDGVR2     EQU     9
+SNDWIN      EQU     10
 
 ; --- TRAP NUMBERS -----------------------------------------
 
@@ -37,6 +41,7 @@ SNDPLTN     EQU     3           ; SOUND PLAY TRAP NUMBER
 ; --- INTERRUPT NUMBERS ------------------------------------
 
 SCRINTN     EQU     1           ; TIMED INTERRUPT NUMBER
+
 
 
 

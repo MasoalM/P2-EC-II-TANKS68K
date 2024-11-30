@@ -39,7 +39,8 @@ TANINIT
             BNE.W   .BOT
             
             ; IF TANK IS NOT A BOT (PLAYER)
-            MOVE.W  #PLRSPEED,4(A0)
+            MOVE.W  #PLYRALIV,(PLYRDEAD)           ; EL JUGADOR NO ESTÁ MUERTO
+            MOVE.W  #PLRSPEED,4(A0)         
             MOVE.L  #$00344D31,6(A0)        ; COLOR DE CONTORNO DEL TANQUE   
             MOVE.L  #$00608C59,10(A0)       ; COLOR DE RELLENO DEL TANQUE
             MOVE.W  #TANPLAY,14(A0)         ; EL TANQUE ES EL JUGADOR 
@@ -87,17 +88,17 @@ TANUPD
             
             BTST.B  #0,(KBDVAL)
             BEQ     .CHKLEFT
-            SUB.W   4(A0),D0  ;RESTAMOS LA DISTANCIA X
+            SUB.W   4(A0),D0  ;RESTAMOS LA VELOCIDAD AL EJE X
 .CHKLEFT    BTST.B  #2,(KBDVAL)
             BEQ     .CONT1
-            ADD.W   4(A0),D0  ;SUMAMOS LA DISTANCIA X
+            ADD.W   4(A0),D0  ;SUMAMOS LA VELOCIDAD AL EJE X
 .CONT1            
             BTST.B  #1,(KBDVAL)
             BEQ     .CHKDWN 
-            SUB.W   4(A0),D1  ;SUMAMOS LA VELOCIDAD AL EJE Y
+            SUB.W   4(A0),D1  ;RESTAMOS LA VELOCIDAD AL EJE Y
 .CHKDWN     BTST.B  #3,(KBDVAL)
             BEQ     .DISP
-            ADD.W   4(A0),D1  ;RESTAMOS LA VELOCIDAD AL EJE Y
+            ADD.W   4(A0),D1  ;SUMAMOS LA VELOCIDAD AL EJE Y
 .DISP          
             ; COMPROBAR SI ESTÁ DISPARANDO  
         
@@ -117,8 +118,8 @@ TANUPD
             LEA     BULUPD,A2
             LEA     BULPLOT,A3            
             MOVE.W  #BULTYPE,D0
-            MOVE.W  (A0),D1                 ;MOVE.W  D3,D1
-            MOVE.W  2(A0),D2                ;MOVE.W  D4,D2
+            MOVE.W  (A0),D1
+            MOVE.W  2(A0),D2
             MOVE.W  20(A0),D3
             JSR     AGLADD
                             
@@ -211,6 +212,9 @@ TANUPD
             CMP.W   #0,22(A0)               ; PARA QUE NO PONGA NÚMEROS NEGATIVOS (puede que estas líneas no hagan falta)
             BEQ     .CONT2
             SUBQ.W  #1,22(A0)               ; RESTARLE 1 AL RTF DEL TANQUE
+
+            ; COMPROBACIÓN DE LA COLISIÓN DE LOS TANQUES CON OTROS TANQUES
+
 .CONT2 
             ;INICIALIZAMOS
             LEA.L   MAPDATA,A1
@@ -367,6 +371,9 @@ TANPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
+
+
 
 
 
