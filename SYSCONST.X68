@@ -6,7 +6,7 @@
 
 SCRWIDTH    EQU     640         ; ANCHURA DE LA PANTALLA DEL JUEGO
 SCRHEIGH    EQU     480         ; ALTURA DE LA PANTALLA DEL JUEGO
-SCRFPS      EQU     50          ; SCREEN FRAMES PER SECOND, EN NUESTRO CASO 50 FPS (UNA INTERRUPCIÓN CADA 20 ms)
+SCRFPS      EQU     50          ; SCREEN FRAMES PER SECOND, EN NUESTRO CASO 50 FPS (UNA INTERRUPCIÃ“N CADA 20 ms)
 
 ; --- KEYCODES ---------------------------------------------
 
@@ -24,12 +24,11 @@ SNDINSTR    EQU     1
 SNDWALL     EQU     2
 SNDHIT      EQU     3
 SNDKILL     EQU     4
-SNDWAA      EQU     5
-SNDBULEX    EQU     6
-SNDDISP     EQU     7
-SNDGVR1     EQU     8
-SNDGVR2     EQU     9
-SNDWIN      EQU     10
+SNDBULEX    EQU     5
+SNDDISP     EQU     6
+SNDGVR1     EQU     7
+SNDGVR2     EQU     8
+SNDWIN      EQU     9
 
 ; --- TRAP NUMBERS -----------------------------------------
 
