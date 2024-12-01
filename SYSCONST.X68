@@ -6,7 +6,7 @@
 
 SCRWIDTH    EQU     640         ; ANCHURA DE LA PANTALLA DEL JUEGO
 SCRHEIGH    EQU     480         ; ALTURA DE LA PANTALLA DEL JUEGO
-SCRFPS      EQU     50          ; SCREEN FRAMES PER SECOND, EN NUESTRO CASO 50 FPS (UNA INTERRUPCIÃ“N CADA 20 ms)
+SCRFPS      EQU     50          ; SCREEN FRAMES PER SECOND, EN NUESTRO CASO 50 FPS (UNA INTERRUPCIÓN CADA 20 ms)
 
 ; --- KEYCODES ---------------------------------------------
 
@@ -40,6 +40,7 @@ SNDPLTN     EQU     3           ; SOUND PLAY TRAP NUMBER
 ; --- INTERRUPT NUMBERS ------------------------------------
 
 SCRINTN     EQU     1           ; TIMED INTERRUPT NUMBER
+
 
 
 

@@ -9,7 +9,7 @@
 * TANTYPE (W)             14(A0)
 * TANLIFE (W)             16(A0)
 * BULLEFT (W)             18(A0)
-* TANID   (W)             20(A0)            ; IDENTIFICADOR √öNICO DE CADA TANQUE
+* TANID   (W)             20(A0)            ; IDENTIFICADOR ⁄NICO DE CADA TANQUE
 * TANRTFTI(W)             22(A0)            ; TANK RTF TIME (TIEMPO RESTANTE PARA QUE PUEDA VOLVER A DISPARAR)
 * INITIAL TANK X POSITION D1
 * INITIAL TANK Y POSITION D2
@@ -26,7 +26,7 @@ TANINIT
             
             ;MOVEM.L D0/A1,-(A7)
             ;JSR     UTLRAND
-            ;AND.L   #$0000000C,D0      ; M√ÅSCARA PARA OBTENER M√öLTIPLOS DE 4 (ALEATORIOS)
+            ;AND.L   #$0000000C,D0      ; M¡SCARA PARA OBTENER M⁄LTIPLOS DE 4 (ALEATORIOS)
             ;LEA     .POSVEC,A1
             ;MOVE.L  (A1,D0),(A0)       ; INITIAL TANK POSITION X AND Y    
             ;MOVEM.L (A7)+,D0/A1
@@ -39,14 +39,14 @@ TANINIT
             BNE.W   .BOT
             
             ; IF TANK IS NOT A BOT (PLAYER)
-            MOVE.W  #PLYRALIV,(PLYRDEAD)           ; EL JUGADOR NO EST√Å MUERTO
+            MOVE.W  #PLYRALIV,(PLYRDEAD)           ; EL JUGADOR NO EST¡ MUERTO
             MOVE.W  #PLRSPEED,4(A0)         
             MOVE.L  #$00344D31,6(A0)        ; COLOR DE CONTORNO DEL TANQUE   
             MOVE.L  #$00608C59,10(A0)       ; COLOR DE RELLENO DEL TANQUE
             MOVE.W  #TANPLAY,14(A0)         ; EL TANQUE ES EL JUGADOR 
             MOVE.W  #PLRINILF,16(A0)        ; VIDA INICIAL DEL TANQUE JUGADOR
-            MOVE.W  #PLMAXBUL,18(A0)        ; M√ÅXIMAS BALAS DISPONIBLES PARA DISPARAR
-            MOVE.W  #0,20(A0)               ; TANID DEL JUGADOR SER√Å 0
+            MOVE.W  #PLMAXBUL,18(A0)        ; M¡XIMAS BALAS DISPONIBLES PARA DISPARAR
+            MOVE.W  #0,20(A0)               ; TANID DEL JUGADOR SER¡ 0
             RTS 
             
             ; ELSE (TANK IS A BOT)
@@ -56,9 +56,9 @@ TANINIT
             MOVE.L  #$00081658,10(A0)
             MOVE.W  #TANENEM,14(A0)         ; EL TANQUE ES UN BOT
             MOVE.W  #ENEINILF,16(A0)        ; VIDA INICIAL DEL TANQUE ENEMIGO
-            MOVE.W  #ENMAXBUL,18(A0)        ; M√ÅXIMAS BALAS DISPONIBLES PARA DISPARAR
+            MOVE.W  #ENMAXBUL,18(A0)        ; M¡XIMAS BALAS DISPONIBLES PARA DISPARAR
             MOVE.W  D3,20(A0)               ; IDENTIFICADOR DEL TANQUE ENEMIGO
-            MOVE.W  #0,22(A0)               ; CUANDO SEA 0 PODR√Å VOLVER A DISPARAR
+            MOVE.W  #0,22(A0)               ; CUANDO SEA 0 PODR¡ VOLVER A DISPARAR
             RTS
             
             ; 4 posiciones aleatorias ( modificar para que no dependa de este vector )
@@ -100,7 +100,7 @@ TANUPD
             BEQ     .DISP
             ADD.W   4(A0),D1  ;SUMAMOS LA VELOCIDAD AL EJE Y
 .DISP          
-            ; COMPROBAR SI EST√Å DISPARANDO  
+            ; COMPROBAR SI EST¡ DISPARANDO  
         
             BTST.B  #4,(KBDEDGE)            ; ESPACIO PULSADO
             BEQ     .CONT2
@@ -134,15 +134,15 @@ TANUPD
             
             MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
-            MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no har√≠a falta (por si la velocidad en un futuro la cambiamos a variable seg√∫n el tanque)
+            MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no harÌa falta (por si la velocidad en un futuro la cambiamos a variable seg˙n el tanque)
             
             ; -> HACER QUE EL TANQUE A VECES HAGA UN MOVIMIENTO ALEATORIO Y A VECES SE ACERQUE AL JUGADOR.
-            ; -> HACER QUE NO SE PUEDA ACERCAR AL JUGADOR A M√ÅS DE ? POSICI√ìN
+            ; -> HACER QUE NO SE PUEDA ACERCAR AL JUGADOR A M¡S DE ? POSICI”N
             ; -> HACER QUE DISPARE CON UNA FRECUENCIA ASIGNADA (predecible?)
             
             ;MOVEM.L D0/A1,-(A7)
             ;JSR     UTLRAND
-            ;AND.L   #$0000000C,D0      ; M√ÅSCARA PARA OBTENER M√öLTIPLOS DE 4 (ALEATORIOS)
+            ;AND.L   #$0000000C,D0      ; M¡SCARA PARA OBTENER M⁄LTIPLOS DE 4 (ALEATORIOS)
             ;LEA     .POSVEC,A1
             ;MOVE.L  (A1,D0),(A0)       ; RANDOM MOVEMENT    
             ;MOVEM.L (A7)+,D0/A1
@@ -183,7 +183,7 @@ TANUPD
             MOVE.W  D1,D5
             
             CMP.W   #0,22(A0)               
-            BHI     .SUBRTF                 ; ENEMIGO A√öN NO TIENE DISPONIBLE DISPARAR     
+            BHI     .SUBRTF                 ; ENEMIGO A⁄N NO TIENE DISPONIBLE DISPARAR     
 
             CMP.W   #0,18(A0)
             BEQ     .SUBRTF                 ; NO QUEDAN BALAS DISPONIBLES           
@@ -209,40 +209,18 @@ TANUPD
             
 
 .SUBRTF
-            CMP.W   #0,22(A0)               ; PARA QUE NO PONGA N√öMEROS NEGATIVOS (puede que estas l√≠neas no hagan falta)
+            CMP.W   #0,22(A0)               ; PARA QUE NO PONGA N⁄MEROS NEGATIVOS (puede que estas lÌneas no hagan falta)
             BEQ     .CONT2
             SUBQ.W  #1,22(A0)               ; RESTARLE 1 AL RTF DEL TANQUE
 
-            ; COMPROBACI√ìN DE LA COLISI√ìN DE LOS TANQUES CON OTROS TANQUES
+            ; COMPROBACI”N DE LA COLISI”N DE LOS TANQUES CON OTROS TANQUES
 
 .CONT2 
             ;INICIALIZAMOS
             LEA.L   MAPDATA,A1
             ;SUBQ.L  #2,A1
-            MOVE.W  D0,D4
-            MOVE.W  D1,D5
-            MOVE.W  #0,D2
-            MOVE.W  #0,D3
-            
-            ;SACAMOS LA POSICI√ìN RELATIVA DE X
-            BRA .CHKX
-.NOORGX
-            SUB.W   #PIESIZX,D4
-            ADDQ.L  #2,A1
-            ADD.W   #PIESIZX,D2
-.CHKX            
-            CMP.W   #PIESIZX,D4
-            BGT     .NOORGX             
-            
-            ;SACAMOS LA POSICI√ìN RELATIVA DE Y
-            BRA .CHKY
-.NOORGY
-            SUB.W   #PIESIZY,D5
-            ADD.L   #40,A1
-            ADD.W   #PIESIZY,D3
-.CHKY            
-            CMP.W   #PIESIZX,D5
-            BGT     .NOORGY
+
+            JSR     RELPOS
             
             ;CMP.L   #$00,(A1)
             ;BNE     .NOCOL
@@ -405,75 +383,6 @@ TANUPD
             
             MOVEM.W (A7)+,D0-D7/A1
             RTS
-
-; ANTIGUA COMRPOBACI√ìN DEL TANQUE
-; CHECK HORIZONTAL COLLISIONS
-;            CMP.W   #PIESIZX-TANWIDTH/2,D4
-;            BGE     .COLRGT
-;.RECX
-;            CMP.W   #TANWIDTH/2,D4
-;            BLT     .COLLFT
-
-;            ; CHECK VERTICAL COLLISIONS
-;.CHKVERT    CMP.W   #PIESIZY-TANHEIGH/2,D5
-;            BGE     .COLBOT
-;.RECY
-;            CMP.W   #TANHEIGH/2,D5
-;            BLT     .COLTOP
-;            BRA     .DONE
-
-;            ; RIGHT SIDE COLLISION
-;.COLRGT
-;            ADDQ.L  #2,A1
-;            CMP.W   #$01,(A1)
-;            BNE     .FARSC
-;            MOVE.W  #PIESIZX-TANWIDTH/2,D0
-;            ADD.W   D2,D0
-;.FARSC
-;            SUBQ.L  #2,A1
-;            BRA     .RECX
-
-;            ; LEFT SIDE COLLISION
-;.COLLFT
-;            SUBQ.L  #2,A1
-;            CMP.W   #$01,(A1)
-;            BNE     .FALSC
-;            MOVE.W  #TANWIDTH/2,D0
-;            ADD.W   D2,D0
-;.FALSC
-;            ADDQ.L  #2,A1
-;            BRA     .CHKVERT
-;
-;            ; BOTTOM COLLISION
-;.COLBOT
-;            ADD.L   #40,A1
-;            CMP.W   #$01,(A1)
-;            BNE     .FABSC
-;            MOVE.W  #PIESIZY-TANHEIGH/2,D1
-;            ADD.W   D3,D1
-;.FABSC
-;            SUB.L  #40,A1
-;            BRA     .RECY
-;
-;            ; TOP COLLISION
-;.COLTOP
-;            SUB.L   #40,A1
-;            CMP.W   #$01,(A1)
-;            BNE     .FATSC
-;            MOVE.W  #TANHEIGH/2,D1
-;            ADD.W   D3,D1
-;.FATSC
-;            SUB.L  #40,A1
- 
-;.FINCOLS
-
-;            ; STORE POSITION
-;.DONE       MOVE.W  D0,(A0)
-;            MOVE.W  D1,2(A0)
-
-;            MOVEM.W (A7)+,D0-D7/A1
-;            RTS
-;Colisiones bloques antiguas
                       
 TANPLOT
 ; PLOT THE TANK
@@ -530,6 +439,8 @@ TANPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
+
 
 
 

@@ -12,31 +12,10 @@ GAMINIT
             
             JSR     DMMINIT
             JSR     SCOINIT 
+            JSR     LVL1INIT
             
-            CLR.W   (TANID)
-            MOVEM.L D0-D2/A1-A3,-(A7)
-            LEA     TANINIT,A1
-            LEA     TANUPD,A2
-            LEA     TANPLOT,A3
-            MOVE.W  #TANPLAY,D0   ; AGENTE TIPO 2 (TANQUE JUGADOR)
-            MOVE.W  #PLRINITX,D1
-            MOVE.W  #PLRINITY,D2
-            JSR     AGLADD
+            MOVE.W  #0,(LVLNUM)
 
-            MOVE.W  #TANENEM,D0
-            MOVE.W  #SCRWIDTH-100,D1    ; ENEMIGO 1
-            MOVE.W  #SCRHEIGH-100,D2
-            ADDQ.W  #1,(TANID)   ; provoca que no sean independientes los tanques enemigos ?
-            MOVE.W  (TANID),D3
-            JSR     AGLADD
-            
-            MOVE.W  #SCRWIDTH-100,D1    ; ENEMIGO 2
-            MOVE.W  #SCRHEIGH-300,D2
-            ADDQ.W  #1,(TANID)
-            MOVE.W  (TANID),D3
-            JSR     AGLADD
-            
-            MOVEM.L (A7)+,D0-D2/A1-A3
             RTS           
             
             ; Seguir inicializando tanques bot (tipo 3)
@@ -51,6 +30,18 @@ GAMUPD
 
             JSR     AGLUPD
             
+            ; RECORDAR QUE EL NIVEL ES CONCEPTUALMENTE UN NÚMERO MAYOR QUE EN EL CÓDIGO (EL CÓDIGO DEL NIVEL 1 ES 0, DEL NIVEL 2 ES 1, ...)
+            ; ESTO ES DEBIDO A QUE MULTIPLICAMOS EL NIVEL POR LO QUE OCUPA CADA MAPA (EL MAPA DEL NIVEL 1 TIENE QUE ESTAR EN LA POSICIÓN 0)
+            
+            CMP.W   #1,(LVLNUM) ; COMPROBAR SI YA ESTAMOS EN EL NIVEL 2
+            BGE     .CHKWIN     
+            CMP.W   #ENEMLVL1,(SCORE)   ; ESTAMOS EN EL NIVEL 1, COMPROBAR SI LO HEMOS ACABADO
+            BLT     .CHKLOSS
+            ADDQ.W  #1,(LVLNUM)
+            JSR     LVL2INIT
+            
+            BRA     .DONE
+.CHKWIN            
             CMP.W   #SCOKILMX,(SCORE)
             BLT     .CHKLOSS
             MOVE.W  #3,(STANEXT)
@@ -74,6 +65,11 @@ GAMPLOT
             JSR     AGLPLOT
     
             BRA     SCOPLOT    
+
+
+
+
+
 
 
 

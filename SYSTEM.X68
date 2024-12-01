@@ -13,7 +13,7 @@ SYSINIT
             MOVE.L  #SCRPLOT,($80+SCRUPTN*4)
             MOVE.L  #KBDUPD,($80+KBDUPTN*4) 
             MOVE.L  #SNDPLAY,($80+SNDPLTN*4)
-            MOVE.L  #SCRTIM,($60+SCRINTN*4) ; INTERRUPCI√ìN DE TIPO 1
+            MOVE.L  #SCRTIM,($60+SCRINTN*4) ; INTERRUPCI”N DE TIPO 1
             
             JSR     SCRINIT
             JSR     KBDINIT
@@ -37,7 +37,7 @@ SNDINIT
 
             CLR.B   D1
             LEA     .SNDLIST,A0
-.LOOP       MOVE.L  (A0)+,D0    ; SI HICIESEMOS MOVEA (PASAR DE A0 A A1 DIRECTAMENTE) NO ACTUALIZAR√çA EL FLAG Z
+.LOOP       MOVE.L  (A0)+,D0    ; SI HICIESEMOS MOVEA (PASAR DE A0 A A1 DIRECTAMENTE) NO ACTUALIZARÕA EL FLAG Z
             BEQ     .DONE
             MOVE.L  D0,A1
             MOVE.B  #71,D0
@@ -244,6 +244,7 @@ MOUUPD
             MOVE.B  D0,(MOUEDGE)
             MOVEM.L (A7)+,D0-D1
             RTE
+
 
 
 

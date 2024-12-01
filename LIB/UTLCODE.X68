@@ -127,7 +127,7 @@ RELPOS
             MOVE.W  #0,D2
             MOVE.W  #0,D3
             
-            ;SACAMOS LA POSICIï¿½N RELATIVA DE X
+            ;SACAMOS LA POSICIÓN RELATIVA DE X
             BRA .CHKX
 .NOORGX
             SUB.W   #PIESIZX,D4
@@ -137,7 +137,7 @@ RELPOS
             CMP.W   #PIESIZX,D4
             BGT     .NOORGX             
             
-            ;SACAMOS LA POSICIï¿½N RELATIVA DE Y
+            ;SACAMOS LA POSICIÓN RELATIVA DE Y
             BRA .CHKY
 .NOORGY
             SUB.W   #PIESIZY,D5

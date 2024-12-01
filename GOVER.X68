@@ -9,8 +9,8 @@ GOVINIT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            MOVE.B  #SNDGVR1,D7
-            TRAP    #SNDPLTN
+            ;MOVE.B  #SNDGVR1,D7
+            ;TRAP    #SNDPLTN
             RTS
 
 ; ------------------------------------------------------------------------------
@@ -21,6 +21,8 @@ GOVUPD
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
             
+            MOVE.B  #SNDGVR1,D7
+            TRAP    #SNDPLTN
             BTST.B  #4,(KBDEDGE)
             BEQ     .CONT
             CLR.W   (STANEXT)
@@ -60,6 +62,7 @@ GOVPLOT
 .TXT1       DC.B    'GAME OVER :(',0
 .TXT2       DC.B    '¡PRESIONA LA BARRA ESPACIADORA PARA CONTINUAR!',0
             DS.W    0
+
 
 
 
