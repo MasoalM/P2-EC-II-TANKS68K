@@ -107,6 +107,49 @@ UTLCHCOL
             RTS
             
 ; -----------------------------------------------------------------------------
+RELPOS
+; PROVIDES THE RELATIVE POSITION
+; INPUT    - DO.W : POSITION X OF THE AGENT
+;            D1.W : POSITION Y OF THE AGENT
+;            A1.L : ADDRESS OF THE MAP 
+; OUTPUT   - D0.W : POSITION X OF THE AGENT
+;            D1.W : POSITION Y OF THE AGENT
+;            D2.W : DISTANCE BETWEEN 0 AND THE BEGINNING OF THE BLOCK WHERE IS THE TANK (X)
+;            D3.W : DISTANCE BETWEEN 0 AND THE BEGINNING OF THE BLOCK WHERE IS THE TANK (Y)
+;            D4.W : RELATIVE POSITION OF THE TANK IN X
+;            D5.W : RELATIVE POSITION OF THE TANK IN Y
+;            A1.L : POSITION OF THE TANK AT THE MAP (A1)
+; MODIFIES - A1.L : THINGS HAPPEND
+; -----------------------------------------------------------------------------
+
+            MOVE.W  D0,D4
+            MOVE.W  D1,D5
+            MOVE.W  #0,D2
+            MOVE.W  #0,D3
+            
+            ;SACAMOS LA POSICI�N RELATIVA DE X
+            BRA .CHKX
+.NOORGX
+            SUB.W   #PIESIZX,D4
+            ADDQ.L  #2,A1
+            ADD.W   #PIESIZX,D2
+.CHKX            
+            CMP.W   #PIESIZX,D4
+            BGT     .NOORGX             
+            
+            ;SACAMOS LA POSICI�N RELATIVA DE Y
+            BRA .CHKY
+.NOORGY
+            SUB.W   #PIESIZY,D5
+            ADD.L   #40,A1
+            ADD.W   #PIESIZY,D3
+.CHKY            
+            CMP.W   #PIESIZX,D5
+            BGT     .NOORGY
+
+            RTS
+            
+; -----------------------------------------------------------------------------
 UTLRAND
 ; PROVIDES A PSEUDO-RANDOM BYTE
 ; INPUT    - NONE
@@ -156,6 +199,7 @@ UTLRAND
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
             
+
 
 
 
