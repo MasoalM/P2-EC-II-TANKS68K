@@ -22,14 +22,61 @@ BULINIT
             ; PARA QUE LA BALA NO APAREZCA ENCIMA DEL TANQUE (modificar para que sea hacia donde apunta)
             ADD.W   #20,D1
             ADD.W   #20,D2
+
+            MOVEM.W D0-D5,-(A7)
+            
+            MOVE.W  D1,D0
+            MOVE.W  D2,D1
+            LEA.L   MAPDATA,A1
+            JSR     RELPOS
+            MOVE.W  D1,D2
+            MOVE.W  D0,D1
+            
             ; BALA SPAWNEA DONDE EL TANQUE QUE LA GENERA
             MOVE.W  D1,(A0) 
             MOVE.W  D2,2(A0)
+            
+            MOVEM.W (A7)+,D0-D5
+            
             ; GUARDAMOS EL ID DEL PADRE DE LA BALA
             MOVE.W  D3,8(A0)
-            ; TOQUES DE LA BALA DISPONIBLES CON LAS PAREDES EMPIEZAN SIENDO EL MÁXIMO
-            MOVE.W  #MAXTOUCH,10(A0)
             
+            CMP.W   #$01,(A1)
+            BNE     .SEGBULL
+            MOVEM.W D4-D5,-(A7)
+            MOVE.W  8(A0),D4
+            MOVE.L  A0,A1
+            
+            MOVE.W  #TANPLAY,D0
+            JSR     DMMFRSTO
+            CMP.W   28(A0),D4
+            BNE     .NOTPLAYER
+            ADDQ.W  #1,26(A0)
+            MOVE.L  A1,A0
+            JSR     AGLKILL
+            MOVEM.W (A7)+,D4-D5
+            RTS
+.NOTPLAYER
+            MOVE.W  #TANENEM,D0
+            JSR     DMMFRSTO
+.LOOP4      CMP.W   28(A0),D4
+            BNE     .OTHERENE
+            ADDQ.W  #1,26(A0)
+            MOVE.L  A1,A0
+            JSR     AGLKILL
+            MOVEM.W (A7)+,D4-D5
+            RTS
+.OTHERENE
+
+            JSR     DMMNEXT
+            BRA     .LOOP4      
+            
+.SEGBULL            
+            
+            
+            
+            ; TOQUES DE LA BALA DISPONIBLES CON LAS PAREDES EMPIEZAN SIENDO EL M?XIMO
+            MOVE.W  #MAXTOUCH,10(A0)
             MOVE.W  #BULSPEED,4(A0)             ; hacer que bulspeed sea variable y que sea 0 o el bulspeed actual (para que se mueva en 8 direcciones)
             MOVE.W  #BULSPEED,6(A0)
             RTS
@@ -58,7 +105,7 @@ BULUPD
             MOVE.W  #0,D2
             MOVE.W  #0,D3
             
-            ;SACAMOS LA POSICIÓN RELATIVA DE X
+            ;SACAMOS LA POSICI?N RELATIVA DE X
             BRA .CHKX
 .NOORGX
             SUB.W   #PIESIZX,D4
@@ -68,7 +115,7 @@ BULUPD
             CMP.W   #PIESIZX,D4
             BGT     .NOORGX             
             
-            ;SACAMOS LA POSICIÓN RELATIVA DE Y
+            ;SACAMOS LA POSICI?N RELATIVA DE Y
             BRA .CHKY
 .NOORGY
             SUB.W   #PIESIZY,D5
@@ -174,7 +221,7 @@ BULUPD
             ADDQ.W  #1,D4
             CMP.W   D3,D4
             BNE     .LOOP32
-            ADDQ.W  #1,26(A0)       ; AGREGAR UNA BALA DISPONIBLE AL TANQUE SI ES EL PADRE ; no llega aquí?
+            ADDQ.W  #1,26(A0)       ; AGREGAR UNA BALA DISPONIBLE AL TANQUE SI ES EL PADRE ; no llega aqu??
             BRA     .ENDCOLEX
 .LOOP32     JSR     DMMNEXTO
             BRA     .LOOP31
@@ -182,7 +229,7 @@ BULUPD
 .CHKPLAY2   
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            CMP.W   #0,D3       ; puede que falle en un futuro que las dos líneas de arriba se ejecuten ?
+            CMP.W   #0,D3       ; puede que falle en un futuro que las dos l?neas de arriba se ejecuten ?
             BNE     .ENDCOLEX
             ADDQ.W  #1,26(A0)
             
@@ -237,7 +284,7 @@ BULUPD
             BNE     .EXPLO
             BRA     .END
 
-            ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET)  ; agregar partículas?         
+            ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET)  ; agregar part?culas?         
 .EXPLO          
             SUB.W   #BULDMG,24(A0)
             
@@ -254,7 +301,7 @@ BULUPD
             JSR     AGLKILL
             BRA     .BULFINAL   
 .ENSNDKIL   ; IF TANK IS A BOT 
-            ADDQ.W  #1,(SCORE)  ; SUMAMOS 1 A LA PUNTUACIÓN 
+            ADDQ.W  #1,(SCORE)  ; SUMAMOS 1 A LA PUNTUACI?N 
             MOVE.B  #SNDKILL,D7
             TRAP    #SNDPLTN
             JSR     AGLKILL
@@ -268,12 +315,12 @@ BULUPD
             ;MOVE.L  A0,A1   
      
             ; SUMARLE UNA BALA DISPONIBLE AL TANQUE
-            ; COMPROBAR SI EL TANQUE PADRE DE LA BALA ES UN BOT, RECORRER TODOS Y COMPROBAR CON CUÁL COINCIDE EL TANID
+            ; COMPROBAR SI EL TANQUE PADRE DE LA BALA ES UN BOT, RECORRER TODOS Y COMPROBAR CON CU?L COINCIDE EL TANID
             MOVE.W  #TANENEM,D0
             CLR.W   D2          ; CONTADOR
             JSR     DMMFRSTO
 .LOOP21     CMP.L   #0,A0
-            BEQ     .PLAYBULL   ; NO ENCONTRADO NINGÚN TANQUE ENEMIGO QUE SEA PADRE DE LA BALA, COMPROBAR JUGADOR
+            BEQ     .PLAYBULL   ; NO ENCONTRADO NING?N TANQUE ENEMIGO QUE SEA PADRE DE LA BALA, COMPROBAR JUGADOR
             ADDQ.W  #1,D2       ; AGREGAR 1 AL CONTADOR
             
             CMP.W   D2,D3
@@ -288,7 +335,7 @@ BULUPD
 .PLAYBULL   ; EL TANQUE PADRE DE LA BALA ES EL JUGADOR (O ES UN ENEMIGO QUE HA MUERTO)
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            CMP.W   #0,D3       ; puede que falle en un futuro que las dos líneas de arriba se ejecuten ?
+            CMP.W   #0,D3       ; puede que falle en un futuro que las dos l?neas de arriba se ejecuten ?
             BNE     .KILLBULL
             ADDQ.W  #1,26(A0)
             
@@ -344,6 +391,14 @@ BULPLOT
 
             RTS
             
+
+
+
+
+
+
+
+
 
 
 
