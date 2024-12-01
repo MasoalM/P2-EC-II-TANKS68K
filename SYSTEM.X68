@@ -13,7 +13,7 @@ SYSINIT
             MOVE.L  #SCRPLOT,($80+SCRUPTN*4)
             MOVE.L  #KBDUPD,($80+KBDUPTN*4) 
             MOVE.L  #SNDPLAY,($80+SNDPLTN*4)
-            MOVE.L  #SCRTIM,($60+SCRINTN*4) ; INTERRUPCI”N DE TIPO 1
+            MOVE.L  #SCRTIM,($60+SCRINTN*4) ; INTERRUPCI√ìN DE TIPO 1
             
             JSR     SCRINIT
             JSR     KBDINIT
@@ -37,7 +37,7 @@ SNDINIT
 
             CLR.B   D1
             LEA     .SNDLIST,A0
-.LOOP       MOVE.L  (A0)+,D0    ; SI HICIESEMOS MOVEA (PASAR DE A0 A A1 DIRECTAMENTE) NO ACTUALIZARÕA EL FLAG Z
+.LOOP       MOVE.L  (A0)+,D0    ; SI HICIESEMOS MOVEA (PASAR DE A0 A A1 DIRECTAMENTE) NO ACTUALIZAR√çA EL FLAG Z
             BEQ     .DONE
             MOVE.L  D0,A1
             MOVE.B  #71,D0
@@ -51,14 +51,13 @@ SNDINIT
 .SNDWALL    DC.B    'SND/WALL.wav',0
 .SNDHIT     DC.B    'SND/HIT.wav',0
 .SNDKILL    DC.B    'SND/ENEMKILL.wav',0
-.SNDWAA     DC.B    'SND/WAA.wav',0
 .SNDBULEX   DC.B    'SND/BULEXP.wav',0
 .SNDDISP    DC.B    'SND/DISP.wav',0
 .SNDGVR1    DC.B    'SND/GOVER1.wav',0
 .SNDGVR2    DC.B    'SND/GOVER2.wav',0
 .SNDWIN     DC.B    'SND/WIN.wav',0
             DS.W   0
-.SNDLIST    DC.L    .SNDINTRO,.SNDINSTR,.SNDWALL,.SNDHIT,.SNDKILL,.SNDWAA,.SNDBULEX,.SNDDISP,.SNDGVR1,.SNDGVR2,.SNDWIN,0
+.SNDLIST    DC.L    .SNDINTRO,.SNDINSTR,.SNDWALL,.SNDHIT,.SNDKILL,.SNDBULEX,.SNDDISP,.SNDGVR1,.SNDGVR2,.SNDWIN,0
             
 ; ----------------------------------------------------------
 SNDPLAY
