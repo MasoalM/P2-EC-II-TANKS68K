@@ -33,6 +33,9 @@ MAPPLOT
             MOVEM.L D0/A0,-(A7)
             
             LEA.L   MAPDATA, A0
+            MOVE.W  (LVLNUM),D6
+            MULU.W  #SIZLVL,D6
+            ADD.L   D6,A0
                         
             ;INICIO BUCLE MATRICIAL DE PINTURA
             MOVE.W #MAPPIEY-1, D6
@@ -40,9 +43,9 @@ MAPPLOT
             CLR.L   D3
             CLR.L   D4
 .LINEY      ;PARA TODAS LAS FILAS
-            MOVE.W #MAPPIEX-1, D5
+            MOVE.W  #MAPPIEX-1, D5
             MOVE.W  #-PIESIZX, D7
-            ADD.W  #PIESIZY,D2
+            ADD.W   #PIESIZY,D2
 .LINEX      ;PINTAMOS SU CUADRADO
 
             ;MIRAMOS SI ES PARED O SUELO
@@ -104,6 +107,8 @@ MAPPLOT
             MOVEM.L (A7)+,D0/A0
 
             RTS
+
+
 
 
 
