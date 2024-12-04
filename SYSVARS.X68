@@ -19,6 +19,11 @@ MOUPOS      DS.B    1       ; MOUSE POSITION
 SCRINTCT    DS.B    1       ; INTERRUPT COUNTER
 SCRCYCCT    DS.B    1       ; CYCLE COUNTER
             DS.W    0
+            
+; --- FILE RELATED VARIABLES -------------------------------
+
+FILEDATA    DS.B    1024
+
 
 
 

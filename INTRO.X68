@@ -44,6 +44,10 @@ ISCPLOT
 ; ------------------------------------------------------------------------------
             MOVEM.L D0-D1/A0,-(A7)
             
+            LEA     FILEDATA,A0             ; DESTINATION ADDRESS
+            LEA     .FILENAME,A1            ; FILE NAME
+            JSR     FILLOAD
+            
             CLR.L   D1                      ; DEFINIR COLOR NEGRO
             MOVE.B  #81,D0
             TRAP    #15
@@ -65,6 +69,8 @@ ISCPLOT
 .TXT1       DC.B    'TANKS 68K',0
 .TXT2       DC.B    '¡PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR!',0
             DS.W    0
+
+
 
 
 
