@@ -9,8 +9,50 @@ ISCINIT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            CLR.W   (ISCTIMER)  
-            RTS
+            CLR.W   (ISCTIMER) 
+            MOVEM.L D0-D5/A0-A1,-(A7)
+            
+            LEA     FILEDATA,A0            ; DESTINATION ADDRESS
+            LEA     .FILENAME,A1            ; FILE NAME
+            JSR     FILLOAD
+            
+            MOVE.L  #-1,D1
+            MOVE.L  #-1,D2
+            MOVE.L  #0,D3
+            MOVE.L  #0,D4
+
+
+.FILA
+            MOVE.L  #-1,D1
+            MOVE.L  #0,D3
+            ADDQ.L  #1,D2
+            ADDQ.L  #1,D4
+.COLUMNA
+
+            MOVE.L  D1,D5
+            MOVE.L  (A0)+,D1
+            MOVE.B  #80,D0                  ; MOVE.B #81,D0 falla porque pinta un cuadrado blanco
+            TRAP    #15
+            MOVE.L  D5,D1
+
+            ADDQ.L  #1,D1
+            ADDQ.L  #1,D3
+
+
+            MOVE.B  #84,D0
+            TRAP    #15
+
+            CMP.L   #260,D3
+            BLT     .COLUMNA
+            CMP.L   #162,D4
+            BLT     .FILA
+            
+            MOVEM.L (A7)+,D0-D5/A0-A1
+             
+            RTS  
+
+.FILENAME   DC.B    'salida3.txt',0
+            DS.W    0                     
 
 ; ------------------------------------------------------------------------------
 ISCUPD
@@ -43,15 +85,7 @@ ISCPLOT
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
             MOVEM.L D0-D1/A0,-(A7)
-            
-            LEA     FILEDATA,A0             ; DESTINATION ADDRESS
-            LEA     .FILENAME,A1            ; FILE NAME
-            JSR     FILLOAD
-            
-            CLR.L   D1                      ; DEFINIR COLOR NEGRO
-            MOVE.B  #81,D0
-            TRAP    #15
-            
+             
             LEA     .TXT1,A0
             MOVE.B  #10,D0
             JSR     UTLPRINT
@@ -69,6 +103,11 @@ ISCPLOT
 .TXT1       DC.B    'TANKS 68K',0
 .TXT2       DC.B    '¡PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR!',0
             DS.W    0
+           
+
+
+
+
 
 
 

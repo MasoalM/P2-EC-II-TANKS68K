@@ -76,6 +76,7 @@ STAEMPTY
 
 
 
+
 *~Font name~Fixedsys~
 *~Font size~24~
 *~Tab type~0~

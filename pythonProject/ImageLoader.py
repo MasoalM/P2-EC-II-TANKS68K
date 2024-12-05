@@ -2,7 +2,7 @@ from PIL import Image
 import numpy as np
 
 # Cargar la imagen
-ruta_imagen = "D:/CARRERA/imagenTanques.jpg"
+ruta_imagen = "D:/CARRERA/Tercer año - Curso 24_25/download.jpeg"
 imagen = Image.open(ruta_imagen).convert("RGB")  # Convertir a RGB si no lo está
 
 # Convertir la imagen a un array NumPy
@@ -18,9 +18,7 @@ array_hex = np.apply_along_axis(
 )
 
 # Guardar en un archivo de texto
-ruta_txt = "salida.txt"
+ruta_txt = "salida3.txt"
 with open(ruta_txt, "w") as archivo:
     for fila in array_hex:
-        archivo.write(" ".join(fila) + "\n")
-
-print(f"Imagen exportada a {ruta_txt}")
+        archivo.write("".join(fila))

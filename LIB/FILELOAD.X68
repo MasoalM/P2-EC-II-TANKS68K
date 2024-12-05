@@ -20,7 +20,7 @@ FILLOAD
 ;            FOR TEXT-FILES IF THE TEXT IS TO BE PRINTED. FOR OTHER USES, IT
 ;            CAN BE REMOVED.
 ; ------------------------------------------------------------------------------
-            MOVEM.L D0-D2/A1,-(A7)          ; SAVE REGISTERS
+            MOVEM.L D0-D3/A1,-(A7)          ; SAVE REGISTERS
             ; CLOSE ALL FILES
             MOVE.B  #50,D0
             TRAP    #15
@@ -30,20 +30,53 @@ FILLOAD
             ; READ DATA
             MOVE.L  A0,A1                   ; A1 MUST BE THE BUFFER ADDRESS
 .LOOP       MOVE.B  #53,D0                  ; READ DATA TASK
-            MOVE.L  #1,D2                   ; BYTES TO READ (ONE BY ONE)
+            MOVE.L  #1,D2                   ; BYTES TO READ
             TRAP    #15
+            
+            MOVE.B  (A1),D3 
+            CMP.B   #$41,D3
+            BLO     .NUMBER
+            SUB.B   #$37,D3
+            BRA     .LETTER
+.NUMBER                
+            SUB.B   #$30,D3                  ; RESTAR CÓDIGO ASCII DE 0 EN HEXADECIMAL
+           
+.LETTER     ; DESPLAZAR 4 BITS A LA IZQUIERDA       
+            ASL.B   #4,D3
+            MOVE.B  D3,(A1) 
+     
             ADD.L   D2,A1                   ; ADVANCE POINTER
+            MOVE.B  #53,D0                  ; READ DATA TASK
+            MOVE.L  #1,D2                   ; BYTES TO READ
+            TRAP    #15
+            
+            MOVE.B  (A1),D3
+            CMP.B   #$41,D3
+            BLO     .NUMBER2
+            SUB.B   #$37,D3
+            BRA     .LETTER2
+.NUMBER2                 
+            SUB.B   #$30,D3
+.LETTER2            
+            CLR.B   (A1)
+            SUB.L   D2,A1
+            ADD.B   D5,(A1)
+            
+            ;MOVE.B  (A1),D3     ; debug
+            
+            ADD.L   D2,A1                   ; ADVANCE POINTER
+
+
             TST.B   D0                      ; END OF FILE OR ERROR?
             BEQ     .LOOP                   ; NO: READ MORE
             CLR.B   (A1)                    ; PUT A ZERO-TERMINATOR.
             ; CLOSE THE FILE
             MOVE.B  #56,D0
             TRAP    #15
-            MOVEM.L (A7)+,D0-D2/A1          ; RESTORE REGISTERS
+            MOVEM.L (A7)+,D0-D3/A1          ; RESTORE REGISTERS
             RTS
+    
 
-.FILENAME   DC.B    'imagenTanques.txt',0
-            DS.W    0
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~

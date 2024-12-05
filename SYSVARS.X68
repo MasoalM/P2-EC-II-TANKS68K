@@ -22,7 +22,9 @@ SCRCYCCT    DS.B    1       ; CYCLE COUNTER
             
 ; --- FILE RELATED VARIABLES -------------------------------
 
-FILEDATA    DS.B    1024
+FILEDATA    DS.L    400000
+
+
 
 
 
