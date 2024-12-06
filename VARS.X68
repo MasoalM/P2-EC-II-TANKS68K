@@ -8,7 +8,7 @@ SCORE       DS.W    1       ; NÚMERO DE TANQUES DESTRUIDOS // (cuidado con si ll
 
 ; --- VARIABLES RELACIONADAS CON EL MAPA -------------------
 
-LVLNUM   DS.W    1       ; NÚMERO DEL NIVEL
+LVLNUM      DS.W    1       ; NÚMERO DEL NIVEL
 
 ; --- VARIABLES RELACIONADAS CON EL TANQUE -----------------
 
@@ -30,6 +30,11 @@ STANEXT     DS.W    1       ; SIGUIENTE ESTADO
 ; --- VARIABLES RELACIONADAS CON LA DERROTA ----------------
 
 PLYRDEAD    DS.W    1       ; PLAYER MUERTO
+
+; --- VARIABLES RELACIONADAS CON EL PLOT -------------------
+
+DOPLOT      DS.W    1
+
 
 
 

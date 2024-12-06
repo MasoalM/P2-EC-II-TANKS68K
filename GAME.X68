@@ -14,6 +14,7 @@ GAMINIT
             JSR     SCOINIT 
             JSR     LVL1INIT
             
+            MOVE.W  #1,(DOPLOT)
             MOVE.W  #0,(LVLNUM)
 
             RTS           
@@ -65,6 +66,7 @@ GAMPLOT
             JSR     AGLPLOT
     
             BRA     SCOPLOT    
+
 
 
 

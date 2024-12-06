@@ -61,12 +61,14 @@ START:
 
 ; --- PLOT -------------------------------------------------
             
-            ;CMP.W   #0,#DOPLOT
-            ;BEQ    .NOTPLOT             
-            JSR     STAPLOT         
+                         
+            JSR     STAPLOT 
+
+            CMP.W   #0,(DOPLOT)
+            BEQ    .NOTPLOT        
  
             TRAP    #SCRUPTN            ; UPDATE DOUBLE BUFFER
-;.NOTPLOT
+.NOTPLOT
             BRA     .LOOP
 
     SIMHALT
@@ -77,6 +79,7 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
 
 
 
