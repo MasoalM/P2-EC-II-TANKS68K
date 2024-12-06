@@ -11,6 +11,11 @@ INSINIT
 ; ------------------------------------------------------------------------------
             
             ;MOVE.W  #0,(DOPLOT)
+            
+            MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
+            MOVE.B  #92,D0
+            TRAP    #15
+            TRAP    #SCRUPTN
 
             CLR.W   (INSTIMER)
             
@@ -64,6 +69,7 @@ INSUPD
 .DONE       MOVE.B  #SNDINSTR,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 

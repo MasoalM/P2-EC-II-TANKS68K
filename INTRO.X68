@@ -10,9 +10,16 @@ ISCINIT
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
             MOVE.W  #0,(DOPLOT)
+
+            MOVE.B  #92,D0                  ;DESACTIVAR DOBLE BUFFER
+            MOVE.B  #16,D1
+            TRAP    #15
+            ;TRAP    #0
             
             CLR.W   (ISCTIMER) 
             MOVEM.L D0-D6/A0-A1,-(A7)
+            
+            CLR.L   D5
             
             LEA     FILEDATA,A0            ; DESTINATION ADDRESS
             LEA     .FILENAME,A1            ; FILE NAME
@@ -66,11 +73,15 @@ ISCINIT
             LEA     .TXT2,A0                ; TEXTO 2
             MOVE.B  #25,D0
             JSR     UTLPRINT
-            
+          
             MOVEM.L (A7)+,D0-D6/A0-A1
+            
+            MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
+            MOVE.B  #92,D0
+            TRAP    #15
              
-            TRAP    #SCRUPTN
-             
+            ;TRAP    #SCRUPTN
+            
             RTS  
 
 .FILENAME   DC.B    'salida3.txt',0
@@ -102,6 +113,7 @@ ISCUPD
 .DONE       MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 

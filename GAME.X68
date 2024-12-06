@@ -10,6 +10,10 @@ GAMINIT
 ; MODIFIES : NONE
 ; ----------------------------------------------------------
             
+            ;MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
+            ;MOVE.B  #92,D0
+            ;TRAP    #15
+            
             JSR     DMMINIT
             JSR     SCOINIT 
             JSR     LVL1INIT
@@ -66,6 +70,7 @@ GAMPLOT
             JSR     AGLPLOT
     
             BRA     SCOPLOT    
+
 
 
 

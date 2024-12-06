@@ -99,9 +99,9 @@ SCRINIT
             TRAP    #15
             
             ; ENABLE DOUBLE BUFFER
-            MOVE.B  #92,D0
-            MOVE.B  #17,D1
-            TRAP    #15
+            ;MOVE.B  #92,D0
+            ;MOVE.B  #17,D1
+            ;TRAP    #15
             
             ; ENABLE TIMED INTERRUPT
             MOVE.B  #32,D0
@@ -244,6 +244,7 @@ MOUUPD
             MOVE.B  D0,(MOUEDGE)
             MOVEM.L (A7)+,D0-D1
             RTE
+
 
 
 
