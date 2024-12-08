@@ -15,6 +15,7 @@ GAMINIT
             ;TRAP    #15
             
             JSR     DMMINIT
+            ;JSR     FPSINIT
             JSR     SCOINIT 
             JSR     LVL1INIT
             
@@ -34,6 +35,7 @@ GAMUPD
 ; ----------------------------------------------------------
 
             JSR     AGLUPD
+            ;JSR     FPSUPD
             
             ; RECORDAR QUE EL NIVEL ES CONCEPTUALMENTE UN NÚMERO MAYOR QUE EN EL CÓDIGO (EL CÓDIGO DEL NIVEL 1 ES 0, DEL NIVEL 2 ES 1, ...)
             ; ESTO ES DEBIDO A QUE MULTIPLICAMOS EL NIVEL POR LO QUE OCUPA CADA MAPA (EL MAPA DEL NIVEL 1 TIENE QUE ESTAR EN LA POSICIÓN 0)
@@ -68,8 +70,10 @@ GAMPLOT
             
             JSR     MAPPLOT
             JSR     AGLPLOT
+            ;JSR     FPSPLOT
     
             BRA     SCOPLOT    
+
 
 
 

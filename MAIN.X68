@@ -23,6 +23,7 @@
     INCLUDE "DATA/CASDATA.X68"
     INCLUDE "CASILLA.X68"
     INCLUDE "NIVEL.X68"
+    INCLUDE "FPS.X68"
     INCLUDE "GAME.X68"
     INCLUDE "INTRO.X68"
     INCLUDE "INSTRUCTIONS.X68"
@@ -36,6 +37,7 @@ START:
 
             ORI.W   #$0700,SR   ; DESHABILITAR INTERRUPCIONES
             JSR     SYSINIT
+            JSR     FPSINIT
             JSR     UTLINIT
             JSR     STAINIT
     
@@ -49,8 +51,8 @@ START:
 ;            TRAP    #MOUUPTN
 
 ; UPDATE GAME LOGIC
-    
             JSR     STAUPD
+            JSR     FPSUPD
             
 ; --- SYNC -------------------------------------------------
 
@@ -61,11 +63,11 @@ START:
 
 ; --- PLOT -------------------------------------------------
             
-                         
-            JSR     STAPLOT 
+            JSR     STAPLOT
+            JSR     FPSPLOT 
 
             CMP.W   #0,(DOPLOT)
-            BEQ    .NOTPLOT        
+            BEQ     .NOTPLOT        
  
             TRAP    #SCRUPTN            ; UPDATE DOUBLE BUFFER
 .NOTPLOT
@@ -79,6 +81,7 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
 
 
 

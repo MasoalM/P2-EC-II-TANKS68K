@@ -8,7 +8,7 @@
 KBDVAL      DS.B    1       ; KEY STATE (1 BYTE -> 8 TECLAS MAX)
 KBDEDGE     DS.B    1       ; KEY EDGE
 
-; --- MOUSE RELATED VARIABLES ---------------------------
+; --- MOUSE RELATED VARIABLES ------------------------------
 
 MOUEDGE     DS.B    1       ; MOUSE EDGE
 MOUBUT      DS.B    1       ; MOUSE LEFT BUTTON
@@ -19,10 +19,22 @@ MOUPOS      DS.B    1       ; MOUSE POSITION
 SCRINTCT    DS.B    1       ; INTERRUPT COUNTER
 SCRCYCCT    DS.B    1       ; CYCLE COUNTER
             DS.W    0
+
+; --- TIME RELATED VARIABLES -------------------------------
+
+TIEMPO      DS.L    1       ; CONTADOR DE TIEMPO
+
+
+; --- FPS RELATED VARIABLES --------------------------------
+
+ACTFPS      DS.W    1       ; FPS ACTUALES
+SHWFPS      DS.W    1       ; FPS PARA MOSTRAR
+            
             
 ; --- FILE RELATED VARIABLES -------------------------------
 
 FILEDATA    DS.L    400000
+
 
 
 

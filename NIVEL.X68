@@ -48,7 +48,12 @@ LVL2INIT
 ; MODIFIES : NONE
 ; ----------------------------------------------------------
 
-            MOVEM.L D0-D2/A1-A3,-(A7)
+            MOVEM.L D0-D2/A0-A3,-(A7)
+            
+            MOVE.W  #TANPLAY,D0
+            JSR     DMMFRSTO
+            MOVE.W  #320,8(A0)
+            MOVE.W  #360,10(A0)
             
             LEA     TANINIT,A1
             LEA     TANUPD,A2
@@ -79,9 +84,10 @@ LVL2INIT
             MOVE.W  (TANID),D3
             JSR     AGLADD
             
-            MOVEM.L (A7)+,D0-D2/A1-A3
+            MOVEM.L (A7)+,D0-D2/A0-A3
             
             RTS
+
 
 
 *~Font name~Courier New~

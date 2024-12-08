@@ -99,6 +99,9 @@ BULUPD
             
             ;INICIALIZAMOS
             LEA.L   MAPDATA,A1
+            MOVE.W  (LVLNUM),D6
+            MULU.W  #SIZLVL,D6
+            ADD.L   D6,A1
             ;SUBQ.L  #2,A1
             MOVE.W  D0,D4
             MOVE.W  D1,D5
@@ -391,6 +394,7 @@ BULPLOT
 
             RTS
             
+
 
 
 
