@@ -42,13 +42,15 @@ LVL1INIT
 
 ; ----------------------------------------------------------
 LVL2INIT
-; INITIALIZES LEVEL 1
+; INITIALIZES LEVEL 2
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ----------------------------------------------------------
 
             MOVEM.L D0-D2/A0-A3,-(A7)
+            
+            MOVE.W  #1,(TANID)
             
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
@@ -87,6 +89,52 @@ LVL2INIT
             MOVEM.L (A7)+,D0-D2/A0-A3
             
             RTS
+            
+; ----------------------------------------------------------
+LVL3INIT
+; INITIALIZES LEVEL 3
+; INPUT    : NONE
+; OUTPUT   : NONE
+; MODIFIES : NONE
+; ----------------------------------------------------------
+            
+            MOVEM.L D0-D2/A0-A3,-(A7)
+            
+            MOVE.W  #1,(TANID)
+            
+            MOVE.W  #TANPLAY,D0
+            JSR     DMMFRSTO
+            MOVE.W  #320,8(A0)
+            MOVE.W  #360,10(A0)
+            
+            LEA     TANINIT,A1
+            LEA     TANUPD,A2
+            LEA     TANPLOT,A3
+            
+            MOVE.W  #TANENEM,D0         ; ENEMIGO 1
+            MOVE.W  #SCRWIDTH-64,D1    
+            MOVE.W  #SCRHEIGH-416,D2
+            ADDQ.W  #1,(TANID)
+            MOVE.W  (TANID),D3
+            JSR     AGLADD
+            
+            MOVE.W  #SCRWIDTH-576,D1    ; ENEMIGO 2 
+            MOVE.W  #SCRHEIGH-416,D2
+            ADDQ.W  #1,(TANID)
+            MOVE.W  (TANID),D3
+            JSR     AGLADD
+
+            MOVE.W  #SCRWIDTH-448,D1    ; ENEMIGO 3
+            MOVE.W  #SCRHEIGH-320,D2
+            ADDQ.W  #1,(TANID)
+            MOVE.W  (TANID),D3
+            JSR     AGLADD
+
+            MOVEM.L (A7)+,D0-D2/A0-A3
+            
+            RTS
+
+
 
 
 

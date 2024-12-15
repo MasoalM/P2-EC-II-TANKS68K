@@ -72,9 +72,7 @@ BULINIT
             
 .SEGBULL            
             
-            
-            
-            ; TOQUES DE LA BALA DISPONIBLES CON LAS PAREDES EMPIEZAN SIENDO EL M?XIMO
+            ; TOQUES DE LA BALA DISPONIBLES CON LAS PAREDES EMPIEZAN SIENDO EL MÁXIMO
             MOVE.W  #MAXTOUCH,10(A0)
             MOVE.W  #BULSPEED,4(A0)             ; hacer que bulspeed sea variable y que sea 0 o el bulspeed actual (para que se mueva en 8 direcciones)
             MOVE.W  #BULSPEED,6(A0)
@@ -107,7 +105,7 @@ BULUPD
             MOVE.W  #0,D2
             MOVE.W  #0,D3
             
-            ;SACAMOS LA POSICI?N RELATIVA DE X
+            ;SACAMOS LA POSICIÓN RELATIVA DE X
             BRA .CHKX
 .NOORGX
             SUB.W   #PIESIZX,D4
@@ -117,8 +115,8 @@ BULUPD
             CMP.W   #PIESIZX,D4
             BGT     .NOORGX             
             
-            ;SACAMOS LA POSICI?N RELATIVA DE Y
-            BRA .CHKY
+            ;SACAMOS LA POSICIÓN RELATIVA DE Y
+            BRA     .CHKY
 .NOORGY
             SUB.W   #PIESIZY,D5
             ADD.L   #40,A1
@@ -223,7 +221,7 @@ BULUPD
             ADDQ.W  #1,D4
             CMP.W   D3,D4
             BNE     .LOOP32
-            ADDQ.W  #1,26(A0)       ; AGREGAR UNA BALA DISPONIBLE AL TANQUE SI ES EL PADRE ; no llega aqu??
+            ADDQ.W  #1,26(A0)       ; AGREGAR UNA BALA DISPONIBLE AL TANQUE SI ES EL PADRE ; no llega aquí?
             BRA     .ENDCOLEX
 .LOOP32     JSR     DMMNEXTO
             BRA     .LOOP31
@@ -231,7 +229,7 @@ BULUPD
 .CHKPLAY2   
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            CMP.W   #0,D3       ; puede que falle en un futuro que las dos l?neas de arriba se ejecuten ?
+            CMP.W   #0,D3       ; puede que falle en un futuro que las dos líneas de arriba se ejecuten ?
             BNE     .ENDCOLEX
             ADDQ.W  #1,26(A0)
             
@@ -393,6 +391,8 @@ BULPLOT
 
             RTS
             
+
+
 
 
 

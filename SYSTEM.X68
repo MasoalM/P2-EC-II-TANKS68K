@@ -23,7 +23,7 @@ SYSINIT
             
             MOVE.W  SR,-(A7)
             ANDI.W  #$D8FF,(A7) ; MODO USUARIO Y HABILITAR INTERRUPCIONES
-            RTE
+            RTE        
 
 ; ----------------------------------------------------------            
 SNDINIT
@@ -270,6 +270,7 @@ READMOU
 .NOCLICKED:             
             MOVEM.L (A7)+, D0-D3
             RTS
+
 
 
 

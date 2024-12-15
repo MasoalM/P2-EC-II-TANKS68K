@@ -18,7 +18,7 @@
     INCLUDE "BULLET.X68"
     INCLUDE "TANK.X68"
     INCLUDE "SCORE.X68"
-    INCLUDE "MAP.X68"           ; antes todo lo de mapa y casilla estaba después del game (creo que así es más correcto)
+    INCLUDE "MAP.X68"         
     INCLUDE "DATA/MAPDATA.X68"
     INCLUDE "DATA/CASDATA.X68"
     INCLUDE "CASILLA.X68"
@@ -36,17 +36,34 @@ START:
 ; --- INITIALIZATION ---------------------------------------
 
             ORI.W   #$0700,SR   ; DESHABILITAR INTERRUPCIONES
+            
             JSR     SYSINIT
             JSR     FPSINIT
             JSR     UTLINIT
+            
+            
+            MOVEM.L  A0-A1,-(A7)
+            LEA     FILEDATA,A0            ; DESTINATION ADDRESS
+            LEA     .FILENAME,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     FILPLDAT,A0            ; DESTINATION ADDRESS
+            LEA     .FILEPLYR,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     FILENDAT,A0            ; DESTINATION ADDRESS
+            LEA     .FILEENEM,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            MOVEM.L  (A7)+,A0-A1
+            
             JSR     STAINIT
-    
-.LOOP
 
 ; --- UPDATE -----------------------------------------------
 
-; READ INPUT DEVICES
+.LOOP
 
+; READ INPUT DEVICES
             TRAP    #KBDUPTN
             ;TRAP    #MOUUPTN
 
@@ -73,6 +90,10 @@ START:
 .NOTPLOT
             BRA     .LOOP
 
+.FILENAME    DC.B    'pythonProject/SALIDA.bin',0 
+.FILEPLYR    DC.B    'pythonProject/PLAYER.bin',0
+.FILEENEM    DC.B    'pythonProject/ENEMY.bin',0            
+
     SIMHALT
     
     INCLUDE "VARS.X68"  
@@ -81,6 +102,8 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
+
 
 
 

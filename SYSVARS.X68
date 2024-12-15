@@ -34,6 +34,11 @@ SHWFPS      DS.W    1       ; FPS PARA MOSTRAR
 ; --- FILE RELATED VARIABLES -------------------------------
 
 FILEDATA    DS.L    400000
+FILPLDAT    DS.L    3000
+FILENDAT    DS.L    3000
+
+
+
 
 
 

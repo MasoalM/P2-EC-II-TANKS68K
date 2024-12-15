@@ -25,14 +25,6 @@ TANINIT
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
             
-            ;MOVEM.L D0/A1,-(A7)
-            ;JSR     UTLRAND
-            ;AND.L   #$0000000C,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 4 (ALEATORIOS)
-            ;LEA     .POSVEC,A1
-            ;MOVE.L  (A1,D0),(A0)       ; INITIAL TANK POSITION X AND Y    
-            ;MOVEM.L (A7)+,D0/A1
-            ;RTS      
-
             MOVE.W  D1,(A0)
             MOVE.W  D2,2(A0)
 
@@ -57,17 +49,10 @@ TANINIT
             MOVE.L  #$00081658,10(A0)
             MOVE.W  #TANENEM,14(A0)         ; EL TANQUE ES UN BOT
             MOVE.W  #ENEINILF,16(A0)        ; VIDA INICIAL DEL TANQUE ENEMIGO
-            MOVE.W  #ENMAXBUL,18(A0)        ; MÁXIMAS BALAS DISPONIBLES PARA DISPARAR
+            ;MOVE.W  #ENMAXBUL,18(A0)        ; MÁXIMAS BALAS DISPONIBLES PARA DISPARAR
             MOVE.W  D3,20(A0)               ; IDENTIFICADOR DEL TANQUE ENEMIGO
             MOVE.W  #0,22(A0)               ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
             RTS
-            
-            ; 4 posiciones aleatorias ( modificar para que no dependa de este vector )
-;.POSVEC     DC.W    SCRWIDTH/4,SCRHEIGH-100   ; 0
-;            DC.W    SCRWIDTH-50,SCRHEIGH/12   ; 4
-;            DC.W    SCRWIDTH-320,SCRHEIGH-30  ; 8
-;            DC.W    SCRWIDTH/5,SCRHEIGH/5     ; 12 
-            
 
 ; ----------------------------------------------------------            
 TANUPD
@@ -109,7 +94,6 @@ TANUPD
             CMP.B   #1,D2
             BNE     .CONT2
 
-        
             ;BTST.B  #4,(KBDEDGE)            ; ESPACIO PULSADO
             ;BEQ     .CONT2
             
@@ -134,17 +118,18 @@ TANUPD
             MOVE.W  D4,D0
             MOVE.W  D5,D1
             SUBQ.W  #1,18(A0)               ; UNA BALA DISPONIBLE MENOS
-            BRA .CONT2
+            BRA     .CONT2
             
 .BOT2       ; ELSE (TANK IS A BOT)
-            ; AI ALGORITHM (greedy por ahora para testear)
+            ; AI ALGORITHM
+            
             ;MOVEM.L D0-D5,-(A7)             ; MOVEM.L D0-D3/A0-A1,-(A7)
             
             MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
             MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no haría falta (por si la velocidad en un futuro la cambiamos a variable según el tanque)
             
-            CMP.W   #60,22(A0)              (DEPENDE DEL RTF, POR AHORA ESO NO NOS MOLESTA)              
+            CMP.W   #60,22(A0)              (EL MOVIMIENTO ALEATORIO DEL TANQUE ENEMIGO DEPENDE DEL RTF, POR AHORA ESO NO NOS MOLESTA)              
             BHI     .FLLOWPLR               ; EN ESTA ITERACIÓN MOVERSE HACIA EL JUGADOR
             
             ; EN CASO DE NO HABER SALTADO, HACEMOS UN MOVIMIENTO RANDOM
@@ -183,7 +168,7 @@ TANUPD
             ; CASO DOS
 .CASODOS    SUB.W   D3,D1
             ADD.W   D3,D2   
-            BRA     .ENDALG2    
+            BRA     .ENDALG2   
 .FLLOWPLR               
             MOVE.L  A0,A1
             MOVE.W  #TANPLAY,D0
@@ -200,14 +185,14 @@ TANUPD
 
 .VELY       CMP.W   10(A0),D2
             BHI     .NEGVELY                ; YENEM > YPLAY
-            BLO     .POSVELY                ; YENEM < YPLAY
+            BLO     .POSVELY                ; YENEM < YPLAY                  
             BRA     .ENDALG                 ; YENEM = YPLAY
 
 .NEGVELY    SUB.W   D3,D2
             BRA     .ENDALG
 .POSVELY    ADD.W   D3,D2           
-       
-.ENDALG     MOVE.L  A1,A0
+
+.ENDALG     MOVE.L  A1,A0       
 .ENDALG2
             MOVE.W  D1,(A0)
             MOVE.W  D2,2(A0)
@@ -220,10 +205,11 @@ TANUPD
             MOVE.W  D1,D5
             
             CMP.W   #0,22(A0)               
-            BHI     .SUBRTF                 ; ENEMIGO AÚN NO TIENE DISPONIBLE DISPARAR     
+            BHI     .SUBRTF                 ; ENEMIGO AÚN NO TIENE DISPONIBLE DISPARAR  
+            MOVE.W  #ENEMYRTF,22(A0)        ; REINICIAR CONTADOR   
 
-            CMP.W   #0,18(A0)
-            BEQ     .SUBRTF                 ; NO QUEDAN BALAS DISPONIBLES           
+            ;CMP.W   #0,18(A0)
+            ;BEQ     .SUBRTF                 ; NO QUEDAN BALAS DISPONIBLES           
 
             MOVE.B  #SNDDISP,D7             ; SONIDO DISPARO
             TRAP    #SNDPLTN  
@@ -237,23 +223,19 @@ TANUPD
             MOVE.W  20(A0),D3
             JSR     AGLADD
 
-            SUBQ.W  #1,18(A0)               ; UNA BALA DISPONIBLE MENOS
+            ;SUBQ.W  #1,18(A0)               ; UNA BALA DISPONIBLE MENOS
             
             MOVE.W  D4,D0
             MOVE.W  D5,D1
-            
 
-.SUBRTF
-            CMP.W   #0,22(A0)               ; PARA QUE NO PONGA NÚMEROS NEGATIVOS (puede que estas líneas no hagan falta)
-            BHI     .SUBRTF2
-            MOVE.W  #ENEMYRTF,22(A0)        ; REINICIAR CONTADOR
-.SUBRTF2            
+.SUBRTF            
             SUBQ.W  #1,22(A0)               ; RESTARLE 1 AL RTF DEL TANQUE
-            MOVE.W  22(A0),D6
-
+            
             ; COMPROBACIÓN DE LA COLISIÓN DE LOS TANQUES CON OTROS TANQUES
-
 .CONT2 
+            MOVE.W  18(A0),D5               ; DEBUG BALAS DISPONIBLES
+            MOVE.W  22(A0),D6               ; DEBUG RTF
+
             ;INICIALIZAMOS
             LEA.L   MAPDATA,A1
             MOVE.W  (LVLNUM),D6
@@ -425,7 +407,7 @@ TANUPD
             MOVEM.W (A7)+,D0-D7/A1
             RTS
             
-            ; 4 posibilidades aleatorias TENGO EN D4
+            ; 4 posibilidades aleatorias
 .MOVVEC     DC.B    0  ; 0
             DC.B    1  ; 2
             DC.B    2  ; 4
@@ -438,32 +420,51 @@ TANPLOT
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
             
-            MOVEM.L D0-D4,-(A7)
-
-            ; SET CONTOUR COLOR
-            MOVE.B  #80,D0
-            MOVE.L  6(A0),D1
-            TRAP    #15
+            MOVEM.L D0-D6/A1,-(A7)
             
-            ; SET FILL COLOR
-            MOVE.B  #81,D0
-            MOVE.L  10(A0),D1
-            TRAP    #15
+            ; DRAW TANK
+            LEA     FILPLDAT,A1
             
-            ; DEFINE COORDINATES
+            MOVE.W  (A0),D1
+            MOVE.W  2(A0),D2
+            SUB.W   #TANWIDTH/2,D1
+            SUB.W   #TANHEIGH/2,D2
+            MOVE.W  D1,D3
+            MOVE.W  D2,D4
+            ;ADD.W   #TANWIDTH,D3
+            ;ADD.W   #TANHEIGH,D4
+            ADDQ.W  #1,D3
+            ADDQ.W  #1,D4
+.FILA
             MOVE.W  (A0),D1
             SUB.W   #TANWIDTH/2,D1
             MOVE.W  D1,D3
-            ADD.W   #TANWIDTH,D3
+            ;ADD.W   #TANWIDTH,D3
             
-            MOVE.W  2(A0),D2
-            SUB.W   #TANHEIGH/2,D2
-            MOVE.W  D2,D4
-            ADD.W   #TANHEIGH,D4
-            
-            ; DRAW RECTANGLE (TANK)
-            MOVE.B  #87,D0
+            ADDQ.W  #1,D2
+            ADDQ.W  #1,D4
+.COLUMNA
+            MOVE.L  D1,D5
+            MOVE.L  (A1)+,D1
+            MOVE.B  #80,D0                  ; MOVE.B #81,D0
             TRAP    #15
+            MOVE.L  D5,D1
+
+            ADDQ.W  #1,D1
+            ADDQ.W  #1,D3
+
+            MOVE.B  #84,D0
+            TRAP    #15
+            
+            MOVE.W  (A0),D6
+            ADD.W   #TANWIDTH/2,D6
+            CMP.W   D6,D3
+            BLT     .COLUMNA
+            
+            MOVE.W  2(A0),D6
+            ADD.W   #TANHEIGH/2,D6
+            CMP.W   D6,D4
+            BLT     .FILA
         
             ; PLOT LIFE
             ; IF TANK IS NOT A BOT (PLAYER)
@@ -483,9 +484,15 @@ TANPLOT
             MOVE.B  #90,D0
             TRAP    #15
 .END            
-            MOVEM.L (A7)+,D0-D4
+            MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
+
+
+
+
+
 
 
 

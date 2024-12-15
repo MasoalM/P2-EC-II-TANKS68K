@@ -17,13 +17,10 @@ ISCINIT
             ;TRAP    #0
             
             CLR.W   (ISCTIMER) 
-            MOVEM.L D0-D6/A0-A1,-(A7)
+            MOVEM.L D0-D6/A0,-(A7)
+            LEA     FILEDATA,A0
             
             CLR.L   D5
-            
-            LEA     FILEDATA,A0            ; DESTINATION ADDRESS
-            LEA     .FILENAME,A1            ; FILE NAME
-            JSR     FILLOAD
             
             MOVE.W  #SCRWIDTH/2,D1
             MOVE.W  #SCRHEIGH/2,D2
@@ -33,7 +30,6 @@ ISCINIT
             MOVE.W  D2,D4
             ADDQ.W  #1,D3
             ADDQ.W  #1,D4
-
 
 .FILA
             MOVE.W  #SCRWIDTH/2,D1
@@ -74,7 +70,7 @@ ISCINIT
             MOVE.B  #25,D0
             JSR     UTLPRINT
           
-            MOVEM.L (A7)+,D0-D6/A0-A1
+            MOVEM.L (A7)+,D0-D6/A0
             
             MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
             MOVE.B  #92,D0
@@ -84,8 +80,7 @@ ISCINIT
             
             RTS  
 
-.FILENAME   DC.B    'pythonProject/SALIDA.bin',0
-            DS.W    0  
+
 .TXT1       DC.B    'TANKS 68K',0
 .TXT2       DC.B    '¡PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR!',0
             DS.W    0
@@ -113,6 +108,7 @@ ISCUPD
 .DONE       MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 
