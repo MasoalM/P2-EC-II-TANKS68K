@@ -9,9 +9,9 @@
 * TANTYPE (W)             14(A0)
 * TANLIFE (W)             16(A0)
 * BULLEFT (W)             18(A0)
-* TANID   (W)             20(A0)            ; IDENTIFICADOR ÚNICO DE CADA TANQUE
+* TANID   (W)             20(A0)            ; IDENTIFICADOR ?NICO DE CADA TANQUE
 * TANRTFTI(W)             22(A0)            ; TANK RTF TIME (TIEMPO RESTANTE PARA QUE PUEDA VOLVER A DISPARAR)
-* ENEDIR  (W)             24(A0)            ; DIRECCIÓN ALEATORIA TEMPORAL ASIGNADA A UN TANQUE ENEMIGO
+* ENEDIR  (W)             24(A0)            ; DIRECCI?N ALEATORIA TEMPORAL ASIGNADA A UN TANQUE ENEMIGO
 * INITIAL TANK X POSITION D1
 * INITIAL TANK Y POSITION D2
 * ENEMY TANK ID           D3
@@ -32,14 +32,14 @@ TANINIT
             BNE.W   .BOT
             
             ; IF TANK IS NOT A BOT (PLAYER)
-            MOVE.W  #PLYRALIV,(PLYRDEAD)           ; EL JUGADOR NO ESTÁ MUERTO
+            MOVE.W  #PLYRALIV,(PLYRDEAD)           ; EL JUGADOR NO EST? MUERTO
             MOVE.W  #PLRSPEED,4(A0)         
             MOVE.L  #$00344D31,6(A0)        ; COLOR DE CONTORNO DEL TANQUE   
             MOVE.L  #$00608C59,10(A0)       ; COLOR DE RELLENO DEL TANQUE
             MOVE.W  #TANPLAY,14(A0)         ; EL TANQUE ES EL JUGADOR 
             MOVE.W  #PLRINILF,16(A0)        ; VIDA INICIAL DEL TANQUE JUGADOR
-            MOVE.W  #PLMAXBUL,18(A0)        ; MÁXIMAS BALAS DISPONIBLES PARA DISPARAR
-            MOVE.W  #0,20(A0)               ; TANID DEL JUGADOR SERÁ 0
+            MOVE.W  #PLMAXBUL,18(A0)        ; M?XIMAS BALAS DISPONIBLES PARA DISPARAR
+            MOVE.W  #0,20(A0)               ; TANID DEL JUGADOR SER? 0
             RTS 
             
             ; ELSE (TANK IS A BOT)
@@ -49,9 +49,9 @@ TANINIT
             MOVE.L  #$00081658,10(A0)
             MOVE.W  #TANENEM,14(A0)         ; EL TANQUE ES UN BOT
             MOVE.W  #ENEINILF,16(A0)        ; VIDA INICIAL DEL TANQUE ENEMIGO
-            ;MOVE.W  #ENMAXBUL,18(A0)        ; MÁXIMAS BALAS DISPONIBLES PARA DISPARAR
+            ;MOVE.W  #ENMAXBUL,18(A0)        ; M?XIMAS BALAS DISPONIBLES PARA DISPARAR
             MOVE.W  D3,20(A0)               ; IDENTIFICADOR DEL TANQUE ENEMIGO
-            MOVE.W  #0,22(A0)               ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
+            MOVE.W  #0,22(A0)               ; CUANDO SEA 0 PODR? VOLVER A DISPARAR
             RTS
 
 ; ----------------------------------------------------------            
@@ -87,7 +87,7 @@ TANUPD
             BEQ     .DISP
             ADD.W   4(A0),D1  ;SUMAMOS LA VELOCIDAD AL EJE Y
 .DISP          
-            ; COMPROBAR SI ESTÁ DISPARANDO  
+            ; COMPROBAR SI EST? DISPARANDO  
             
             MOVE.B  (MOUEDGE),D2
 
@@ -127,10 +127,10 @@ TANUPD
             
             MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
-            MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no haría falta (por si la velocidad en un futuro la cambiamos a variable según el tanque)
+            MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no har?a falta (por si la velocidad en un futuro la cambiamos a variable seg?n el tanque)
             
             CMP.W   #60,22(A0)              (EL MOVIMIENTO ALEATORIO DEL TANQUE ENEMIGO DEPENDE DEL RTF, POR AHORA ESO NO NOS MOLESTA)              
-            BHI     .FLLOWPLR               ; EN ESTA ITERACIÓN MOVERSE HACIA EL JUGADOR
+            BHI     .FLLOWPLR               ; EN ESTA ITERACI?N MOVERSE HACIA EL JUGADOR
             
             ; EN CASO DE NO HABER SALTADO, HACEMOS UN MOVIMIENTO RANDOM
 
@@ -138,7 +138,7 @@ TANUPD
             BHI     .DIRASIGN
             MOVEM.L D0/A1,-(A7)
             JSR     UTLRAND
-            AND.L   #$00000006,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 2 (ALEATORIOS)
+            AND.L   #$00000006,D0      ; M?SCARA PARA OBTENER M?LTIPLOS DE 2 (ALEATORIOS)
             LEA     .MOVVEC,A1
             MOVE.L  (A1,D0),24(A0)     ; RANDOM MOVEMENT   
  
@@ -205,7 +205,7 @@ TANUPD
             MOVE.W  D1,D5
             
             CMP.W   #0,22(A0)               
-            BHI     .SUBRTF                 ; ENEMIGO AÚN NO TIENE DISPONIBLE DISPARAR  
+            BHI     .SUBRTF                 ; ENEMIGO A?N NO TIENE DISPONIBLE DISPARAR  
             MOVE.W  #ENEMYRTF,22(A0)        ; REINICIAR CONTADOR   
 
             ;CMP.W   #0,18(A0)
@@ -231,7 +231,7 @@ TANUPD
 .SUBRTF            
             SUBQ.W  #1,22(A0)               ; RESTARLE 1 AL RTF DEL TANQUE
             
-            ; COMPROBACIÓN DE LA COLISIÓN DE LOS TANQUES CON OTROS TANQUES
+            ; COMPROBACI?N DE LA COLISI?N DE LOS TANQUES CON OTROS TANQUES
 .CONT2 
             MOVE.W  18(A0),D5               ; DEBUG BALAS DISPONIBLES
             MOVE.W  22(A0),D6               ; DEBUG RTF
@@ -423,30 +423,32 @@ TANPLOT
             MOVEM.L D0-D6/A1,-(A7)
             
             ; DRAW TANK
+            CMP.W   #2,14(A0)
+            BEQ     .DRAWPLAY
+            LEA     FILENDAT,A1
+            BRA     .DRAW
+.DRAWPLAY
             LEA     FILPLDAT,A1
-            
+.DRAW                        
             MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
             SUB.W   #TANWIDTH/2,D1
             SUB.W   #TANHEIGH/2,D2
             MOVE.W  D1,D3
             MOVE.W  D2,D4
-            ;ADD.W   #TANWIDTH,D3
-            ;ADD.W   #TANHEIGH,D4
             ADDQ.W  #1,D3
             ADDQ.W  #1,D4
 .FILA
             MOVE.W  (A0),D1
             SUB.W   #TANWIDTH/2,D1
             MOVE.W  D1,D3
-            ;ADD.W   #TANWIDTH,D3
             
             ADDQ.W  #1,D2
             ADDQ.W  #1,D4
 .COLUMNA
             MOVE.L  D1,D5
             MOVE.L  (A1)+,D1
-            MOVE.B  #80,D0                  ; MOVE.B #81,D0
+            MOVE.B  #80,D0
             TRAP    #15
             MOVE.L  D5,D1
 
@@ -487,49 +489,6 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 *~Font name~Courier New~
 *~Font size~10~

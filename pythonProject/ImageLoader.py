@@ -1,6 +1,6 @@
 from skimage.io import imread
 
-theImage = imread('../IMAGES/PLAYER.jpg')
+theImage = imread('../IMAGES/ENEMY.jpg')
 numRows, numCols, _ = theImage.shape
 outData = []
 
@@ -9,5 +9,5 @@ for r in range(numRows):
         theRed, theGreen, theBlue = theImage[r, c]
         outData += [0, theBlue, theGreen, theRed]
 
-with open('PLAYER.bin', 'wb') as outFile:
+with open('ENEMY.bin', 'wb') as outFile:
     outFile.write(bytearray(outData))
