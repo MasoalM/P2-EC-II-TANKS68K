@@ -225,8 +225,6 @@ TANUPD
             CMP.W   #0,18(A0)
             BEQ     .SUBRTF                 ; NO QUEDAN BALAS DISPONIBLES           
 
-            MOVE.W  #ENEMYRTF,22(A0)        ; REINICIAR CONTADOR
-
             MOVE.B  #SNDDISP,D7             ; SONIDO DISPARO
             TRAP    #SNDPLTN  
 
@@ -246,9 +244,12 @@ TANUPD
             
 
 .SUBRTF
-            ;CMP.W   #0,22(A0)               ; PARA QUE NO PONGA NÚMEROS NEGATIVOS (puede que estas líneas no hagan falta)
-            ;BEQ     .CONT2
+            CMP.W   #0,22(A0)               ; PARA QUE NO PONGA NÚMEROS NEGATIVOS (puede que estas líneas no hagan falta)
+            BHI     .SUBRTF2
+            MOVE.W  #ENEMYRTF,22(A0)        ; REINICIAR CONTADOR
+.SUBRTF2            
             SUBQ.W  #1,22(A0)               ; RESTARLE 1 AL RTF DEL TANQUE
+            MOVE.W  22(A0),D6
 
             ; COMPROBACIÓN DE LA COLISIÓN DE LOS TANQUES CON OTROS TANQUES
 
