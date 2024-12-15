@@ -11,6 +11,7 @@
 * BULLEFT (W)             18(A0)
 * TANID   (W)             20(A0)            ; IDENTIFICADOR ÚNICO DE CADA TANQUE
 * TANRTFTI(W)             22(A0)            ; TANK RTF TIME (TIEMPO RESTANTE PARA QUE PUEDA VOLVER A DISPARAR)
+* ENEDIR  (W)             24(A0)            ; DIRECCIÓN ALEATORIA TEMPORAL ASIGNADA A UN TANQUE ENEMIGO
 * INITIAL TANK X POSITION D1
 * INITIAL TANK Y POSITION D2
 * ENEMY TANK ID           D3
@@ -102,12 +103,13 @@ TANUPD
             ADD.W   4(A0),D1  ;SUMAMOS LA VELOCIDAD AL EJE Y
 .DISP          
             ; COMPROBAR SI ESTÁ DISPARANDO  
-        
-            MOVE.B  (MOUEDGE),D2
             
+            MOVE.B  (MOUEDGE),D2
+
             CMP.B   #1,D2
             BNE     .CONT2
-            
+
+        
             ;BTST.B  #4,(KBDEDGE)            ; ESPACIO PULSADO
             ;BEQ     .CONT2
             
@@ -142,22 +144,51 @@ TANUPD
             MOVE.W  2(A0),D2
             MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no haría falta (por si la velocidad en un futuro la cambiamos a variable según el tanque)
             
-            ; -> HACER QUE EL TANQUE A VECES HAGA UN MOVIMIENTO ALEATORIO Y A VECES SE ACERQUE AL JUGADOR.
-            ; -> HACER QUE NO SE PUEDA ACERCAR AL JUGADOR A MÁS DE ? POSICIÓN
-            ; -> HACER QUE DISPARE CON UNA FRECUENCIA ASIGNADA (predecible?)
+            CMP.W   #60,22(A0)              (DEPENDE DEL RTF, POR AHORA ESO NO NOS MOLESTA)              
+            BHI     .FLLOWPLR               ; EN ESTA ITERACIÓN MOVERSE HACIA EL JUGADOR
             
-            ;MOVEM.L D0/A1,-(A7)
-            ;JSR     UTLRAND
-            ;AND.L   #$0000000C,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 4 (ALEATORIOS)
-            ;LEA     .POSVEC,A1
-            ;MOVE.L  (A1,D0),(A0)       ; RANDOM MOVEMENT    
-            ;MOVEM.L (A7)+,D0/A1
-            ;RTS
+            ; EN CASO DE NO HABER SALTADO, HACEMOS UN MOVIMIENTO RANDOM
+
+            CMP.W   #0,22(A0)
+            BHI     .DIRASIGN
+            MOVEM.L D0/A1,-(A7)
+            JSR     UTLRAND
+            AND.L   #$00000006,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 2 (ALEATORIOS)
+            LEA     .MOVVEC,A1
+            MOVE.L  (A1,D0),24(A0)     ; RANDOM MOVEMENT   
+ 
+            MOVEM.L (A7)+,D0/A1
+.DIRASIGN           
+            CMP.B   #0,24(A0)
+            BEQ     .CASOCERO
+            CMP.B   #1,24(A0)
+            BEQ     .CASOUNO
+            CMP.B   #2,24(A0)
+            BEQ     .CASODOS
             
+            ; CASO TRES
+            SUB.W   D3,D1
+            SUB.W   D3,D2
+            BRA     .ENDALG2
+            
+            ; CASO CERO
+.CASOCERO   ADD.W   D3,D1
+            ADD.W   D3,D2
+            BRA     .ENDALG2
+         
+            ; CASO UNO
+.CASOUNO    ADD.W   D3,D1
+            SUB.W   D3,D2
+            BRA     .ENDALG2         
+            ; CASO DOS
+.CASODOS    SUB.W   D3,D1
+            ADD.W   D3,D2   
+            BRA     .ENDALG2    
+.FLLOWPLR               
             MOVE.L  A0,A1
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            
+         
             CMP.W   8(A0),D1
             BHI     .NEGVELX                ; XENEM > XPLAY
             BLO     .POSVELX                ; XENEM < XPLAY
@@ -177,7 +208,7 @@ TANUPD
 .POSVELY    ADD.W   D3,D2           
        
 .ENDALG     MOVE.L  A1,A0
-
+.ENDALG2
             MOVE.W  D1,(A0)
             MOVE.W  D2,2(A0)
             
@@ -215,8 +246,8 @@ TANUPD
             
 
 .SUBRTF
-            CMP.W   #0,22(A0)               ; PARA QUE NO PONGA NÚMEROS NEGATIVOS (puede que estas líneas no hagan falta)
-            BEQ     .CONT2
+            ;CMP.W   #0,22(A0)               ; PARA QUE NO PONGA NÚMEROS NEGATIVOS (puede que estas líneas no hagan falta)
+            ;BEQ     .CONT2
             SUBQ.W  #1,22(A0)               ; RESTARLE 1 AL RTF DEL TANQUE
 
             ; COMPROBACIÓN DE LA COLISIÓN DE LOS TANQUES CON OTROS TANQUES
@@ -392,6 +423,12 @@ TANUPD
             
             MOVEM.W (A7)+,D0-D7/A1
             RTS
+            
+            ; 4 posibilidades aleatorias TENGO EN D4
+.MOVVEC     DC.B    0  ; 0
+            DC.B    1  ; 2
+            DC.B    2  ; 4
+            DC.B    3  ; 6            
                       
 TANPLOT
 ; PLOT THE TANK
@@ -448,6 +485,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
 
 
 
