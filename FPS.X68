@@ -39,6 +39,9 @@ FPSUPD
   
 	        RTS
             
+            
+GOALFPS         DC.B    'FPS ESPERADOS:',0
+ACTUALFPS       DC.B    'FPS ACTUALES :',0
 
 ; ----------------------------------------------------------
 FPSPLOT     
@@ -56,7 +59,7 @@ FPSPLOT
             TRAP    #15
             
             ; MOSTRAR TEXTO
-            LEA     .GOALFPS, A1
+            LEA     GOALFPS, A1
             CLR.L   D1
             MOVE.W  #SCRFPS,D1
             MOVE.B  #17,D0
@@ -68,7 +71,7 @@ FPSPLOT
             TRAP    #15
             
             ; MOSTRAR TEXTO
-            LEA     .ACTUALFPS,A1
+            LEA     ACTUALFPS,A1
             CLR.L   D1
             MOVE.W  (SHWFPS),D1
             MOVE.B  #17,D0
@@ -77,9 +80,7 @@ FPSPLOT
             MOVEM.L (A7)+,D0-D1/A1
             
             RTS
-            
-.GOALFPS         DC.B    'FPS ESPERADOS:',0
-.ACTUALFPS       DC.B    'FPS ACTUALES :',0
+
 
 
 

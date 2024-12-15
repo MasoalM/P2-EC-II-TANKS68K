@@ -20,8 +20,8 @@ BULINIT
 ; ----------------------------------------------------------
             
             ; PARA QUE LA BALA NO APAREZCA ENCIMA DEL TANQUE (modificar para que sea hacia donde apunta)
-            ADD.W   #1+TANWIDTH/2,D1
-            ADD.W   #1+TANHEIGH/2,D2
+            ADD.W   #20,D1
+            ADD.W   #20,D2
 
             MOVEM.W D0-D5,-(A7)
             
@@ -67,7 +67,8 @@ BULINIT
             MOVEM.W (A7)+,D4-D5
             RTS
 .OTHERENE
-            JSR     DMMNEXTO
+
+            JSR     DMMNEXT
             BRA     .LOOP4      
             
 .SEGBULL            
@@ -393,7 +394,6 @@ BULPLOT
 
             RTS
             
-
 
 
 

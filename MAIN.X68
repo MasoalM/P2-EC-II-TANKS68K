@@ -48,7 +48,7 @@ START:
 ; READ INPUT DEVICES
 
             TRAP    #KBDUPTN
-;            TRAP    #MOUUPTN
+            ;TRAP    #MOUUPTN
 
 ; UPDATE GAME LOGIC
             JSR     STAUPD

@@ -10,9 +10,9 @@ KBDEDGE     DS.B    1       ; KEY EDGE
 
 ; --- MOUSE RELATED VARIABLES ------------------------------
 
-MOUEDGE     DS.B    1       ; MOUSE EDGE
-MOUBUT      DS.B    1       ; MOUSE LEFT BUTTON
-MOUPOS      DS.B    1       ; MOUSE POSITION
+MOUEDGE     DS.L    1       ; MOUSE EDGE
+MOUBUT      DS.L    1       ; MOUSE LEFT BUTTON
+MOUPOS      DS.L    1       ; MOUSE POSITION
 
 ; --- TIMED INTERRUPT RELATED VARIABLES --------------------
 
@@ -34,7 +34,6 @@ SHWFPS      DS.W    1       ; FPS PARA MOSTRAR
 ; --- FILE RELATED VARIABLES -------------------------------
 
 FILEDATA    DS.L    400000
-
 
 
 

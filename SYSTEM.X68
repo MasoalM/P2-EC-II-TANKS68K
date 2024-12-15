@@ -17,7 +17,7 @@ SYSINIT
             
             JSR     SCRINIT
             JSR     KBDINIT
-            ;JSR     MOUINIT
+            JSR     MOUINIT
             JSR     SNDINIT
             JSR     DMMINIT
             
@@ -240,10 +240,45 @@ MOUUPD
             MOVE.B  (MOUBUT),D1
             MOVE.B  D0,(MOUBUT)
             NOT.B   D1
-            AND.B   D1,D0
+            AND.B   D1,D0   
             MOVE.B  D0,(MOUEDGE)
+            MOVE.B  (MOUEDGE),D0
             MOVEM.L (A7)+,D0-D1
-            RTE
+            RTS
+            
+            ;ANDI.L  #$0000FFFF, D2 ;X
+            ;ANDI.L  #$FFFF0000, D3 ;Y
+            ;LSR.L   #8, D3
+            ;LSR.L   #8, D3
+            
+;-----------------------------------------------------------------------------             
+READMOU
+;READ MOUSE VARIABLES
+;
+;----------------------------------------------------------------------------- 
+            MOVEM.L D0-D3, -(A7)
+            CLR.L   D1
+            
+            MOVE.W  #61,D0           ;LECTURA DEL RATÓN
+            MOVE.B  #0,D1
+            TRAP    #15
+            
+            BTST    #0,D0
+            BEQ     .NOCLICKED
+      
+            MOVE.L  D1, D2           ;PROCESO DE EXTRACCIÓN DE LA COORDENADA X
+            ANDI.L  #$0000FFFF, D2
+            
+            MOVE.L  D1, D3           ;PROCESO D'EXTRACCIÓN DE LA COORDENADA Y
+            ;ANDI.L  #$FFFF0000, D3
+            ;LSR.L   #8, D3
+            ;LSR.L   #8, D3
+.NOCLICKED:             
+            MOVEM.L (A7)+, D0-D3
+            RTS
+
+
+
 
 
 

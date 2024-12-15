@@ -84,7 +84,7 @@ ISCINIT
             
             RTS  
 
-.FILENAME   DC.B    'pythonProject/SALIDA.bin',0
+.FILENAME   DC.B    'salida3.txt',0
             DS.W    0  
 .TXT1       DC.B    'TANKS 68K',0
 .TXT2       DC.B    '¡PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR!',0
@@ -113,8 +113,6 @@ ISCUPD
 .DONE       MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
-
-
 
 
 

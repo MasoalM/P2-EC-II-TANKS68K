@@ -81,7 +81,7 @@ TANUPD
             ; UPDATE COORDINATES
             MOVE.W  (A0),D0
             MOVE.W  2(A0),D1
-            
+            JSR     MOUUPD
             ; IF TANK IS NOT A BOT (PLAYER)
             CMP.W   #TANPLAY,14(A0)
             BNE.W   .BOT2
@@ -101,9 +101,15 @@ TANUPD
             ADD.W   4(A0),D1  ;SUMAMOS LA VELOCIDAD AL EJE Y
 .DISP          
             ; COMPROBAR SI ESTÁ DISPARANDO  
-        
-            BTST.B  #4,(KBDEDGE)            ; ESPACIO PULSADO
-            BEQ     .CONT2
+            
+            
+            MOVE.B  (MOUEDGE),D2
+            
+            CMP.B   #1,D2
+            BNE     .CONT2
+            
+            ;BTST.B  #4,(KBDEDGE)            ; ESPACIO PULSADO
+            ;BEQ     .CONT2
             
             CMP.W   #0,18(A0)
             BEQ     .CONT2                  ; NO QUEDAN BALAS DISPONIBLES 
@@ -216,6 +222,25 @@ TANUPD
             ; COMPROBACIÓN DE LA COLISIÓN DE LOS TANQUES CON OTROS TANQUES
 
 .CONT2 
+
+;utlhcol
+;            D0.W X0 COORDINATE
+;            D1.W Y0 COORDINATE
+;            D2.W X1 COORDINATE
+;            D3.W Y1 COORDINATE
+;            D4.W WIDTH 0
+;            D5.W WIDTH 1
+;            D6.W HEIGHT 0
+;            D7.W HEIGHT 1
+
+            MOVEM.L D0-D7,-(A7)
+            
+            
+            
+            MOVEM.L (A7)+,D0-D7
+
+
+
             ;INICIALIZAMOS
             LEA.L   MAPDATA,A1
             MOVE.W  (LVLNUM),D6
@@ -442,6 +467,10 @@ TANPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS    
+
+
+
+
 
 
 

@@ -35,6 +35,7 @@ GAMUPD
 ; ----------------------------------------------------------
 
             JSR     AGLUPD
+            
             ;JSR     FPSUPD
             
             ; RECORDAR QUE EL NIVEL ES CONCEPTUALMENTE UN NÚMERO MAYOR QUE EN EL CÓDIGO (EL CÓDIGO DEL NIVEL 1 ES 0, DEL NIVEL 2 ES 1, ...)
@@ -67,12 +68,13 @@ GAMPLOT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ----------------------------------------------------------
-            
             JSR     MAPPLOT
             JSR     AGLPLOT
             ;JSR     FPSPLOT
     
             BRA     SCOPLOT    
+
+
 
 
 
