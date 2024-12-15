@@ -81,7 +81,6 @@ TANUPD
             ; UPDATE COORDINATES
             MOVE.W  (A0),D0
             MOVE.W  2(A0),D1
-            JSR     MOUUPD
             
             ; IF TANK IS NOT A BOT (PLAYER)
             CMP.W   #TANPLAY,14(A0)
@@ -103,13 +102,8 @@ TANUPD
 .DISP          
             ; COMPROBAR SI ESTÁ DISPARANDO  
         
-            MOVE.B  (MOUEDGE),D2
-            
-            CMP.B   #1,D2
-            BNE     .CONT2
-            
-            ;BTST.B  #4,(KBDEDGE)            ; ESPACIO PULSADO
-            ;BEQ     .CONT2
+            BTST.B  #4,(KBDEDGE)            ; ESPACIO PULSADO
+            BEQ     .CONT2
             
             CMP.W   #0,18(A0)
             BEQ     .CONT2                  ; NO QUEDAN BALAS DISPONIBLES 
@@ -142,22 +136,51 @@ TANUPD
             MOVE.W  2(A0),D2
             MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no haría falta (por si la velocidad en un futuro la cambiamos a variable según el tanque)
             
-            ; -> HACER QUE EL TANQUE A VECES HAGA UN MOVIMIENTO ALEATORIO Y A VECES SE ACERQUE AL JUGADOR.
-            ; -> HACER QUE NO SE PUEDA ACERCAR AL JUGADOR A MÁS DE ? POSICIÓN
-            ; -> HACER QUE DISPARE CON UNA FRECUENCIA ASIGNADA (predecible?)
+            CMP.W   #40,22(A0)              (DEPENDE DEL RTF, POR AHORA ESO NO NOS MOLESTA)              
+            BHI     .FLLOWPLR               ; EN ESTA ITERACIÓN MOVERSE HACIA EL JUGADOR
             
-            ;MOVEM.L D0/A1,-(A7)
-            ;JSR     UTLRAND
-            ;AND.L   #$0000000C,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 4 (ALEATORIOS)
-            ;LEA     .POSVEC,A1
-            ;MOVE.L  (A1,D0),(A0)       ; RANDOM MOVEMENT    
-            ;MOVEM.L (A7)+,D0/A1
+            ; EN CASO DE NO HABER SALTADO, HACEMOS UN MOVIMIENTO RANDOM
+            
+            
+
+            MOVEM.L D0/A1,-(A7)
+            JSR     UTLRAND
+            AND.L   #$00000006,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 2 (ALEATORIOS)
+            LEA     .MOVVEC,A1
+            MOVE.L  (A1,D0),D4         ; RANDOM MOVEMENT   
+ 
+            MOVEM.L (A7)+,D0/A1
             ;RTS
             
+            ; 4 posibilidades aleatorias TENGO EN D4
+.MOVVEC     DC.B    0  ; 0
+            DC.B    1  ; 2
+            DC.B    2  ; 4
+            DC.B    3  ; 6
+            
+            CMP.B   #0,D4
+            BEQ     .CASOCERO
+            CMP.B   #1,D4
+            BEQ     .CASOUNO
+            CMP.B   #2,D4
+            BEQ     .CASODOS
+            
+            ; CASO TRES
+            
+            BRA     .ENDALG
+            
+            ; CASO CERO
+            
+            ; CASO UNO
+            
+            ; CASO DOS
+            
+
+.FLLOWPLR               
             MOVE.L  A0,A1
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            
+         
             CMP.W   8(A0),D1
             BHI     .NEGVELX                ; XENEM > XPLAY
             BLO     .POSVELX                ; XENEM < XPLAY

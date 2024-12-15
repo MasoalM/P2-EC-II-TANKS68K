@@ -231,7 +231,6 @@ MOUUPD
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
-
             MOVEM.L D0-D1,-(A7)
             MOVE.B  #61,D0
             CLR.B   D1
@@ -240,18 +239,13 @@ MOUUPD
             MOVE.B  (MOUBUT),D1
             MOVE.B  D0,(MOUBUT)
             NOT.B   D1
-            AND.B   D1,D0   
+            AND.B   D1,D0
             MOVE.B  D0,(MOUEDGE)
             MOVE.B  (MOUEDGE),D0
             MOVEM.L (A7)+,D0-D1
             RTS
             
-            ;ANDI.L  #$0000FFFF, D2 ;X
-            ;ANDI.L  #$FFFF0000, D3 ;Y
-            ;LSR.L   #8, D3
-            ;LSR.L   #8, D3
-            
-;-----------------------------------------------------------------------------             
+; ----------------------------------------------------------------------------           
 READMOU
 ;READ MOUSE VARIABLES
 ;
@@ -276,9 +270,6 @@ READMOU
 .NOCLICKED:             
             MOVEM.L (A7)+, D0-D3
             RTS
-
-
-
 
 
 

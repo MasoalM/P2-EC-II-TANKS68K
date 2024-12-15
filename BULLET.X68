@@ -67,8 +67,7 @@ BULINIT
             MOVEM.W (A7)+,D4-D5
             RTS
 .OTHERENE
-
-            JSR     DMMNEXT
+            JSR     DMMNEXTO
             BRA     .LOOP4      
             
 .SEGBULL            
@@ -394,6 +393,8 @@ BULPLOT
 
             RTS
             
+
+
 
 
 
