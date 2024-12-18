@@ -272,6 +272,130 @@ READMOU
             RTS
 
 
+; ----------------------------------------------------------------------------           
+APUNTADOR
+;COLOCA LA DIRECCIÓN EN LA CUAL APUNTA EL RATÓN (LA FOTO, LAS VARS DE LA BALA)
+;
+;----------------------------------------------------------------------------- 
+
+
+
+            MOVEM.L D2-D7,-(A7)
+            
+            MOVE.L (MOUPOS),D2
+            MOVE.L  D2,D3            ;PROCESO DE EXTRACCIÓN DE LA COORDENADA X
+            ANDI.L  #$0000FFFF, D3   ;X EN D1
+            
+            MOVE.L  D2,D4            ;PROCESO D'EXTRACCIÓN DE LA COORDENADA Y
+            ANDI.L  #$FFFF0000, D4   ;Y EN D2
+            LSR.L   #8,D4
+            LSR.L   #8,D4
+            
+            SUB.W   D0,D3
+            SUB.W   D1,D4
+            
+            MOVE.W  D4,D5
+            EXT.L   D5
+            LSR.L   #1,D5             ;DIVIDIR POR Y 2
+            CMP.W   D3,D5
+            BLT     .UPRECTEI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA EMPINADA INFERIOR
+            
+            MOVE.W  D4,D5
+            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
+            NEG.W   D5                 ;NEGAMOS Y
+            CMP.W   D3,D5
+            BLT     .DWRECTSS         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
+
+
+            MOVE.W  D4,D5
+            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
+            CMP.W   D3,D5
+            BLT     .DWRECTSI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE INFERIOR
+            MOVE.W  #-BULSPEED,(BULVELX)          ;ZONA 6 
+            MOVE.W  #0,(BULVELY)
+            MOVE.W  #-20,(BULPOSORGX)
+            MOVE.W  #0,(BULPOSORGY)
+            
+            BRA     .FINAPU  
+.DWRECTSI            
+            MOVE.W  #-BULSPEED/2,(BULVELX)          ;ZONA 7
+            MOVE.W  #-BULSPEED/2,(BULVELY)
+            MOVE.W  #-20,(BULPOSORGX)
+            MOVE.W  #-20,(BULPOSORGY)
+            BRA     .FINAPU
+            
+.DWRECTSS            
+            MOVE.W  D4,D5
+            EXT.L   D5
+            LSR.L   #1,D5             ;DIVIDIR Y POR 2
+            NEG.W   D5
+            
+            CMP.W   D3,D5
+            BLT     .DWRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
+            MOVE.W  #-BULSPEED/2,(BULVELX)          ;ZONA 5
+            MOVE.W  #BULSPEED/2,(BULVELY)
+            MOVE.W  #-20,(BULPOSORGX)
+            MOVE.W  #20,(BULPOSORGY) 
+            BRA     .FINAPU  
+.DWRECTES            
+            MOVE.W  #BULSPEED,(BULVELY)          ;ZONA 4
+            MOVE.W  #0,(BULVELX)
+            MOVE.W  #20,(BULPOSORGY)
+            MOVE.W  #0,(BULPOSORGX)
+            BRA     .FINAPU
+
+
+            
+.UPRECTEI            
+
+            MOVE.W  D4,D5
+            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
+            NEG.W   D5                 ;NEGAMOS Y
+            CMP.W   D3,D5
+            BGT     .UPRECTSS         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
+
+
+            MOVE.W  D4,D5
+            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
+            CMP.W   D3,D5
+            BLT     .UPRECTSI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE INFERIOR
+            MOVE.W  #BULSPEED/2,(BULVELX)          ;ZONA 3
+            MOVE.W  #BULSPEED/2,(BULVELY)
+            MOVE.W  #20,(BULPOSORGX)
+            MOVE.W  #20,(BULPOSORGY)
+            BRA     .FINAPU  
+.UPRECTSI            
+            MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 2
+            MOVE.W  #0,(BULVELY)
+            MOVE.W  #20,(BULPOSORGX)
+            MOVE.W  #0,(BULPOSORGY)
+            BRA     .FINAPU
+            
+.UPRECTSS            
+            MOVE.W  D4,D5
+            EXT.L   D5
+            LSR.L   #1,D5             ;DIVIDIR Y POR 2
+            NEG.W   D5
+            
+            CMP.W   D3,D5
+            BLT     .UPRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
+            MOVE.W  #-BULSPEED,(BULVELY)          ;ZONA 0
+            MOVE.W  #0,(BULVELX)
+            MOVE.W  #-20,(BULPOSORGY)
+            MOVE.W  #0,(BULPOSORGX)
+            BRA     .FINAPU  
+.UPRECTES            
+            MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 1
+            MOVE.W  #-BULSPEED/2,(BULVELY)
+            MOVE.W  #20,(BULPOSORGX)
+            MOVE.W  #-20,(BULPOSORGY)
+            BRA     .FINAPU
+            
+.FINAPU
+            
+            
+            MOVEM.L (A7)+,D2-D7
+            RTS
 
 
 

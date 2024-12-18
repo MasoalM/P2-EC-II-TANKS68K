@@ -87,10 +87,12 @@ TANUPD
             BEQ     .DISP
             ADD.W   4(A0),D1  ;SUMAMOS LA VELOCIDAD AL EJE Y
 .DISP          
-            ; COMPROBAR SI EST? DISPARANDO  
+            ; COMPROBAR SI ESTÁ DISPARANDO  
             
-            MOVE.B  (MOUEDGE),D2
-
+            JSR     APUNTADOR
+            
+            MOVE.B  (MOUEDGE),D2   
+            
             CMP.B   #1,D2
             BNE     .CONT2
 
@@ -489,6 +491,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
 
 *~Font name~Courier New~
 *~Font size~10~

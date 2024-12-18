@@ -35,6 +35,14 @@ PLYRDEAD    DS.W    1       ; PLAYER MUERTO
 
 DOPLOT      DS.W    1
 
+; --- VARIABLES RELACIONADAS CON LA BALA -------------------
+
+BULVELY        DS.W    1
+BULVELX        DS.W    1
+BULPOSORGY     DS.W    1
+BULPOSORGX     DS.W    1
+
+
 
 
 

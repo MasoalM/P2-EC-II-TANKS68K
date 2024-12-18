@@ -20,8 +20,8 @@ BULINIT
 ; ----------------------------------------------------------
             
             ; PARA QUE LA BALA NO APAREZCA ENCIMA DEL TANQUE (modificar para que sea hacia donde apunta)
-            ADD.W   #20,D1
-            ADD.W   #20,D2
+            ADD.W   (BULPOSORGX),D1
+            ADD.W   (BULPOSORGY),D2
 
             MOVEM.W D0-D5,-(A7)
             
@@ -74,8 +74,8 @@ BULINIT
             
             ; TOQUES DE LA BALA DISPONIBLES CON LAS PAREDES EMPIEZAN SIENDO EL MÁXIMO
             MOVE.W  #MAXTOUCH,10(A0)
-            MOVE.W  #BULSPEED,4(A0)             ; hacer que bulspeed sea variable y que sea 0 o el bulspeed actual (para que se mueva en 8 direcciones)
-            MOVE.W  #BULSPEED,6(A0)
+            MOVE.W  (BULVELX),4(A0)
+            MOVE.W  (BULVELY),6(A0)
             RTS
             
 ; ----------------------------------------------------------
@@ -391,6 +391,7 @@ BULPLOT
 
             RTS
             
+
 
 
 
