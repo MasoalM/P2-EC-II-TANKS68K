@@ -90,14 +90,30 @@ START:
 
 ; --- PLOT -------------------------------------------------
             
+            MOVE.W  SHWFPS,D6
+            CMP.W   #20,D6
+            BLS     .LOWFPS
+
+            CMP.W   #0,(DOPLOT) ; subir esto arriba para que se vea la pantalla de título?
+            BEQ     .NOTPLOT 
+            BRA     .DOPLOT
+
+.LOWFPS 
+            CMP.W   #15,D6
+            BLS     .SOLOWFPS
+            BTST    #16,(SCRCYCCT)
+            BEQ     .NOTPLOT
+            BNE     .DOPLOT   
+.SOLOWFPS
+            BTST    #8,(SCRCYCCT)    
+            BEQ     .NOTPLOT        
+.DOPLOT            
             JSR     STAPLOT
             JSR     FPSPLOT 
-
-            CMP.W   #0,(DOPLOT)
-            BEQ     .NOTPLOT        
  
             TRAP    #SCRUPTN            ; UPDATE DOUBLE BUFFER
 .NOTPLOT
+
             BRA     .LOOP
 
 .FILENAME       DC.B    'pythonProject/OUTPUT/SALIDA.bin',0 
@@ -144,6 +160,7 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
 
 
 
