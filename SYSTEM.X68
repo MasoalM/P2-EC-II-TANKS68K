@@ -56,7 +56,7 @@ SNDINIT
 .SNDGVR1    DC.B    'SND/GOVER1.wav',0
 .SNDGVR2    DC.B    'SND/GOVER2.wav',0
 .SNDWIN     DC.B    'SND/WIN.wav',0
-            DS.W   0
+            DS.W    0
 .SNDLIST    DC.L    .SNDINTRO,.SNDINSTR,.SNDWALL,.SNDHIT,.SNDKILL,.SNDBULEX,.SNDDISP,.SNDGVR1,.SNDGVR2,.SNDWIN,0
             
 ; ----------------------------------------------------------
@@ -396,6 +396,7 @@ APUNTADOR
             
             MOVEM.L (A7)+,D2-D7
             RTS
+
 
 
 

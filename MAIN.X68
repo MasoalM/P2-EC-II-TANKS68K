@@ -40,22 +40,32 @@ START:
             JSR     SYSINIT
             JSR     FPSINIT
             JSR     UTLINIT
+                     
+            MOVEM.L  D1/A0-A1,-(A7)            
+            LEA     FILEDATA,A0             ; DESTINATION ADDRESS
+            LEA     .FILENAME,A1            ; FILE NAME
             
+            MOVE.W  #15,D1
             
-            MOVEM.L  A0-A1,-(A7)
-            LEA     FILEDATA,A0            ; DESTINATION ADDRESS
-            LEA     .FILENAME,A1           ; FILE NAME
+            LEA     FILPLDAT,A0             ; DESTINATION ADDRESS
+            LEA     .FILPLXE,A1             ; FILE NAME
+.FILLOOP1            
+            CMP.W   #0,(A1)+
+            BEQ     .DONE1
             JSR     FILLOAD
-            
-            LEA     FILPLDAT,A0            ; DESTINATION ADDRESS
-            LEA     .FILEPLYR,A1           ; FILE NAME
+            DBRA    D1,.FILLOOP1
+.DONE1            
+            LEA     FILENDAT,A0             ; DESTINATION ADDRESS
+            LEA     .FILENXE,A1             ; FILE NAME
+.FILLOOP2 
+            CMP.W   #0,(A1)+
+            BEQ     .DONE2
             JSR     FILLOAD
+            BRA     .FILLOOP2
+
+.DONE2               
             
-            LEA     FILENDAT,A0            ; DESTINATION ADDRESS
-            LEA     .FILEENEM,A1           ; FILE NAME
-            JSR     FILLOAD
-            
-            MOVEM.L  (A7)+,A0-A1
+            MOVEM.L  (A7)+,D1/A0-A1
             
             JSR     STAINIT
 
@@ -90,9 +100,41 @@ START:
 .NOTPLOT
             BRA     .LOOP
 
-.FILENAME    DC.B    'pythonProject/SALIDA.bin',0 
-.FILEPLYR    DC.B    'pythonProject/PLAYER.bin',0
-.FILEENEM    DC.B    'pythonProject/ENEMY.bin',0            
+.FILENAME       DC.B    'pythonProject/OUTPUT/SALIDA.bin',0 
+.FILPLXE        DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_E.bin',0
+.FILPLXN        DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_N.bin',0
+.FILPLXNE       DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_NE.bin',0
+.FILPLXNW       DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_NW.bin',0
+.FILPLXS        DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_S.bin',0
+.FILPLXSE       DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_SE.bin',0
+.FILPLXSW       DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_SW.bin',0
+.FILPLXW        DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_W.bin',0
+.FILPLYE        DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_Y_E.bin',0
+.FILPLYN        DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_Y_N.bin',0
+.FILPLYNE       DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_Y_NE.bin',0
+.FILPLYNW       DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_Y_NW.bin',0
+.FILPLYS        DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_Y_S.bin',0
+.FILPLYSE       DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_Y_SE.bin',0
+.FILPLYSW       DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_Y_SW.bin',0
+.FILPLYW        DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_Y_W.bin',0
+.FILENXE        DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_X_E.bin',0
+.FILENXN        DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_X_N.bin',0
+.FILENXNE       DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_X_NE.bin',0
+.FILENXNW       DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_X_NW.bin',0
+.FILENXS        DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_X_S.bin',0
+.FILENXSE       DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_X_SE.bin',0
+.FILENXSW       DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_X_SW.bin',0
+.FILENXW        DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_X_W.bin',0
+.FILENYE        DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_Y_E.bin',0
+.FILENYN        DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_Y_N.bin',0
+.FILENYNE       DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_Y_NE.bin',0
+.FILENYNW       DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_Y_NW.bin',0
+.FILENYS        DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_Y_S.bin',0
+.FILENYSE       DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_Y_SE.bin',0
+.FILENYSW       DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_Y_SW.bin',0
+.FILENYW        DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_Y_W.bin',0
+                DS.W    0
+          
 
     SIMHALT
     
@@ -102,6 +144,7 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
 
 
 
