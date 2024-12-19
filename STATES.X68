@@ -9,6 +9,7 @@ STAINIT
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
+            MOVE.W  #0,(DEMO)
             MOVE.W  #STANONE,(STACUR)
             CLR.W   (STANEXT)
             RTS
@@ -68,6 +69,7 @@ STAEMPTY
 ; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
 ; -----------------------------------------------------------------------------
             RTS
+
 
 
 

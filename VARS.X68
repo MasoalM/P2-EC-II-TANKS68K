@@ -37,10 +37,14 @@ DOPLOT      DS.W    1
 
 ; --- VARIABLES RELACIONADAS CON LA BALA -------------------
 
-BULVELY        DS.W    1
-BULVELX        DS.W    1
-BULPOSORGY     DS.W    1
-BULPOSORGX     DS.W    1
+BULVELY     DS.W    1
+BULVELX     DS.W    1
+BULPOSORGY  DS.W    1
+BULPOSORGX  DS.W    1
+
+; --- VARIABLES RELACIONADAS CON LA DEMO -------------------
+
+DEMO        DS.W    1       ; SI VALE 1, ESTAMOS EN LA DEMO, SI VALE 0 NO
 
 
 

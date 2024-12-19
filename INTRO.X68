@@ -14,7 +14,6 @@ ISCINIT
             MOVE.B  #92,D0                  ;DESACTIVAR DOBLE BUFFER
             MOVE.B  #16,D1
             TRAP    #15
-            ;TRAP    #0
             
             CLR.W   (ISCTIMER) 
             MOVEM.L D0-D6/A0,-(A7)
@@ -42,7 +41,7 @@ ISCINIT
 
             MOVE.L  D1,D5
             MOVE.L  (A0)+,D1
-            MOVE.B  #80,D0                  ; MOVE.B #81,D0
+            MOVE.B  #80,D0
             TRAP    #15
             MOVE.L  D5,D1
 
@@ -75,8 +74,6 @@ ISCINIT
             MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
             MOVE.B  #92,D0
             TRAP    #15
-             
-            ;TRAP    #SCRUPTN
             
             RTS  
 
@@ -102,12 +99,14 @@ ISCUPD
 .CONT       ADDQ.W  #1,(ISCTIMER)
             CMP.W   #ISCMAXTM,(ISCTIMER)
             BLT     .DONE
-            MOVE.W  #1,(STANEXT)
+            MOVE.W  #1,(DEMO)
+            MOVE.W  #2,(STANEXT)
             RTS
      
 .DONE       MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 
