@@ -41,31 +41,144 @@ START:
             JSR     FPSINIT
             JSR     UTLINIT
                      
-            MOVEM.L  D1/A0-A1,-(A7)            
-            LEA     FILEDATA,A0             ; DESTINATION ADDRESS
-            LEA     .FILENAME,A1            ; FILE NAME
-            
-            MOVE.W  #15,D1
-            
-            LEA     FILPLDAT,A0             ; DESTINATION ADDRESS
-            LEA     .FILPLXE,A1             ; FILE NAME
-.FILLOOP1            
-            CMP.W   #0,(A1)+
-            BEQ     .DONE1
+            MOVEM.L  A0-A1,-(A7)
+            LEA     FILEDATA,A0            ; DESTINATION ADDRESS
+            LEA     .FILENAME,A1           ; FILE NAME
             JSR     FILLOAD
-            DBRA    D1,.FILLOOP1
-.DONE1            
-            LEA     FILENDAT,A0             ; DESTINATION ADDRESS
-            LEA     .FILENXE,A1             ; FILE NAME
-.FILLOOP2 
-            CMP.W   #0,(A1)+
-            BEQ     .DONE2
+            
+            LEA     DATPLXE,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLXE,A1           ; FILE NAME
             JSR     FILLOAD
-            BRA     .FILLOOP2
+            
+            LEA     DATPLXN,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLXN,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLXNE,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLXNE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLXNW,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLXNW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLXS,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLXS,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLXSE,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLXSE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLXSW,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLXSW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLXW,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLXW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLYE,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLYE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLYN,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLYN,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLYNE,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLYNE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLYNW,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLYNW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLYS,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLYS,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLYSE,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLYSE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLYSW,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLYSW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATPLYW,A0            ; DESTINATION ADDRESS
+            LEA     .FILPLYW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENXE,A0            ; DESTINATION ADDRESS
+            LEA     .FILENXE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENXN,A0            ; DESTINATION ADDRESS
+            LEA     .FILENXN,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENXNE,A0            ; DESTINATION ADDRESS
+            LEA     .FILENXNE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENXNW,A0            ; DESTINATION ADDRESS
+            LEA     .FILENXNW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENXS,A0            ; DESTINATION ADDRESS
+            LEA     .FILENXS,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENXSE,A0            ; DESTINATION ADDRESS
+            LEA     .FILENXSE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENXSW,A0            ; DESTINATION ADDRESS
+            LEA     .FILENXSW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENXW,A0            ; DESTINATION ADDRESS
+            LEA     .FILENXW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENYE,A0            ; DESTINATION ADDRESS
+            LEA     .FILENYE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENYN,A0            ; DESTINATION ADDRESS
+            LEA     .FILENYN,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENYNE,A0            ; DESTINATION ADDRESS
+            LEA     .FILENYNE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENYNW,A0            ; DESTINATION ADDRESS
+            LEA     .FILENYNW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENYS,A0            ; DESTINATION ADDRESS
+            LEA     .FILENYS,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENYSE,A0            ; DESTINATION ADDRESS
+            LEA     .FILENYSE,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENYSW,A0            ; DESTINATION ADDRESS
+            LEA     .FILENYSW,A1           ; FILE NAME
+            JSR     FILLOAD
+            
+            LEA     DATENYW,A0            ; DESTINATION ADDRESS
+            LEA     .FILENYW,A1           ; FILE NAME
+            JSR     FILLOAD
 
-.DONE2               
+
             
-            MOVEM.L  (A7)+,D1/A0-A1
+            
+            MOVEM.L  (A7)+,A0-A1
+
             
             JSR     STAINIT
 
@@ -160,6 +273,7 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+
 
 
 

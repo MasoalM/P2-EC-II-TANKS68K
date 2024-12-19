@@ -427,19 +427,20 @@ TANPLOT
             ; DRAW TANK
             CMP.W   #2,14(A0)
             BEQ     .DRAWPLAY
-            LEA     FILENDAT,A1
+            LEA     DATENXN,A1
             BRA     .DRAW
 .DRAWPLAY
-            LEA     FILPLDAT,A1
+            LEA     DATPLXNE,A1
 .DRAW                        
-            MOVE.W  (A0),D1
+            ;MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
-            SUB.W   #TANWIDTH/2,D1
+            ;SUB.W   #TANWIDTH/2,D1
             SUB.W   #TANHEIGH/2,D2
-            MOVE.W  D1,D3
+            ;MOVE.W  D1,D3
             MOVE.W  D2,D4
-            ADDQ.W  #1,D3
-            ADDQ.W  #1,D4
+            ;ADDQ.W  #1,D3
+            ;ADDQ.W  #1,D4
+            SUBQ.W  #1,D2
 .FILA
             MOVE.W  (A0),D1
             SUB.W   #TANWIDTH/2,D1
@@ -491,6 +492,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
 
 
 
