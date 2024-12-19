@@ -73,11 +73,15 @@ TANUPD
             CMP.W   #TANPLAY,14(A0)
             BNE.W   .BOT2
             
+            JSR     APUNTADOR
+            
             BTST.B  #0,(KBDVAL)
             BEQ     .CHKLEFT
+            ADDQ.W  #1,(PLCANPOS)
             SUB.W   4(A0),D0  ;RESTAMOS LA VELOCIDAD AL EJE X
 .CHKLEFT    BTST.B  #2,(KBDVAL)
             BEQ     .CONT1
+            ADDQ.W  #1,(PLCANPOS)
             ADD.W   4(A0),D0  ;SUMAMOS LA VELOCIDAD AL EJE X
 .CONT1            
             BTST.B  #1,(KBDVAL)
@@ -89,15 +93,10 @@ TANUPD
 .DISP          
             ; COMPROBAR SI ESTÁ DISPARANDO  
             
-            JSR     APUNTADOR
-            
             MOVE.B  (MOUEDGE),D2   
             
             CMP.B   #1,D2
             BNE     .CONT2
-
-            ;BTST.B  #4,(KBDEDGE)            ; ESPACIO PULSADO
-            ;BEQ     .CONT2
             
             CMP.W   #0,18(A0)
             BEQ     .CONT2                  ; NO QUEDAN BALAS DISPONIBLES 
@@ -414,7 +413,8 @@ TANUPD
             DC.B    1  ; 2
             DC.B    2  ; 4
             DC.B    3  ; 6            
-                      
+          
+; ----------------------------------------------------------            
 TANPLOT
 ; PLOT THE TANK
 ; INPUT     : A0 POINTER TO THE INSTANCE VARIABLES
@@ -430,7 +430,7 @@ TANPLOT
             LEA     DATENXN,A1
             BRA     .DRAW
 .DRAWPLAY
-            LEA     DATPLXNE,A1
+            JSR     PLIMASEL
 .DRAW                        
             ;MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
@@ -492,6 +492,8 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
+
 
 
 

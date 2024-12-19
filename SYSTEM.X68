@@ -278,8 +278,6 @@ APUNTADOR
 ;
 ;----------------------------------------------------------------------------- 
 
-
-
             MOVEM.L D2-D7,-(A7)
             
             MOVE.L (MOUPOS),D2
@@ -302,7 +300,7 @@ APUNTADOR
             
             MOVE.W  D4,D5
             LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
-            NEG.W   D5                 ;NEGAMOS Y
+            NEG.W   D5                ;NEGAMOS Y
             CMP.W   D3,D5
             BLT     .DWRECTSS         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
 
@@ -316,12 +314,15 @@ APUNTADOR
             MOVE.W  #-20,(BULPOSORGX)
             MOVE.W  #0,(BULPOSORGY)
             
+            MOVE.W  #12,(PLCANPOS)
             BRA     .FINAPU  
 .DWRECTSI            
             MOVE.W  #-BULSPEED/2,(BULVELX)          ;ZONA 7
             MOVE.W  #-BULSPEED/2,(BULVELY)
             MOVE.W  #-20,(BULPOSORGX)
             MOVE.W  #-20,(BULPOSORGY)
+            
+            MOVE.W  #14,(PLCANPOS)
             BRA     .FINAPU
             
 .DWRECTSS            
@@ -336,15 +337,17 @@ APUNTADOR
             MOVE.W  #BULSPEED/2,(BULVELY)
             MOVE.W  #-20,(BULPOSORGX)
             MOVE.W  #20,(BULPOSORGY) 
+            
+            MOVE.W  #10,(PLCANPOS)
             BRA     .FINAPU  
 .DWRECTES            
             MOVE.W  #BULSPEED,(BULVELY)          ;ZONA 4
             MOVE.W  #0,(BULVELX)
             MOVE.W  #20,(BULPOSORGY)
             MOVE.W  #0,(BULPOSORGX)
+            
+            MOVE.W  #8,(PLCANPOS)
             BRA     .FINAPU
-
-
             
 .UPRECTEI            
 
@@ -363,12 +366,16 @@ APUNTADOR
             MOVE.W  #BULSPEED/2,(BULVELY)
             MOVE.W  #20,(BULPOSORGX)
             MOVE.W  #20,(BULPOSORGY)
+            
+            MOVE.W  #6,(PLCANPOS)
             BRA     .FINAPU  
 .UPRECTSI            
             MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 2
             MOVE.W  #0,(BULVELY)
             MOVE.W  #20,(BULPOSORGX)
             MOVE.W  #0,(BULPOSORGY)
+            
+            MOVE.W  #4,(PLCANPOS)
             BRA     .FINAPU
             
 .UPRECTSS            
@@ -383,19 +390,23 @@ APUNTADOR
             MOVE.W  #0,(BULVELX)
             MOVE.W  #-20,(BULPOSORGY)
             MOVE.W  #0,(BULPOSORGX)
+            
+            MOVE.W  #0,(PLCANPOS)
             BRA     .FINAPU  
 .UPRECTES            
             MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 1
             MOVE.W  #-BULSPEED/2,(BULVELY)
             MOVE.W  #20,(BULPOSORGX)
             MOVE.W  #-20,(BULPOSORGY)
-            BRA     .FINAPU
+            
+            MOVE.W  #2,(PLCANPOS)
             
 .FINAPU
             
             
             MOVEM.L (A7)+,D2-D7
             RTS
+
 
 
 

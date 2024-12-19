@@ -150,6 +150,92 @@ RELPOS
             RTS
             
 ; -----------------------------------------------------------------------------
+PLIMASEL
+; SELECT THE TANK AND CANNON POSITION TO PLOT FOR THE PLAYER
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - A1
+; -----------------------------------------------------------------------------
+            MOVEM.L D0-D7,-(A7)
+            CMP.W   #8,(PLCANPOS)
+            BLO     .LOW1     
+            CMP.W   #12,(PLCANPOS)
+            BLO     .LOW2
+            CMP.W   #14,(PLCANPOS)
+            BLO     .LOW3
+            BNE     .QUINCE
+            LEA     DATPLYNW,A1
+            BRA     .ENDDECOD
+.QUINCE
+            LEA     DATPLXNW,A1
+            BRA     .ENDDECOD
+.LOW3
+            CMP.W   #12,(PLCANPOS)
+            BNE     .TRECE
+            LEA     DATPLYW,A1
+            BRA     .ENDDECOD
+.TRECE
+            LEA     DATPLXNW,A1
+            BRA     .ENDDECOD
+.LOW2
+            CMP.W   #10,(PLCANPOS)
+            BLO     .LOW31
+            BNE     .ONCE
+            LEA     DATPLYSW,A1
+            BRA     .ENDDECOD
+.ONCE
+            LEA     DATPLXNW,A1
+            BRA     .ENDDECOD
+.LOW31
+            CMP.W   #8,(PLCANPOS)
+            BNE     .NUEVE
+            LEA     DATPLYS,A1
+            BRA     .ENDDECOD
+.NUEVE
+            LEA     DATPLXS,A1
+            BRA     .ENDDECOD
+
+
+            
+.LOW1
+            CMP.W   #4,(PLCANPOS)
+            BLO     .LOW211
+            CMP.W   #6,(PLCANPOS)
+            BLO     .LOW311
+            BNE     .SIETE
+            LEA     DATPLYSE,A1
+            BRA     .ENDDECOD
+.SIETE
+            LEA     DATPLXSE,A1
+            BRA     .ENDDECOD
+.LOW311
+            CMP.W   #4,(PLCANPOS)
+            BNE     .CINCO
+            LEA     DATPLYE,A1
+            BRA     .ENDDECOD
+.CINCO
+            LEA     DATPLXE,A1
+            BRA     .ENDDECOD
+.LOW211
+            CMP.W   #2,(PLCANPOS)
+            BLO     .LOW321
+            BNE     .TRES
+            LEA     DATPLYNE,A1
+            BRA     .ENDDECOD
+.TRES
+            LEA     DATPLXNW,A1
+            BRA     .ENDDECOD
+.LOW321
+            CMP.W   #0,(PLCANPOS)
+            BNE     .UNO
+            LEA     DATPLYN,A1
+            BRA     .ENDDECOD
+.UNO
+            LEA     DATPLXN,A1
+.ENDDECOD           
+            MOVEM.L (A7)+,D0-D7
+            RTS
+; -----------------------------------------------------------------------------
 UTLRAND
 ; PROVIDES A PSEUDO-RANDOM BYTE
 ; INPUT    - NONE
@@ -199,6 +285,8 @@ UTLRAND
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
             
+
+
 
 
 
