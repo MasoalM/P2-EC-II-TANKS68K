@@ -24,11 +24,9 @@ SNDINSTR    EQU     1
 SNDWALL     EQU     2
 SNDHIT      EQU     3
 SNDKILL     EQU     4
-SNDBULEX    EQU     5
-SNDDISP     EQU     6
-SNDGVR1     EQU     7
-SNDGVR2     EQU     8
-SNDWIN      EQU     9
+SNDDISP     EQU     5
+SNDGVR1     EQU     6
+SNDWIN      EQU     7
 
 ; --- TRAP NUMBERS -----------------------------------------
 
@@ -40,6 +38,7 @@ SNDPLTN     EQU     3           ; SOUND PLAY TRAP NUMBER
 ; --- INTERRUPT NUMBERS ------------------------------------
 
 SCRINTN     EQU     1           ; TIMED INTERRUPT NUMBER
+
 
 
 

@@ -49,9 +49,9 @@ BULINIT
             
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            CMP.W   28(A0),D4
+            CMP.W   20(A0),D4
             BNE     .NOTPLAYER
-            ADDQ.W  #1,26(A0)
+            ADDQ.W  #1,18(A0)
             MOVE.L  A1,A0
             JSR     AGLKILL
             MOVEM.W (A7)+,D4-D5
@@ -59,9 +59,9 @@ BULINIT
 .NOTPLAYER
             MOVE.W  #TANENEM,D0
             JSR     DMMFRSTO
-.LOOP4      CMP.W   28(A0),D4
+.LOOP4      CMP.W   20(A0),D4
             BNE     .OTHERENE
-            ADDQ.W  #1,26(A0)
+            ADDQ.W  #1,18(A0)
             MOVE.L  A1,A0
             JSR     AGLKILL
             MOVEM.W (A7)+,D4-D5
@@ -221,7 +221,7 @@ BULUPD
             ADDQ.W  #1,D4
             CMP.W   D3,D4
             BNE     .LOOP32
-            ADDQ.W  #1,26(A0)       ; AGREGAR UNA BALA DISPONIBLE AL TANQUE SI ES EL PADRE ; no llega aquí?
+            ADDQ.W  #1,18(A0)       ; AGREGAR UNA BALA DISPONIBLE AL TANQUE SI ES EL PADRE ; no llega aquí?
             BRA     .ENDCOLEX
 .LOOP32     JSR     DMMNEXTO
             BRA     .LOOP31
@@ -231,7 +231,7 @@ BULUPD
             JSR     DMMFRSTO
             CMP.W   #0,D3       ; puede que falle en un futuro que las dos líneas de arriba se ejecuten ?
             BNE     .ENDCOLEX
-            ADDQ.W  #1,26(A0)
+            ADDQ.W  #1,18(A0)
             
 .ENDCOLEX   ; FINAL EN EL QUE LA BALA EXPLOTA POR TENER X COLISIONES CON BLOQUES         
             ;MOVE.B  #SNDBULEX,D7
@@ -240,8 +240,8 @@ BULUPD
             RTS 
 
 
-.BULWALL    ;MOVE.B  #SNDWALL,D7 ; BULLET WALL SOUND
-            ;TRAP    #SNDPLTN           
+.BULWALL    MOVE.B  #SNDWALL,D7 ; BULLET WALL SOUND
+            TRAP    #SNDPLTN           
             
 .CHKTAN     
             ; CHECK TANK COLLISIONS
@@ -286,18 +286,16 @@ BULUPD
 
             ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET)  ; agregar part?culas?         
 .EXPLO          
-            SUB.W   #BULDMG,24(A0)
+            SUB.W   #BULDMG,16(A0)
             
-            CMP.W   #0,24(A0)
+            CMP.W   #0,16(A0)
             BHI     .ALIVE
             ; IF TANK LIFE IS 0
             
-            CMP.W   #TANPLAY,22(A0)
+            CMP.W   #TANPLAY,14(A0)
             BNE.W   .ENSNDKIL
             ; IF HIT TANK IS NOT A BOT (PLAYER)
             MOVE.W  #KILLPLYR,(PLYRDEAD)
-            ;MOVE.B  #SNDWAA,D7
-            ;TRAP    #SNDPLTN
             JSR     AGLKILL
             BRA     .BULFINAL   
 .ENSNDKIL   ; IF TANK IS A BOT 
@@ -312,7 +310,6 @@ BULUPD
 .BULFINAL    
             MOVE.L  A1,A0
             MOVE.W  8(A0),D3    ; ALMACENAR EL FATHER ID
-            ;MOVE.L  A0,A1   
      
             ; SUMARLE UNA BALA DISPONIBLE AL TANQUE
             ; COMPROBAR SI EL TANQUE PADRE DE LA BALA ES UN BOT, RECORRER TODOS Y COMPROBAR CON CU?L COINCIDE EL TANID
@@ -325,7 +322,7 @@ BULUPD
             
             CMP.W   D2,D3
             BNE     .LOOP22     
-            ADDQ.W  #1,26(A0)   ; SI ES EL PADRE LE SUMAMOS UNA BALA DISPONIBLE
+            ADDQ.W  #1,18(A0)   ; SI ES EL PADRE LE SUMAMOS UNA BALA DISPONIBLE
             BRA     .KILLBULL
 
 .LOOP22     JSR     DMMNEXTO
@@ -335,9 +332,9 @@ BULUPD
 .PLAYBULL   ; EL TANQUE PADRE DE LA BALA ES EL JUGADOR (O ES UN ENEMIGO QUE HA MUERTO)
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            CMP.W   #0,D3       ; puede que falle en un futuro que las dos l?neas de arriba se ejecuten ?
+            CMP.W   #0,D3
             BNE     .KILLBULL
-            ADDQ.W  #1,26(A0)
+            ADDQ.W  #1,18(A0)
             
 .KILLBULL
             MOVE.L  A1,A0             
@@ -391,6 +388,7 @@ BULPLOT
 
             RTS
             
+
 
 
 

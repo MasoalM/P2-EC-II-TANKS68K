@@ -51,13 +51,11 @@ SNDINIT
 .SNDWALL    DC.B    'SND/WALL.wav',0
 .SNDHIT     DC.B    'SND/HIT.wav',0
 .SNDKILL    DC.B    'SND/ENEMKILL.wav',0
-.SNDBULEX   DC.B    'SND/BULEXP.wav',0
 .SNDDISP    DC.B    'SND/DISP.wav',0
 .SNDGVR1    DC.B    'SND/GOVER1.wav',0
-.SNDGVR2    DC.B    'SND/GOVER2.wav',0
 .SNDWIN     DC.B    'SND/WIN.wav',0
             DS.W    0
-.SNDLIST    DC.L    .SNDINTRO,.SNDINSTR,.SNDWALL,.SNDHIT,.SNDKILL,.SNDBULEX,.SNDDISP,.SNDGVR1,.SNDGVR2,.SNDWIN,0
+.SNDLIST    DC.L    .SNDINTRO,.SNDINSTR,.SNDWALL,.SNDHIT,.SNDKILL,.SNDDISP,.SNDGVR1,.SNDWIN,0
             
 ; ----------------------------------------------------------
 SNDPLAY
@@ -247,8 +245,10 @@ MOUUPD
             
 ; ----------------------------------------------------------------------------           
 READMOU
-;READ MOUSE VARIABLES
-;
+; READ MOUSE VARIABLES
+; INPUT    : NONE
+; OUTPUT   : NONE
+; MODIFIES : NONE
 ;----------------------------------------------------------------------------- 
             MOVEM.L D0-D3, -(A7)
             CLR.L   D1
@@ -275,15 +275,18 @@ READMOU
 ; ----------------------------------------------------------------------------           
 APUNTADOR
 ; COLOCA LA DIRECCIÓN EN LA CUAL APUNTA EL RATÓN O EL ENEMIGO (LA FOTO, LAS VARS DE LA BALA)
-; INPUT     : D7 (0 indica que es el jugador, 1 el enemigo)
+; INPUT     : D7 (0 indica que es el jugador, 1 el jugador en la demo y 2 el enemigo)
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ;----------------------------------------------------------------------------- 
 
             MOVEM.L D2-D7,-(A7)
             
-            CMP.W   #0,D7
-            BNE     .ENEMY
+            CMP.W   #2,D7
+            BEQ     .ENEMY
+            CMP.W   #1,D7
+            BEQ     .DEMOPLAY
+            
             MOVE.L (MOUPOS),D2
             MOVE.L  D2,D3            ;PROCESO DE EXTRACCIÓN DE LA COORDENADA X
             ANDI.L  #$0000FFFF,D3
@@ -296,6 +299,11 @@ APUNTADOR
 .ENEMY      
             MOVE.W  (PLAYPOSX),D3
             MOVE.W  (PLAYPOSY),D4
+            BRA     .CONT
+.DEMOPLAY   
+            MOVE.W  (ENEMPOSX),D3
+            MOVE.W  (ENEMPOSY),D4 
+           
 .CONT            
             SUB.W   D0,D3
             SUB.W   D1,D4
@@ -407,16 +415,17 @@ APUNTADOR
             MOVE.W  #-20,(BULPOSORGY)
             
             MOVE.W  #2,D6
-            
 .FINAPU  
-            CMP.W   #0,D7
-            BEQ     .FINPLY
+            CMP.W   #1,D7
+            BLS     .FINPLY
             MOVE.W  D6,(ENCANPOS)
+            BRA     .FINENE
 .FINPLY            
-            MOVE.W  D6,(PLCANPOS)
+            MOVE.W  D6,(PLCANPOS)                   
 .FINENE            
             MOVEM.L (A7)+,D2-D7
             RTS
+
 
 
 

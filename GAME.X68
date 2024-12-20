@@ -42,7 +42,13 @@ GAMUPD
             ADDQ.W  #1,(LVLNUM)
             JSR     LVL3INIT
             BRA     .DONE
-.LVL1            
+.LVL1       
+            CMP.W   #1,(DEMO)
+            BNE     .CONTLVL1
+            ; SI ESTAMOS EN LA DEMO, COMPROBAR SI HAN PULSADO AL ESPACIO PARA VOLVER AL MENÚ
+            BTST.B  #4,(KBDEDGE)
+            BNE     .DEMOEND
+.CONTLVL1     
             CMP.W   #ENEMLVL1,(SCORE)   ; ESTAMOS EN EL NIVEL 1, COMPROBAR SI LO HEMOS ACABADO
             BLT     .CHKLOSS
             CMP.W   #1,(DEMO)
@@ -90,15 +96,20 @@ GAMPLOT
             LEA     .TXT1,A0                ; TEXTO DEMO
             MOVE.B  #15,D0
             JSR     UTLPRINT
-            LEA     .TXT2,A0                ; TEXTO DEMO
+            LEA     .TXT2,A0                
             MOVE.B  #16,D0
+            JSR     UTLPRINT
+            LEA     .TXT3,A0                
+            MOVE.B  #25,D0
             JSR     UTLPRINT
 .NODEMO        
             BRA     SCOPLOT
 
 .TXT1       DC.B    'PANTALLA',0
 .TXT2       DC.B    'DE DEMOSTRACIÓN',0
+.TXT3       DC.B    'PULSA LA BARRA ESPACIADORA PARA VOLVER AL MENÚ PRINCIPAL',0
             DS.W    0
+
 
 
 
