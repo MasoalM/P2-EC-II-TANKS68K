@@ -10,6 +10,7 @@
 * TANID   (W)             12(A0)            ; IDENTIFICADOR ?NICO DE CADA TANQUE
 * TANRTFTI(W)             14(A0)            ; TANK RTF TIME (TIEMPO RESTANTE PARA QUE PUEDA VOLVER A DISPARAR)
 * ENEDIR  (W)             16(A0)            ; DIRECCIÓN ALEATORIA TEMPORAL ASIGNADA A UN TANQUE ENEMIGO O BOT
+* POSAPUN (W)             18(A0)            ; POSICIÓN DE APUNTADO DEL ENEMIGO
 * INITIAL TANK X POSITION D1
 * INITIAL TANK Y POSITION D2
 * ENEMY TANK ID           D3                ; NO IMPLEMENTADO AÚN (SIRVE PARA CREAR MÁS DE UN TIPO DE ENEMIGOS)
@@ -242,7 +243,8 @@ TANUPD
 
 .ENEDISP
             MOVE.W  #2,D7
-            JSR     APUNTADOR    
+            JSR     APUNTADOR  
+            MOVE.W  (ENCANPOS),18(A0)  
 .ENEDISP2
             MOVE.B  #SNDDISP,D7             ; SONIDO DISPARO
             TRAP    #SNDPLTN  
@@ -441,12 +443,7 @@ TANUPD
 .MOVVEC     DC.B    0  ; 0
             DC.B    1  ; 2
             DC.B    2  ; 4
-            DC.B    3  ; 6  
-*.BULVEC     
-*            DC.B    0
-*            DC.B    20     
-*            DC.B    0
-*            DC.B    20         
+            DC.B    3  ; 6         
           
 ; ----------------------------------------------------------            
 TANPLOT
@@ -461,6 +458,7 @@ TANPLOT
             ; DRAW TANK
             CMP.W   #2,6(A0)
             BEQ     .DRAWPLAY
+            MOVE.W  18(A0),(ENCANPOS)
             JSR     ENIMASEL
             BRA     .DRAW
 .DRAWPLAY
@@ -526,6 +524,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
 
 
 

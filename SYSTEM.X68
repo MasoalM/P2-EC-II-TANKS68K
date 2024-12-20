@@ -303,7 +303,6 @@ APUNTADOR
 .DEMOPLAY   
             MOVE.W  (ENEMPOSX),D3
             MOVE.W  (ENEMPOSY),D4 
-           
 .CONT            
             SUB.W   D0,D3
             SUB.W   D1,D4
@@ -364,8 +363,7 @@ APUNTADOR
             MOVE.W  #8,D6
             BRA     .FINAPU
             
-.UPRECTEI            
-
+.UPRECTEI      
             MOVE.W  D4,D5
             LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
             NEG.W   D5                 ;NEGAMOS Y
@@ -425,6 +423,7 @@ APUNTADOR
 .FINENE            
             MOVEM.L (A7)+,D2-D7
             RTS
+
 
 
 
