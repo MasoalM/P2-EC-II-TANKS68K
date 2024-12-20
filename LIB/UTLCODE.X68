@@ -235,6 +235,93 @@ PLIMASEL
 .ENDDECOD           
             MOVEM.L (A7)+,D0-D7
             RTS
+            
+; -----------------------------------------------------------------------------
+ENIMASEL
+; SELECT THE TANK AND CANNON POSITION TO PLOT FOR THE PLAYER
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - A1
+; -----------------------------------------------------------------------------
+
+            MOVEM.L D0-D7,-(A7)
+            CMP.W   #8,(ENCANPOS)
+            BLO     .ELOW1     
+            CMP.W   #12,(ENCANPOS)
+            BLO     .ELOW2
+            CMP.W   #14,(ENCANPOS)
+            BLO     .ELOW3
+            BNE     .EQUINCE
+            LEA     DATENYNW,A1
+            BRA     .EENDDCOD
+.EQUINCE
+            LEA     DATENXNW,A1
+            BRA     .EENDDCOD
+.ELOW3
+            CMP.W   #12,(ENCANPOS)
+            BNE     .ETRECE
+            LEA     DATENYW,A1
+            BRA     .EENDDCOD
+.ETRECE
+            LEA     DATENXNW,A1
+            BRA     .EENDDCOD
+.ELOW2
+            CMP.W   #10,(ENCANPOS)
+            BLO     .ELOW31
+            BNE     .EONCE
+            LEA     DATENYSW,A1
+            BRA     .EENDDCOD
+.EONCE
+            LEA     DATENXNW,A1
+            BRA     .EENDDCOD
+.ELOW31
+            CMP.W   #8,(ENCANPOS)
+            BNE     .ENUEVE
+            LEA     DATENYS,A1
+            BRA     .EENDDCOD
+.ENUEVE
+            LEA     DATENXS,A1
+            BRA     .EENDDCOD
+.ELOW1
+            CMP.W   #4,(ENCANPOS)
+            BLO     .ELOW211
+            CMP.W   #6,(ENCANPOS)
+            BLO     .ELOW311
+            BNE     .ESIETE
+            LEA     DATENYSE,A1
+            BRA     .EENDDCOD
+.ESIETE
+            LEA     DATENXSE,A1
+            BRA     .EENDDCOD
+.ELOW311
+            CMP.W   #4,(ENCANPOS)
+            BNE     .ECINCO
+            LEA     DATENYE,A1
+            BRA     .EENDDCOD
+.ECINCO
+            LEA     DATENXE,A1
+            BRA     .EENDDCOD
+.ELOW211
+            CMP.W   #2,(ENCANPOS)
+            BLO     .ELOW321
+            BNE     .ETRES
+            LEA     DATENYNE,A1
+            BRA     .EENDDCOD
+.ETRES
+            LEA     DATENXNW,A1
+            BRA     .EENDDCOD
+.ELOW321
+            CMP.W   #0,(ENCANPOS)
+            BNE     .EUNO
+            LEA     DATENYN,A1
+            BRA     .EENDDCOD
+.EUNO
+            LEA     DATENXN,A1
+.EENDDCOD           
+            MOVEM.L (A7)+,D0-D7
+            RTS
+
+
 ; -----------------------------------------------------------------------------
 UTLRAND
 ; PROVIDES A PSEUDO-RANDOM BYTE
@@ -285,6 +372,7 @@ UTLRAND
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
             
+
 
 
 

@@ -10,12 +10,7 @@ GAMINIT
 ; MODIFIES : NONE
 ; ----------------------------------------------------------
             
-            ;MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
-            ;MOVE.B  #92,D0
-            ;TRAP    #15
-            
             JSR     DMMINIT
-            ;JSR     FPSINIT
             JSR     SCOINIT 
             JSR     LVL1INIT
             
@@ -23,8 +18,6 @@ GAMINIT
             MOVE.W  #0,(LVLNUM)
 
             RTS           
-            
-            ; Seguir inicializando tanques bot (tipo 3)
 
 ; ----------------------------------------------------------
 GAMUPD
@@ -35,10 +28,8 @@ GAMUPD
 ; ----------------------------------------------------------
 
             JSR     AGLUPD
-            ;JSR     MOUUPD
-            ;JSR     FPSUPD
             
-            ; RECORDAR QUE EL NIVEL ES CONCEPTUALMENTE UN NÚMERO MAYOR QUE EN EL CÓDIGO (EL CÓDIGO DEL NIVEL 1 ES 0, DEL NIVEL 2 ES 1, ...)
+            ; RECORDAR QUE EL NIVEL ES CONCEPTUALMENTE UN NÚMERO MAYOR QUE SU PROPIO CÓDIGO (EL CÓDIGO DEL NIVEL 1 ES 0, DEL NIVEL 2 ES 1, ...)
             ; ESTO ES DEBIDO A QUE MULTIPLICAMOS EL NIVEL POR LO QUE OCUPA CADA MAPA (EL MAPA DEL NIVEL 1 TIENE QUE ESTAR EN LA POSICIÓN 0)
             
             CMP.W   #2,(LVLNUM) ; COMPROBAR SI YA ESTAMOS EN EL NIVEL 3
@@ -69,11 +60,16 @@ GAMUPD
             MOVE.W  #3,(STANEXT)
             RTS
 .CHKLOSS            
-            CMP.W   #KILLPLYR,(PLYRDEAD)    ; SI EL JUGADOR TIENE 0 DE VIDA
-            BLT     .DONE
+            CMP.W   #KILLPLYR,(PLYRDEAD)    
+            BNE     .DONE
+            CMP.W   #1,(DEMO)
+            BEQ     .DEMOEND
+            
+            ; SI EL JUGADOR TIENE 0 DE VIDA Y NO ES UNA DEMO, IR A LA PANTALLA DE DERROTA
             MOVE.W  #4,(STANEXT)
 .DONE
-            RTS            
+            RTS      
+      
 ; ----------------------------------------------------------
 GAMPLOT
 ; PLOTS THE GAME
@@ -87,16 +83,23 @@ GAMPLOT
              
             CMP.W   #1,(DEMO)
             BNE     .NODEMO
-            MOVEM.L  D0/A0,-(A7)
-            LEA     .TXT,A0                ; TEXTO DEMO
-            MOVE.B  #10,D0
+            
+            CLR.L   D1
+            MOVE.B  #81,D0
+            TRAP    #15
+            LEA     .TXT1,A0                ; TEXTO DEMO
+            MOVE.B  #15,D0
             JSR     UTLPRINT
-            MOVEM.L  (A7)+,D0/A0
+            LEA     .TXT2,A0                ; TEXTO DEMO
+            MOVE.B  #16,D0
+            JSR     UTLPRINT
 .NODEMO        
             BRA     SCOPLOT
 
-.TXT        DC.B    'PANTALLA DE DEMOSTRACIÓN',0
+.TXT1       DC.B    'PANTALLA',0
+.TXT2       DC.B    'DE DEMOSTRACIÓN',0
             DS.W    0
+
 
 
 

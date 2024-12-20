@@ -274,21 +274,29 @@ READMOU
 
 ; ----------------------------------------------------------------------------           
 APUNTADOR
-;COLOCA LA DIRECCIÓN EN LA CUAL APUNTA EL RATÓN (LA FOTO, LAS VARS DE LA BALA)
-;
+; COLOCA LA DIRECCIÓN EN LA CUAL APUNTA EL RATÓN O EL ENEMIGO (LA FOTO, LAS VARS DE LA BALA)
+; INPUT     : D7 (0 indica que es el jugador, 1 el enemigo)
+; OUTPUT    : NONE
+; MODIFIES  : NONE
 ;----------------------------------------------------------------------------- 
 
             MOVEM.L D2-D7,-(A7)
             
+            CMP.W   #0,D7
+            BNE     .ENEMY
             MOVE.L (MOUPOS),D2
             MOVE.L  D2,D3            ;PROCESO DE EXTRACCIÓN DE LA COORDENADA X
-            ANDI.L  #$0000FFFF, D3   ;X EN D1
+            ANDI.L  #$0000FFFF,D3
             
-            MOVE.L  D2,D4            ;PROCESO D'EXTRACCIÓN DE LA COORDENADA Y
-            ANDI.L  #$FFFF0000, D4   ;Y EN D2
+            MOVE.L  D2,D4            ;PROCESO DE EXTRACCIÓN DE LA COORDENADA Y
+            ANDI.L  #$FFFF0000,D4
             LSR.L   #8,D4
             LSR.L   #8,D4
-            
+            BRA     .CONT
+.ENEMY      
+            MOVE.W  (PLAYPOSX),D3
+            MOVE.W  (PLAYPOSY),D4
+.CONT            
             SUB.W   D0,D3
             SUB.W   D1,D4
             
@@ -304,7 +312,6 @@ APUNTADOR
             CMP.W   D3,D5
             BLT     .DWRECTSS         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
 
-
             MOVE.W  D4,D5
             LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
             CMP.W   D3,D5
@@ -314,7 +321,7 @@ APUNTADOR
             MOVE.W  #-20,(BULPOSORGX)
             MOVE.W  #0,(BULPOSORGY)
             
-            MOVE.W  #12,(PLCANPOS)
+            MOVE.W  #12,D6
             BRA     .FINAPU  
 .DWRECTSI            
             MOVE.W  #-BULSPEED/2,(BULVELX)          ;ZONA 7
@@ -322,7 +329,7 @@ APUNTADOR
             MOVE.W  #-20,(BULPOSORGX)
             MOVE.W  #-20,(BULPOSORGY)
             
-            MOVE.W  #14,(PLCANPOS)
+            MOVE.W  #14,D6
             BRA     .FINAPU
             
 .DWRECTSS            
@@ -338,7 +345,7 @@ APUNTADOR
             MOVE.W  #-20,(BULPOSORGX)
             MOVE.W  #20,(BULPOSORGY) 
             
-            MOVE.W  #10,(PLCANPOS)
+            MOVE.W  #10,D6
             BRA     .FINAPU  
 .DWRECTES            
             MOVE.W  #BULSPEED,(BULVELY)          ;ZONA 4
@@ -346,7 +353,7 @@ APUNTADOR
             MOVE.W  #20,(BULPOSORGY)
             MOVE.W  #0,(BULPOSORGX)
             
-            MOVE.W  #8,(PLCANPOS)
+            MOVE.W  #8,D6
             BRA     .FINAPU
             
 .UPRECTEI            
@@ -367,7 +374,7 @@ APUNTADOR
             MOVE.W  #20,(BULPOSORGX)
             MOVE.W  #20,(BULPOSORGY)
             
-            MOVE.W  #6,(PLCANPOS)
+            MOVE.W  #6,D6
             BRA     .FINAPU  
 .UPRECTSI            
             MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 2
@@ -375,7 +382,7 @@ APUNTADOR
             MOVE.W  #20,(BULPOSORGX)
             MOVE.W  #0,(BULPOSORGY)
             
-            MOVE.W  #4,(PLCANPOS)
+            MOVE.W  #4,D6
             BRA     .FINAPU
             
 .UPRECTSS            
@@ -391,7 +398,7 @@ APUNTADOR
             MOVE.W  #-20,(BULPOSORGY)
             MOVE.W  #0,(BULPOSORGX)
             
-            MOVE.W  #0,(PLCANPOS)
+            MOVE.W  #0,D6
             BRA     .FINAPU  
 .UPRECTES            
             MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 1
@@ -399,13 +406,18 @@ APUNTADOR
             MOVE.W  #20,(BULPOSORGX)
             MOVE.W  #-20,(BULPOSORGY)
             
-            MOVE.W  #2,(PLCANPOS)
+            MOVE.W  #2,D6
             
-.FINAPU
-            
-            
+.FINAPU  
+            CMP.W   #0,D7
+            BEQ     .FINPLY
+            MOVE.W  D6,(ENCANPOS)
+.FINPLY            
+            MOVE.W  D6,(PLCANPOS)
+.FINENE            
             MOVEM.L (A7)+,D2-D7
             RTS
+
 
 
 
