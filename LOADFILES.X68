@@ -13,8 +13,8 @@ LOADFILES
             LEA     .FILENAME,A1            ; NOMBRE DEL ARCHIVO
             JSR     FILLOAD
             
-            LEA     WINDATA,A0             ; DIRECCIÓN DE DESTINO
-            LEA     .FILEWIN,A1            ; NOMBRE DEL ARCHIVO
+            LEA     WINDATA,A0
+            LEA     .FILEWIN,A1
             JSR     FILLOAD
             
             LEA     DATPLXE,A0       

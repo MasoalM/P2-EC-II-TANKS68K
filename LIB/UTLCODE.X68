@@ -119,7 +119,7 @@ RELPOS
 ;            D4.W : RELATIVE POSITION OF THE TANK IN X
 ;            D5.W : RELATIVE POSITION OF THE TANK IN Y
 ;            A1.L : POSITION OF THE TANK AT THE MAP (A1)
-; MODIFIES - A1.L : THINGS HAPPEND
+; MODIFIES - A1.L
 ; -----------------------------------------------------------------------------
 
             MOVE.W  D0,D4
@@ -426,6 +426,7 @@ UTLRAND
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
             
+
 
 
 

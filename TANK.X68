@@ -36,27 +36,23 @@ TANINIT
             ; IF TANK IS NOT A BOT (PLAYER)
             MOVE.W  #PLYRALIV,(PLYRDEAD)    ; EL JUGADOR NO ESTÁ MUERTO
             MOVE.W  #PLRSPEED,4(A0)         
-            ;MOVE.L  #$00344D31,6(A0)        ; COLOR DE CONTORNO DEL TANQUE   
-            ;MOVE.L  #$00608C59,10(A0)       ; COLOR DE RELLENO DEL TANQUE
-            MOVE.W  #TANPLAY,6(A0)         ; EL TANQUE ES EL JUGADOR 
-            MOVE.W  #PLRINILF,8(A0)        ; VIDA INICIAL DEL TANQUE JUGADOR
+            MOVE.W  #TANPLAY,6(A0)          ; EL TANQUE ES EL JUGADOR 
+            MOVE.W  #PLRINILF,8(A0)         ; VIDA INICIAL DEL TANQUE JUGADOR
             MOVE.W  #PLMAXBUL,10(A0)        ; MÁXIMAS BALAS DISPONIBLES PARA DISPARAR
             MOVE.W  #0,12(A0)               ; TANID DEL JUGADOR SERÁ 0
             CMP.W   #1,(DEMO)
             BNE     .NOTDEMO
-            MOVE.W  #ENEMYRTF,14(A0)               ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
+            MOVE.W  #ENEMYRTF,14(A0)        ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
 .NOTDEMO            
             RTS 
             
             ; ELSE (TANK IS A BOT)
 .BOT
             MOVE.W  #ENESPEED,4(A0)
-            ;MOVE.L  #$000B2187,6(A0)  
-            ;MOVE.L  #$00081658,10(A0)
             MOVE.W  #TANENEM,6(A0)         ; EL TANQUE ES UN BOT
             MOVE.W  #ENEINILF,8(A0)        ; VIDA INICIAL DEL TANQUE ENEMIGO
-            MOVE.W  D3,12(A0)               ; IDENTIFICADOR DEL TANQUE ENEMIGO
-            MOVE.W  #ENEMYRTF,14(A0)               ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
+            MOVE.W  D3,12(A0)              ; IDENTIFICADOR DEL TANQUE ENEMIGO
+            MOVE.W  #ENEMYRTF,14(A0)       ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
             RTS
 
 ; ----------------------------------------------------------            
@@ -72,8 +68,6 @@ TANUPD
             ; UPDATE COORDINATES
             MOVE.W  (A0),D0
             MOVE.W  2(A0),D1
-            ;JSR     MOUUPD                  ; mover abajo cuando ya elijamos hacia donde dispara el tanque enemigo
-            ;JSR     APUNTADOR
             
             CMP.W   #TANPLAY,6(A0)
             BNE.W   .BOT2
@@ -137,7 +131,7 @@ TANUPD
 .BOT2       ; ELSE (TANK IS A BOT)
             MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
-            MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no haría falta (por si la velocidad en un futuro la cambiamos a variable seg?n el tanque)
+            MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no haría falta (por si la velocidad en un futuro la cambiamos a variable según el tanque)
             
             CMP.W   #1,(DEMO)
             BEQ     .DEMOPLAY
@@ -500,7 +494,12 @@ TANPLOT
             ; IF TANK IS NOT A BOT (PLAYER)
             CMP.W   #TANPLAY,6(A0)
             BNE.W   .END
-
+            
+            CMP.W   #BULDMG*3,8(A0)
+            BHI     .PLOTLIFE
+            BTST.B  #4,(SCRCYCCT)           ; PARPADEO VIDA EN CASO DE QUE QUEDEN TRES GOLPES O MENOS
+            BEQ     .END
+.PLOTLIFE
             UTLSPEN #$00FFFFFF 
             UTLSFIL #PLRLIFEC
             MOVE.W  #(SCRWIDTH-PLRINILF)/2,D1
