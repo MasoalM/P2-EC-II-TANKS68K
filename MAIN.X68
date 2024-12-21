@@ -40,10 +40,18 @@ START:
             JSR     SYSINIT
             JSR     FPSINIT
             JSR     UTLINIT
+
+            MOVE.L  #$00054B17,D1
+            MOVE.B  #81,D0
+            TRAP    #15
+
+            LEA     .TXT,A0                ; TEXTO DE LA PANTALLA DE CARGA
+            MOVE.B  #15,D0
+            JSR     UTLPRINT
             
             JSR     LOADFILES
             
-            JSR     STAINIT
+            JSR     STAINIT    
 
 ; --- UPDATE -----------------------------------------------
 
@@ -89,7 +97,10 @@ START:
             TRAP    #SCRUPTN            ; UPDATE DOUBLE BUFFER
 .NOTPLOT
 
-            BRA     .LOOP          
+            BRA     .LOOP   
+
+.TXT        DC.B    'CARGANDO...',0
+            DS.W    0         
 
     SIMHALT
     
@@ -99,6 +110,9 @@ START:
     INCLUDE "LIB/DMMVARS.X68"
 
     END    START
+    
+      
+
 
 
 

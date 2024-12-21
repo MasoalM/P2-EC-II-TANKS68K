@@ -163,7 +163,7 @@ KBDUPD
 ; UPDATE KEYBOARD INFO
 ; 7 ->
 ; 6 ->
-; 5 -> PAUSE
+; 5 -> INSTRUCTIONS
 ; 4 -> FIRE
 ; 3 -> DOWN
 ; 2 -> RIGHT
@@ -178,7 +178,7 @@ KBDUPD
 
             ; READ FIRST PART
             MOVE.B  #19,D0
-            MOVE.L  #KBDPAUSE<<8|KBDFIRE,D1
+            MOVE.L  #KBDINSTR<<8|KBDFIRE,D1
             TRAP    #15
             
             ; CONVERT TO DESIRED FORMAT
@@ -423,6 +423,7 @@ APUNTADOR
 .FINENE            
             MOVEM.L (A7)+,D2-D7
             RTS
+
 
 
 

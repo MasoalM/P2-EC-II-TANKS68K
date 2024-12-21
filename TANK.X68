@@ -205,8 +205,8 @@ TANUPD
 
 .ENDALG     MOVE.L  A1,A0       
 .ENDALG2
-            MOVE.W  D1,(A0)
-            MOVE.W  D2,2(A0)
+            ;MOVE.W  D1,(A0)
+            ;MOVE.W  D2,2(A0)
             
             MOVE.W  D1,D0
             MOVE.W  D2,D1
@@ -221,20 +221,6 @@ TANUPD
             
             CMP.W   #2,6(A0)
             BNE     .ENEDISP                ; SALTAR SI ES EL ENEMIGO (EL JUGADOR PUEDE ESTAR AQUÍ SI ES LA DEMO)
-            
-*            MOVEM.L D0/A1,-(A7)
-*            JSR     UTLRAND
-*            AND.L   #$00000006,D0           ; MÁSCARA PARA OBTENER UNO ENTRE DOS VALORES
-*            LEA     .BULVEC,A1
-*            MOVE.L  (A1,D0),(BULPOSORGX) 
-*            ;MOVEM.L (A7)+,D0/A1 
-*            
-*            ;MOVEM.L D0/A1,-(A7)
-*            JSR     UTLRAND
-*            AND.L   #$00000006,D0           ; MÁSCARA PARA OBTENER UNO ENTRE DOS VALORES
-*            LEA     .BULVEC,A1
-*            MOVE.L  (A1,D0),(BULPOSORGY)  
-*            MOVEM.L (A7)+,D0/A1
 
             MOVE.W  #1,D7
             JSR     APUNTADOR
@@ -263,6 +249,13 @@ TANUPD
 .SUBRTF            
             SUBQ.W  #1,14(A0)               ; RESTARLE 1 AL RTF DEL TANQUE  
 .CONT2 
+            JSR     TANKCOL
+            CMP.W   #1,A3
+            BLS     .SEG
+            MOVE.W  (A0),D0
+            MOVE.W  2(A0),D1
+            BRA     .DONE
+.SEG        
             ;INICIALIZAMOS
             LEA.L   MAPDATA,A1
             MOVE.W  (LVLNUM),D6
@@ -524,6 +517,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
 
 
 

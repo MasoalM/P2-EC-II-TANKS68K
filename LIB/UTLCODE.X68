@@ -47,7 +47,7 @@ UTLINIT
  
 ; -----------------------------------------------------------------------------
 UTLPRINT
-; PRINT SCREEN CENTERED TEXT
+; PRINT SCREEN  CENTERED TEXT
 ; INPUT    : A0 POINTER TO ZERO-TERMINATED STRING
 ;            D0.B SCREEN ROW TO PRINT TEXT
 ; OUTPUT   : D0.B NEXT ROW
@@ -72,7 +72,7 @@ UTLPRINT
             MOVEM.L (A7)+,D0-D1/A0-A1
             ADDQ.B  #1,D0
             RTS
-            
+  
 ; -----------------------------------------------------------------------------
 UTLCHCOL
 ; CHECKS COLLISION
@@ -320,7 +320,61 @@ ENIMASEL
 .EENDDCOD           
             MOVEM.L (A7)+,D0-D7
             RTS
-
+            
+; ----------------------------------------------------------
+TANKCOL
+; COLOCA EN A3 EL NÚMERO DE COLICIONES QUE TENDRÁ EL TANQUE EN EL SIGUIENTE MOVIMIENTO
+; INPUT     : D0: POSICIÓN X DEL TANQUE
+;             D1: POSICION Y DEL TANQUE 
+; OUTPUT    : A3: NÚMERO DE COLISIONES DEL TANQUE
+; MODIFIES  : POSXTEMP
+;             POSYTMP
+; ----------------------------------------------------------
+            MOVEM.L A0-A1/D0-D7,-(A7)
+            MOVE.W  #0,A3
+            MOVE.W  D0,(POSXTEMP)
+            MOVE.W  D1,(POSYTEMP)
+            MOVE.W  (A0),D2                 ; PREPARE SHOT COORDINATES FOR
+            MOVE.W  2(A0),D3                ; COLLISION CHECK
+            MOVE.W  #TANWIDTH/2,D5
+            MOVE.W  #TANHEIGH/2,D7
+            MOVE.L  A0,A1
+            MOVE.W  #TANENEM,D0
+            JSR     DMMFRSTO
+.LOOP       CMP.L   #0,A0
+            BEQ     .CHKPLAY
+            MOVE.W  8(A0),D0
+            MOVE.W  10(A0),D1
+            SUB.W   #TANWIDTH/2,D0
+            SUB.W   #TANHEIGH/2,D1
+            MOVE.W  #TANWIDTH,D4
+            MOVE.W  #TANHEIGH,D6
+            JSR     UTLCHCOL
+            TST.B   D0
+            BEQ     .NTHG
+            ADDQ.W  #1,A3
+.NTHG
+            MOVE.W  #TANENEM,D0
+            JSR     DMMNEXTO
+            BRA     .LOOP
+.CHKPLAY    ; PLAYER TANK COLLISIONS
+            MOVE.W  #TANPLAY,D0
+            JSR     DMMFRSTO
+            CMP.L   #0,A0
+            BEQ     .NTHG1
+            MOVE.W  8(A0),D0
+            MOVE.W  10(A0),D1
+            SUB.W   #TANWIDTH/2,D0
+            SUB.W   #TANHEIGH/2,D1
+            MOVE.W  #TANWIDTH,D4
+            MOVE.W  #TANHEIGH,D6
+            JSR     UTLCHCOL
+            TST.B   D0
+            BEQ     .NTHG1
+            ADDQ.W  #1,A3
+.NTHG1
+            MOVEM.L (A7)+,A0-A1/D0-D7
+            RTS
 
 ; -----------------------------------------------------------------------------
 UTLRAND
@@ -372,6 +426,8 @@ UTLRAND
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
             
+
+
 
 
 

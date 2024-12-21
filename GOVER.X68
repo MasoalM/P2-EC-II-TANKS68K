@@ -14,7 +14,7 @@ GOVINIT
             MOVE.W  #0,(DOPLOT)
             MOVEM.L D0-D1/A0,-(A7)
             
-            CLR.L   D1
+            MOVE.L  #$00101060,D1
             MOVE.B  #81,D0
             TRAP    #15
             
@@ -53,6 +53,7 @@ GOVUPD
 .CONT       ;MOVE.B  #SNDGVR2,D7
             ;TRAP    #SNDPLTN
             RTS
+
 
 
 

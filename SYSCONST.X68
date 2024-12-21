@@ -15,7 +15,7 @@ KBDUP       EQU     'W'
 KBDRIGHT    EQU     'D'
 KBDDOWN     EQU     'S'
 KBDFIRE     EQU     ' '
-KBDPAUSE    EQU     'P'
+KBDINSTR    EQU     'I'
 
 ; --- SOUND IDENTIFIERS ------------------------------------
 
@@ -38,6 +38,7 @@ SNDPLTN     EQU     3           ; SOUND PLAY TRAP NUMBER
 ; --- INTERRUPT NUMBERS ------------------------------------
 
 SCRINTN     EQU     1           ; TIMED INTERRUPT NUMBER
+
 
 
 

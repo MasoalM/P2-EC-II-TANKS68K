@@ -61,12 +61,20 @@ ISCINIT
             CMP.W   D6,D4
             BLT     .FILA
             
-            LEA     .TXT1,A0                ; TEXTO 1
-            MOVE.B  #10,D0
-            JSR     UTLPRINT
+            MOVE.L  #$00054B17,D1
+            MOVE.B  #81,D0
+            TRAP    #15
  
-            LEA     .TXT2,A0                ; TEXTO 2
+            LEA     .TXT1,A0                ; TEXTO 1
             MOVE.B  #25,D0
+            JSR     UTLPRINT
+            
+            LEA     .TXT2,A0                ; TEXTO 2
+            MOVE.B  #28,D0
+            JSR     UTLPRINT
+            
+            LEA     .TXT3,A0                ; TEXTO 3
+            MOVE.B  #29,D0
             JSR     UTLPRINT
           
             MOVEM.L (A7)+,D0-D6/A0
@@ -77,9 +85,9 @@ ISCINIT
             
             RTS  
 
-
-.TXT1       DC.B    'TANKS 68K',0
-.TXT2       DC.B    '¡PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR!',0
+.TXT1       DC.B    '¡PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR!',0
+.TXT2       DC.B    'PRESIONA LA TECLA "i" PARA',0 
+.TXT3       DC.B    'VISITAR EL MENÚ DE INSTRUCCIONES',0
             DS.W    0
                               
 
@@ -92,11 +100,16 @@ ISCUPD
 ; ------------------------------------------------------------------------------
             
             BTST.B  #4,(KBDEDGE)
-            BEQ     .CONT
+            BEQ     .CONT1
             MOVE.W  #2,(STANEXT)
             RTS
             
-.CONT       ADDQ.W  #1,(ISCTIMER)
+.CONT1      BTST.B  #5,(KBDEDGE)
+            BEQ     .CONT2
+            MOVE.W  #1,(STANEXT)
+            RTS
+            
+.CONT2      ADDQ.W  #1,(ISCTIMER)
             CMP.W   #ISCMAXTM,(ISCTIMER)
             BLT     .DONE
             MOVE.W  #1,(DEMO)
@@ -106,6 +119,7 @@ ISCUPD
 .DONE       MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 

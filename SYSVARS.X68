@@ -34,6 +34,7 @@ SHWFPS      DS.W    1       ; FPS PARA MOSTRAR
 ; --- FILE RELATED VARIABLES -------------------------------
 
 FILEDATA    DS.L    400000
+WINDATA     DS.L    40000
 
 DATPLXE     DS.L    1000    ; IMÁGENES JUGADOR
 DATPLXN     DS.L    1000
@@ -68,6 +69,7 @@ DATENYS     DS.L    1000
 DATENYSE    DS.L    1000
 DATENYSW    DS.L    1000
 DATENYW     DS.L    1000
+
 
 
 

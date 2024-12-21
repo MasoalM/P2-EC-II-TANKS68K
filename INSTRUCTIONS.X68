@@ -14,13 +14,16 @@ INSINIT
             MOVE.B  #92,D0
             TRAP    #15
             TRAP    #SCRUPTN
-
-            CLR.W   (INSTIMER)
             
             MOVEM.L D0-D1/A0-A1,-(A7)
-            CLR.L   D1
+            MOVE.L  #$00054B17,D1
             MOVE.B  #81,D0
             TRAP    #15
+            
+            LEA     .TXT1,A0
+            MOVE.B  #5,D0
+            JSR     UTLPRINT
+            
             MOVE.B  #11,D0
             LEA     .TXTLST,A1
 .LOOP       MOVE.L  (A1)+,D1
@@ -28,9 +31,8 @@ INSINIT
             MOVE.L  D1,A0
             JSR     UTLPRINT
             BRA     .LOOP
-.LOOPEND            
-            
-            LEA     .TXT6,A0
+.LOOPEND           
+            LEA     .TXT9,A0
             MOVE.B  #25,D0
             JSR     UTLPRINT
 
@@ -42,11 +44,15 @@ INSINIT
 .TXT1       DC.B    '¡BIENVENIDO A TANKS 68K!',0
 .TXT2       DC.B    'TU OBJETIVO ES SUPERAR TODOS LOS NIVELES.',0
 .TXT3       DC.B    'PARA ELLO, DEBES DERROTAR A TODOS LOS TANQUES ENEMIGOS',0
-.TXT4       DC.B    'PARA MOVERTE UTILIZA LAS TECLAS WASD,',0
-.TXT5       DC.B    'PARA DISPARAR PRESIONA LA BARRA ESPACIADORA',0
-.TXT6       DC.B    'PULSA ESPACIO PARA REGRESAR AL MENÚ PRINCIPAL',0
+.TXT4       DC.B    'SIN QUE ELLOS AGOTEN TU BARRA DE VIDA.',0
+.TXT5       DC.B    'PARA MOVERTE UTILIZA LAS TECLAS WASD,',0
+.TXT6       DC.B    'PARA APUNTAR UTILIZA EL RATÓN,',0
+.TXT7       DC.B    'PARA DISPARAR PRESIONA EL CLICK IZQUIERDO,',0
+.TXT8       DC.B    'TIENES UN MÁXIMO DE 3 BALAS SIMULTÁNEAS.',0
+.TXT9       DC.B    'PULSA ESPACIO PARA REGRESAR AL MENÚ PRINCIPAL',0
+.VOIDTXT    DC.B    '',0
             DS.W    0
-.TXTLST     DC.L    .TXT1,.TXT2,.TXT3,.TXT4,.TXT5,0            
+.TXTLST     DC.L    .TXT2,.TXT3,.TXT4,.VOIDTXT,.VOIDTXT,.TXT5,.TXT6,.TXT7,.TXT8,0            
 
 ; ------------------------------------------------------------------------------
 INSUPD
@@ -58,15 +64,13 @@ INSUPD
             BTST.B  #4,(KBDEDGE)
             BEQ     .CONT
             CLR.W   (STANEXT)
-.CONT       ADDQ.W  #1,(INSTIMER)
-            CMP.W   #INSMAXTM,(INSTIMER)
-            BLT     .DONE
-            CLR.W   (STANEXT)
             RTS
- 
-.DONE       MOVE.B  #SNDINSTR,D7
+.CONT       
+            MOVE.B  #SNDINSTR,D7
             TRAP    #SNDPLTN
             RTS
+
+
 
 
 

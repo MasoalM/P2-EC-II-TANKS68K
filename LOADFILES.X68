@@ -13,6 +13,10 @@ LOADFILES
             LEA     .FILENAME,A1            ; NOMBRE DEL ARCHIVO
             JSR     FILLOAD
             
+            LEA     WINDATA,A0             ; DIRECCIÓN DE DESTINO
+            LEA     .FILEWIN,A1            ; NOMBRE DEL ARCHIVO
+            JSR     FILLOAD
+            
             LEA     DATPLXE,A0       
             LEA     .FILPLXE,A1           
             JSR     FILLOAD
@@ -145,7 +149,8 @@ LOADFILES
             
             RTS
             
-.FILENAME       DC.B    'pythonProject/OUTPUT/SALIDA.bin',0 
+.FILENAME       DC.B    'pythonProject/OUTPUT/MENUIMAGE.bin',0 
+.FILEWIN        DC.B    'pythonProject/OUTPUT/WINIMAGE.bin',0
 .FILPLXE        DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_E.bin',0
 .FILPLXN        DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_N.bin',0
 .FILPLXNE       DC.B    'pythonProject/OUTPUT/PLAYER_OUTPUT/PLAYER_X_NE.bin',0
@@ -180,6 +185,8 @@ LOADFILES
 .FILENYW        DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_Y_W.bin',0
                 DS.W    0
             
+
+
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~
