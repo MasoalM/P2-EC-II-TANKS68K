@@ -9,15 +9,21 @@ GOVINIT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            ;MOVE.B  #SNDGVR1,D7
-            ;TRAP    #SNDPLTN
+
             MOVE.W  #0,(DOPLOT)
             MOVEM.L D0-D1/A0,-(A7)
             
-            MOVE.L  #$00101060,D1
+            MOVE.L  #$00101060,D1           ; COLOR FONDO
             MOVE.B  #81,D0
             TRAP    #15
-            
+
+            MOVE.L  #0,D1
+            MOVE.L  #0,D2
+            MOVE.L  #SCRWIDTH,D3
+            MOVE.L  #SCRHEIGH,D4
+            MOVE.B  #87,D0
+            TRAP    #15
+
             LEA     .TXT1,A0
             MOVE.B  #10,D0
             JSR     UTLPRINT
@@ -53,6 +59,7 @@ GOVUPD
 .CONT       ;MOVE.B  #SNDGVR2,D7
             ;TRAP    #SNDPLTN
             RTS
+
 
 
 

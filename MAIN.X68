@@ -40,9 +40,16 @@ START:
             JSR     SYSINIT
             JSR     FPSINIT
             JSR     UTLINIT
-
-            MOVE.L  #$00054B17,D1
+            
+            MOVE.L  #$00054B17,D1           ; COLOR FONDO
             MOVE.B  #81,D0
+            TRAP    #15
+
+            MOVE.L  #0,D1
+            MOVE.L  #0,D2
+            MOVE.L  #SCRWIDTH,D3
+            MOVE.L  #SCRHEIGH,D4
+            MOVE.B  #87,D0
             TRAP    #15
 
             LEA     .TXT,A0                ; TEXTO DE LA PANTALLA DE CARGA
@@ -112,6 +119,8 @@ START:
     END    START
     
       
+
+
 
 
 

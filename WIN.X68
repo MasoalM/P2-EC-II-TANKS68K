@@ -13,6 +13,17 @@ WININIT
             MOVE.W  #0,(DOPLOT)
             MOVEM.L D0-D1/A0,-(A7)
             
+            MOVE.L  #$000098AD,D1           ; COLOR FONDO
+            MOVE.B  #81,D0
+            TRAP    #15
+
+            MOVE.L  #0,D1
+            MOVE.L  #0,D2
+            MOVE.L  #SCRWIDTH,D3
+            MOVE.L  #SCRHEIGH,D4
+            MOVE.B  #87,D0
+            TRAP    #15
+            
             LEA     WINDATA,A0
             MOVE.W  #SCRWIDTH/2,D1
             MOVE.W  #SCRHEIGH/2,D2
@@ -53,16 +64,11 @@ WININIT
             ADD.W   #WINHEIGH/2,D6
             CMP.W   D6,D4
             BLT     .FILA
-           
-            MOVE.L  #$0000BACF,D1
-            MOVE.B  #81,D0
-            TRAP    #15
             
             LEA     .TXT1,A0
             MOVE.B  #10,D0
             JSR     UTLPRINT
-            
-            
+
             LEA     .TXT2,A0
             MOVE.B  #20,D0
             JSR     UTLPRINT
@@ -93,6 +99,7 @@ WINUPD
 .CONT       MOVE.B  #SNDWIN,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 

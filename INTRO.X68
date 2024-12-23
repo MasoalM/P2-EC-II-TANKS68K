@@ -15,6 +15,17 @@ ISCINIT
             MOVE.B  #16,D1
             TRAP    #15
             
+            MOVE.L  #$00054B17,D1           ; COLOR FONDO
+            MOVE.B  #81,D0
+            TRAP    #15
+            
+            MOVE.L  #0,D1
+            MOVE.L  #0,D2
+            MOVE.L  #SCRWIDTH,D3
+            MOVE.L  #SCRHEIGH,D4
+            MOVE.B  #87,D0
+            TRAP    #15
+            
             CLR.W   (ISCTIMER) 
             MOVEM.L D0-D6/A0,-(A7)
             LEA     FILEDATA,A0
@@ -119,6 +130,7 @@ ISCUPD
 .DONE       MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 

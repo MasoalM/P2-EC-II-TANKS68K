@@ -16,10 +16,17 @@ INSINIT
             TRAP    #SCRUPTN
             
             MOVEM.L D0-D1/A0-A1,-(A7)
-            MOVE.L  #$00054B17,D1
+            MOVE.L  #$00054B17,D1           ; COLOR FONDO
             MOVE.B  #81,D0
             TRAP    #15
-            
+
+            MOVE.L  #0,D1
+            MOVE.L  #0,D2
+            MOVE.L  #SCRWIDTH,D3
+            MOVE.L  #SCRHEIGH,D4
+            MOVE.B  #87,D0
+            TRAP    #15
+
             LEA     .TXT1,A0
             MOVE.B  #5,D0
             JSR     UTLPRINT
@@ -69,6 +76,7 @@ INSUPD
             MOVE.B  #SNDINSTR,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 
