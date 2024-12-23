@@ -99,120 +99,55 @@ BULUPD
             MOVE.W  (LVLNUM),D6
             MULU.W  #SIZLVL,D6
             ADD.L   D6,A1
-            ;SUBQ.L  #2,A1
-            MOVE.W  D0,D4
-            MOVE.W  D1,D5
-            MOVE.W  #0,D2
-            MOVE.W  #0,D3
+            JSR     RELPOS
             
-            ;SACAMOS LA POSICIÓN RELATIVA DE X
-            BRA .CHKX
-.NOORGX
-            SUB.W   #PIESIZX,D4
-            ADDQ.L  #2,A1
-            ADD.W   #PIESIZX,D2
-.CHKX            
-            CMP.W   #PIESIZX,D4
-            BGT     .NOORGX             
+            CMP.W   #01,(A1)
+            BNE .CHKTAN
             
-            ;SACAMOS LA POSICIÓN RELATIVA DE Y
-            BRA     .CHKY
-.NOORGY
-            SUB.W   #PIESIZY,D5
-            ADD.L   #40,A1
-            ADD.W   #PIESIZY,D3
-.CHKY            
-            CMP.W   #PIESIZX,D5
-            BGT     .NOORGY
-            
-            ; CHECK HORIZONTAL COLLISIONS
-            CMP.W   #PIESIZX-BULRAD/2,D4
-            BGE     .COLRGT
-.RECX
-            CMP.W   #BULRAD+2,D4            
-            BLT     .COLLFT                 
-
-            ; CHECK VERTICAL COLLISIONS
-.CHKVERT    CMP.W   #PIESIZY-BULRAD/2,D5
-            BGE     .COLBOT
-.RECY            
-            CMP.W   #BULRAD+2,D5
-            BLT     .COLTOP                
-            BRA     .CHKTAN   
-
-            ; RIGHT SIDE COLLISION    
-.COLRGT     
-            ADDQ.L  #2,A1
-            CMP.W   #$01,(A1)
-            BNE     .FARSC
-            MOVE.W  #PIESIZX-BULRAD,D0
-            ADD.W   D2,D0
+            CMP.W   #PIESIZX/3,D4
+            BLO     .COLX
+            CMP.W   #2*PIESIZX/3,D4  
+            BHI     .COLX
+            BRA     .SVPNT
+.COLX
+            MOVE.W  #$FF,D2
             NEG.W   4(A0)
-            SUBQ.W  #1,10(A0)
-            CMP.W   #0,10(A0)
-            BNE     .BULWALL
-            MOVE.W  8(A0),D3
-            JSR     AGLKILL
-            BRA     .BULFACHK  
-.FARSC
-            SUBQ.L  #2,A1
-            BRA     .RECX
-
-            ; LEFT SIDE COLLISION
-.COLLFT     
-            SUBQ.L  #2,A1
-            CMP.W   #$01,(A1)
-            BNE     .FALSC
-            MOVE.W  #BULRAD,D0
-            ADD.W   D2,D0
-            NEG.W   4(A0) 
-            SUBQ.W  #1,10(A0)  
-            CMP.W   #0,10(A0)
-            BNE     .BULWALL
-            MOVE.W  8(A0),D3
-
-            JSR     AGLKILL
-            BRA     .BULFACHK            
-                
-.FALSC
-            ADDQ.L  #2,A1
-            BRA     .CHKVERT  
-
-            ; BOTTOM COLLISION
-.COLBOT     
-            ADD.L   #40,A1
-            CMP.W   #$01,(A1)
-            BNE     .FABSC
-            MOVE.W  #PIESIZY-BULRAD,D1
-            ADD.W   D3,D1
+.SVPNT            
+            CMP.W   #PIESIZY/3,D5
+            BLO     .COLY
+            CMP.W   #2*PIESIZY/3,D5  
+            BHI     .COLY
+            BRA     .SVPNT2
+.COLY
             NEG.W   6(A0)
+            MOVE.W  #$FF,D3     
+.SVPNT2           
+
+            CMP.W   #$FF,D2
+            BEQ     .TRATCOL
+.TRATCOLU
             SUBQ.W  #1,10(A0)
             CMP.W   #0,10(A0)
             BNE     .BULWALL
             MOVE.W  8(A0),D3
-
             JSR     AGLKILL
             BRA     .BULFACHK
-.FABSC
-            ;SUB.L   #40,A1            
-            BRA     .RECY
-
-            ; TOP COLLISION
-.COLTOP     
-            SUB.L   #40,A1
-            CMP.W   #$01,(A1)
-            BNE     .CHKTAN
-            MOVE.W  #BULRAD,D1
-            ADD.W   D3,D1         
+.TRATCOL            
+            CMP.W   #$FF,D3
+            BNE     .TRATCOLU
+            CMP.W   D5,D4
+            BHI     .GAND5
+            BLO     .GAND4
+            BRA     .TRATCOLU
+.GAND4            
             NEG.W   6(A0)
-            SUBQ.W  #1,10(A0)
-            CMP.W   #0,10(A0)
-            BNE     .BULWALL
-            MOVE.W  8(A0),D3
+            BRA     .TRATCOLU
+.GAND5
+            NEG.W   4(A0)
+            BRA     .TRATCOLU
 
-            JSR     AGLKILL
-            BRA     .BULFACHK
 
+            BRA     .CHKTAN
 .BULFACHK   CLR.W   D4              ; CONTADOR
             MOVE.W  #TANENEM,D0
             JSR     DMMFRSTO
@@ -388,6 +323,8 @@ BULPLOT
 
             RTS
             
+
+
 
 
 
