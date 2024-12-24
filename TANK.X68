@@ -82,21 +82,25 @@ TANUPD
             MOVE.W  #0,D7
             JSR     APUNTADOR
             
+            MOVE.W  #0,(MOVXTEMP)
+            MOVE.W  #0,(MOVYTEMP)
             BTST.B  #0,(KBDVAL)
             BEQ     .CHKLEFT
-            ADDQ.W  #1,(PLCANPOS)
             SUB.W   4(A0),D0  ;RESTAMOS LA VELOCIDAD AL EJE X
+            MOVE.W  #-1,(MOVXTEMP)
 .CHKLEFT    BTST.B  #2,(KBDVAL)
             BEQ     .CONT1
-            ADDQ.W  #1,(PLCANPOS)
             ADD.W   4(A0),D0  ;SUMAMOS LA VELOCIDAD AL EJE X
+            MOVE.W  #1,(MOVXTEMP)
 .CONT1            
             BTST.B  #1,(KBDVAL)
             BEQ     .CHKDWN 
             SUB.W   4(A0),D1  ;RESTAMOS LA VELOCIDAD AL EJE Y
+            MOVE.W  #-1,(MOVYTEMP)
 .CHKDWN     BTST.B  #3,(KBDVAL)
             BEQ     .DISP
             ADD.W   4(A0),D1  ;SUMAMOS LA VELOCIDAD AL EJE Y
+            MOVE.W  #1,(MOVYTEMP)
 .DISP          
             ; COMPROBAR SI ESTÁ DISPARANDO  
             
@@ -129,6 +133,8 @@ TANUPD
             BRA     .CONT2
 
 .BOT2       ; ELSE (TANK IS A BOT)
+            MOVE.W  #0,(MOVXTEMP)
+            MOVE.W  #0,(MOVYTEMP)
             MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
             MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no haría falta (por si la velocidad en un futuro la cambiamos a variable según el tanque)
@@ -158,21 +164,29 @@ TANUPD
             BEQ     .CASODOS
             
             ; CASO TRES
+            MOVE.W  #-1,(MOVXTEMP)
+            MOVE.W  #-1,(MOVYTEMP)
             SUB.W   D3,D2
             BRA     .ENDALG2
             
             ; CASO CERO
 .CASOCERO   ADD.W   D3,D1
             ADDQ.W  #1,(PLCANPOS)
+            MOVE.W  #1,(MOVXTEMP)
+            MOVE.W  #1,(MOVYTEMP)
             BRA     .ENDALG2
          
             ; CASO UNO
 .CASOUNO    SUB.W   D3,D1
             ADDQ.W  #1,(PLCANPOS)
+            MOVE.W  #1,(MOVXTEMP)
+            MOVE.W  #-1,(MOVYTEMP)
             BRA     .ENDALG2       
   
             ; CASO DOS
 .CASODOS    ADD.W   D3,D2   
+            MOVE.W  #-1,(MOVXTEMP)
+            MOVE.W  #1,(MOVYTEMP) 
             BRA     .ENDALG2   
 .FLLOWPLR               
             MOVE.L  A0,A1
@@ -185,8 +199,10 @@ TANUPD
             BRA     .VELY                   ; XENEM = XPLAY
             
 .NEGVELX    SUB.W   D3,D1
+            MOVE.W  #-1,(MOVXTEMP)
             BRA     .VELY
 .POSVELX    ADD.W   D3,D1
+            MOVE.W  #1,(MOVXTEMP)
 
 .VELY       CMP.W   10(A0),D2
             BHI     .NEGVELY                ; YENEM > YPLAY
@@ -194,8 +210,10 @@ TANUPD
             BRA     .ENDALG                 ; YENEM = YPLAY
 
 .NEGVELY    SUB.W   D3,D2
+            MOVE.W  #-1,(MOVYTEMP)
             BRA     .ENDALG
-.POSVELY    ADD.W   D3,D2           
+.POSVELY    ADD.W   D3,D2   
+            MOVE.W  #1,(MOVYTEMP)         
 
 .ENDALG     MOVE.L  A1,A0       
 .ENDALG2
@@ -245,10 +263,45 @@ TANUPD
 .CONT2 
             JSR     TANKCOL
             CMP.W   #1,A3
-            BLS     .SEG
-            MOVE.W  (A0),D0
-            MOVE.W  2(A0),D1
+            BLS     .SEG                    ;SALTA SI NO HAY COLISIÓN
+            CMP.W   #1,(COLTANKP)
+            BNE     .NTRAT                  ;SI NO SE HAN CHOCADO CON EL JUGADOR, SEGUIMOS CON EL TRATAMIENTO NORMAL
+            
+            CMP.W   #TANPLAY,6(A0)
+            BEQ     .NTRAT
+            
+            JSR     AGLKILL
+            MOVE.B  #SNDEXPLO,D7             ; SONIDO EXPLOSIÓN
+            TRAP    #SNDPLTN  
+            ADDQ.W  #1,(SCORE)
+            JSR     COLBYKMKZ
+            BRA     .FINISH
+            
+.NTRAT            
+            CMP.W   #0,(MOVXTEMP)
+            BEQ     .NXTEJE
+            CMP.W   #1,(MOVXTEMP)
+            BNE     .TENX
+            SUB.W   4(A0),D0
+            SUB.W   4(A0),D0
+            BRA     .NXTEJE
+.TENX 
+            ADD.W   4(A0),D0
+            ADD.W   4(A0),D0
+.NXTEJE
+            CMP.W   #0,(MOVYTEMP)
+            BEQ     .NXTEJE2
+            CMP.W   #1,(MOVYTEMP)
+            BNE     .TENY
+            SUB.W   4(A0),D1
+            SUB.W   4(A0),D1            
+            BRA     .NXTEJE2
+.TENY 
+            ADD.W   4(A0),D1
+            ADD.W   4(A0),D1
+.NXTEJE2
             BRA     .DONE
+
 .SEG        
             ;INICIALIZAMOS
             LEA.L   MAPDATA,A1
@@ -516,6 +569,12 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
+
+
+
+
+
 
 
 

@@ -331,6 +331,7 @@ TANKCOL
 ;             POSYTMP
 ; ----------------------------------------------------------
             MOVEM.L A0-A1/D0-D7,-(A7)
+            MOVE.W  #0,(COLTANKP)
             MOVE.W  #0,A3
             MOVE.W  D0,(POSXTEMP)
             MOVE.W  D1,(POSYTEMP)
@@ -371,8 +372,31 @@ TANKCOL
             JSR     UTLCHCOL
             TST.B   D0
             BEQ     .NTHG1
+            MOVE.W  #1,(COLTANKP)
             ADDQ.W  #1,A3
 .NTHG1
+            MOVEM.L (A7)+,A0-A1/D0-D7
+            RTS
+
+
+; -----------------------------------------------------------------------------
+COLBYKMKZ
+; LE QUITA AL JUGADOR LA VIDA POR COLISIÓN DE KAMIKAZE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE (ASIDE OF OUTPUT)
+; -----------------------------------------------------------------------------
+
+            MOVEM.L D0-D7/A0-A1,-(A7)
+            MOVE.W  #TANPLAY,D0
+            JSR     DMMFRSTO
+            CMP.L   #0,A0
+            BEQ     .NTHG1
+            SUB.W   #3*BULDMG,16(A0)
+            CMP.W   #0,16(A0)
+            BGT     .NTHG1
+            MOVE.W  #KILLPLYR,(PLYRDEAD)
+.NTHG1            
             MOVEM.L (A7)+,A0-A1/D0-D7
             RTS
 
@@ -426,6 +450,8 @@ UTLRAND
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
             
+
+
 
 
 

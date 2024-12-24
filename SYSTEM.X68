@@ -54,8 +54,9 @@ SNDINIT
 .SNDDISP    DC.B    'SND/DISP.wav',0
 .SNDGVR1    DC.B    'SND/GOVER1.wav',0
 .SNDWIN     DC.B    'SND/WIN.wav',0
+.SNDEXPLO   DC.B    'SND/EXPLO.wav',0
             DS.W    0
-.SNDLIST    DC.L    .SNDINTRO,.SNDINSTR,.SNDWALL,.SNDHIT,.SNDKILL,.SNDDISP,.SNDGVR1,.SNDWIN,0
+.SNDLIST    DC.L    .SNDINTRO,.SNDINSTR,.SNDWALL,.SNDHIT,.SNDKILL,.SNDDISP,.SNDGVR1,.SNDWIN,.SNDEXPLO,0
             
 ; ----------------------------------------------------------
 SNDPLAY
@@ -423,6 +424,8 @@ APUNTADOR
 .FINENE            
             MOVEM.L (A7)+,D2-D7
             RTS
+
+
 
 
 

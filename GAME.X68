@@ -65,7 +65,7 @@ GAMUPD
             BLT     .CHKLOSS
             MOVE.W  #3,(STANEXT)
             RTS
-.CHKLOSS            
+.CHKLOSS    
             CMP.W   #KILLPLYR,(PLYRDEAD)    
             BNE     .DONE
             CMP.W   #1,(DEMO)
@@ -109,6 +109,7 @@ GAMPLOT
 .TXT2       DC.B    'DE DEMOSTRACIÓN',0
 .TXT3       DC.B    'PULSA LA BARRA ESPACIADORA PARA VOLVER AL MENÚ PRINCIPAL',0
             DS.W    0
+
 
 
 
