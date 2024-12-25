@@ -326,8 +326,6 @@ IMAPLOT
 ; DIBUJA UNA IMAGEN
 ; INPUT     : A2: (A2)  CONTIENE LA DIMENSIÓN X DE LA IMAGEN (LA MITAD)
 ;           :     2(A2) CONTIENE LA DIMENSIÓN Y DE LA IMAGEN (LA MITAD)
-;           :     4(A2) POSICIÓN X INICIAL
-;           :     6(A2) POSICIÓN Y INICIAL
 ;           : A0: DIRECCIÓN DE LA IMAGEN
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
@@ -335,8 +333,8 @@ IMAPLOT
             
             MOVEM.L D0-D6/A0-A2,-(A7)
             
-            MOVE.W  4(A2),D1
-            MOVE.W  6(A2),D2
+            MOVE.W  #SCRWIDTH/2,D1
+            MOVE.W  #SCRHEIGH/2,D2
             SUB.W   (A2),D1          ; PARA CENTRAR LA IMAGEN EN LA PANTALLA
             SUB.W   2(A2),D2
             MOVE.W  D1,D3
@@ -344,7 +342,7 @@ IMAPLOT
             ADDQ.W  #1,D3
             ADDQ.W  #1,D4
 .FILA
-            MOVE.W  4(A2),D1
+            MOVE.W  #SCRWIDTH/2,D1
             SUB.W   (A2),D1
             MOVE.W  D1,D3
             
@@ -364,12 +362,12 @@ IMAPLOT
             MOVE.B  #84,D0
             TRAP    #15
             
-            MOVE.W  4(A2),D6
+            MOVE.W  #SCRWIDTH/2,D6
             ADD.W   (A2),D6
             CMP.W   D6,D3
             BLT     .COLUMNA
             
-            MOVE.W  6(A2),D6
+            MOVE.W  #SCRHEIGH/2,D6
             ADD.W   2(A2),D6
             CMP.W   D6,D4
             BLT     .FILA
@@ -507,6 +505,7 @@ UTLRAND
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
             
+
 
 
 

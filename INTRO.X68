@@ -35,8 +35,6 @@ ISCINIT
             LEA     FILEDATA,A0
             MOVE.W  #IMAWIDTH/2,(A2)
             MOVE.W  #IMAHEIGH/2,2(A2)
-            MOVE.W  #SCRWIDTH/2,4(A2)       ; POSICIONES X E Y INICIALE
-            MOVE.W  #SCRHEIGH/2,6(A2)
             
             JSR     IMAPLOT
             
@@ -98,6 +96,7 @@ ISCUPD
 .DONE       MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 

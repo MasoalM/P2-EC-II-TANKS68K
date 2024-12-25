@@ -28,8 +28,6 @@ WININIT
             
             MOVE.W  #WINWIDTH/2,(A2)
             MOVE.W  #WINHEIGH/2,2(A2)
-            MOVE.W  #SCRWIDTH/2,4(A2)
-            MOVE.W  #SCRHEIGH/2,6(A2)
             
             JSR     IMAPLOT
             
@@ -67,6 +65,7 @@ WINUPD
 .CONT       MOVE.B  #SNDWIN,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 
