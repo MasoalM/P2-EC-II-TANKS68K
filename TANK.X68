@@ -73,7 +73,6 @@ TANUPD
             BNE.W   .BOT2
             
             ; TANK IS NOT A BOT (PLAYER)
-            
             CMP.W   #1,(DEMO)
             BEQ     .BOT2            
 
@@ -572,6 +571,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
 
 
 *~Font name~Courier New~

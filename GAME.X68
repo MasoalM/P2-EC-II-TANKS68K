@@ -10,6 +10,18 @@ GAMINIT
 ; MODIFIES : NONE
 ; ----------------------------------------------------------
             
+            CLR.L   D0
+            CLR.L   D1
+            CLR.L   D2
+            CLR.L   D3
+            CLR.L   D4
+            CLR.L   D5
+            CLR.L   D6
+            CLR.L   D7
+            
+            CLR.L   (BULPOSORGX)
+            CLR.L   (BULPOSORGY)
+            
             JSR     DMMINIT
             JSR     SCOINIT 
             JSR     LVL1INIT
@@ -40,6 +52,7 @@ GAMUPD
             CMP.W   #ENEMLVL2,(SCORE)   ; ESTAMOS EN EL NIVEL 2, COMPROBAR SI LO HEMOS ACABADO
             BLT     .CHKLOSS
             ADDQ.W  #1,(LVLNUM)
+            JSR     KILLBULS
             JSR     LVL3INIT
             BRA     .DONE
 .LVL1       
@@ -54,6 +67,7 @@ GAMUPD
             CMP.W   #1,(DEMO)
             BEQ     .DEMOEND
             ADDQ.W  #1,(LVLNUM)
+            JSR     KILLBULS
             JSR     LVL2INIT
             RTS
 .DEMOEND                                ; EN LA DEMO SOLO SE MUESTRA EL PRIMER NIVEL
@@ -63,11 +77,19 @@ GAMUPD
 .CHKWIN            
             CMP.W   #ENEMLVL3,(SCORE)
             BLT     .CHKLOSS
+            JSR     KILLBULS
+            MOVE.W  #TANPLAY,D0
+            JSR     DMMFRSTO
+            JSR     AGLKILL
             MOVE.W  #3,(STANEXT)
             RTS
 .CHKLOSS    
             CMP.W   #KILLPLYR,(PLYRDEAD)    
             BNE     .DONE
+            JSR     KILLBULS
+            MOVE.W  #TANPLAY,D0
+            JSR     DMMFRSTO
+            JSR     AGLKILL
             CMP.W   #1,(DEMO)
             BEQ     .DEMOEND
             
@@ -109,6 +131,7 @@ GAMPLOT
 .TXT2       DC.B    'DE DEMOSTRACIÓN',0
 .TXT3       DC.B    'PULSA LA BARRA ESPACIADORA PARA VOLVER AL MENÚ PRINCIPAL',0
             DS.W    0
+
 
 
 

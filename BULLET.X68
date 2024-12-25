@@ -1,30 +1,31 @@
 *-----------------------------------------------------------
-* BULLET MANAGEMENT (AGENT)
-* BULPOSX (W) (A0)
-* BULPOSY (W) 2(A0)
-* BULVELX (W) 4(A0)     ; por ahora es una cte as? que no habr?a que ponerlo aqu?
-* BULVELY (W) 6(A0)     ; idem
+* GESTIÓN DE LA BALA (AGENTE)
+* BULPOSX (W) (A0)      ; POSICIÓN X
+* BULPOSY (W) 2(A0)     ; POSICIÓN Y
+* BULVELX (W) 4(A0)     ; VELOCIDAD X
+* BULVELY (W) 6(A0)     ; VELOCIDAD Y
 * BULFATH (W) 8(A0)     ; IDENTIFICADOR DEL PADRE DE LA BALA
 * TOUCHLFT(W) 10(A0)    ; TOQUES RESTANTES PARA QUE EXPLOTE LA BALA
-* TANPOSX     D1
-* TANPOSY     D2
-* FATHID      D3
+* TANPOSX     D1        ; POSICIÓN X DEL TANQUE QUE LA HA CREADO
+* TANPOSY     D2        ; POSICIÓN Y DEL TANQUE QUE LA HA CREADO
+* FATHID      D3        ; ID DEL PADRE DE LA BALA (RECIBIDO POR PARÁMETRO)
 *-----------------------------------------------------------
 
 ; ----------------------------------------------------------
 BULINIT
-; INITIALITZE BULLET
-; INPUT     : A0 POINTER TO THE INSTANCE VARIABLES
+; INICIALIZAR BALA
+; INPUT     : PUNTERO DE A0 A LAS VARIABLES DE INSTANCIA
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
             
-            ; PARA QUE LA BALA NO APAREZCA ENCIMA DEL TANQUE (modificar para que sea hacia donde apunta)
+            ; AJUSTAR POSICIÓN INICIAL PARA QUE NO APAREZCA SOBRE EL TANQUE
             ADD.W   (BULPOSORGX),D1
             ADD.W   (BULPOSORGY),D2
 
             MOVEM.W D0-D5,-(A7)
             
+            ; CALCULAR LA POSICIÓN RELATIVA
             MOVE.W  D1,D0
             MOVE.W  D2,D1
             LEA.L   MAPDATA,A1
@@ -32,56 +33,45 @@ BULINIT
             MOVE.W  D1,D2
             MOVE.W  D0,D1
             
-            ; BALA SPAWNEA DONDE EL TANQUE QUE LA GENERA
+            ; ESTABLECER LA POSICIÓN INICIAL DE LA BALA
             MOVE.W  D1,(A0) 
             MOVE.W  D2,2(A0)
             
             MOVEM.W (A7)+,D0-D5
             
-            ; GUARDAMOS EL ID DEL PADRE DE LA BALA
+            ; GUARDAR EL ID DEL PADRE DE LA BALA
             MOVE.W  D3,8(A0)
             
-            CMP.W   #$01,(A1)
+            CMP.W   #$01,(A1)   ; COMPROBAR ESTADO DEL MAPA
             BNE     .SEGBULL
+            ; LA BALA HA HECHO SPAWN ENCIMA DE UN BLOQUE
             MOVEM.W D4-D5,-(A7)
-            MOVE.W  8(A0),D4
+            
+            CMP.W   #0,8(A0)    ; COMPROBAR SI EL PADRE DE LA BALA ES EL JUGADOR
+            BNE     .NOTPLAYER
+            
+            ; EL JUGADOR ES EL PADRE DE LA BALA
             MOVE.L  A0,A1
             
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            CMP.W   20(A0),D4
-            BNE     .NOTPLAYER
-            ADDQ.W  #1,18(A0)
-            MOVE.L  A1,A0
-            JSR     AGLKILL
-            MOVEM.W (A7)+,D4-D5
-            RTS
+            ADDQ.W  #1,18(A0)   ; AGREGARLE UNA BALA DISPONIBLE AL JUGADOR
+            MOVE.L  A1,A0            
 .NOTPLAYER
-            MOVE.W  #TANENEM,D0
-            JSR     DMMFRSTO
-.LOOP4      CMP.W   20(A0),D4
-            BNE     .OTHERENE
-            ADDQ.W  #1,18(A0)
-            MOVE.L  A1,A0
-            JSR     AGLKILL
+            JSR     AGLKILL     ; DESTRUIR BALA
             MOVEM.W (A7)+,D4-D5
             RTS
-.OTHERENE
-            JSR     DMMNEXTO
-            BRA     .LOOP4      
-            
-.SEGBULL            
-            
-            ; TOQUES DE LA BALA DISPONIBLES CON LAS PAREDES EMPIEZAN SIENDO EL MÁXIMO
-            MOVE.W  #MAXTOUCH,10(A0)
+             
+.SEGBULL    ; LA BALA HA HECHO SPAWN CORRECTAMENTE                
+            MOVE.W  #MAXTOUCH,10(A0)    ; TOQUES DE LA BALA DISPONIBLES CON LAS PAREDES EMPIEZAN SIENDO EL MÁXIMO
             MOVE.W  (BULVELX),4(A0)
             MOVE.W  (BULVELY),6(A0)
             RTS
             
 ; ----------------------------------------------------------
 BULUPD
-; UPDATE THE BULLET
-; INPUT     : A0 POINTER TO THE INSTANCE VARIABLES
+; ACTUALIZA LA BALA
+; INPUT     : PUNTERO DE A0 A LAS VARIABLES DE INSTANCIA
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
@@ -164,13 +154,11 @@ BULUPD
 .CHKPLAY2   
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            CMP.W   #0,D3       ; puede que falle en un futuro que las dos líneas de arriba se ejecuten ?
+            CMP.W   #0,D3
             BNE     .ENDCOLEX
             ADDQ.W  #1,18(A0)
             
 .ENDCOLEX   ; FINAL EN EL QUE LA BALA EXPLOTA POR TENER X COLISIONES CON BLOQUES         
-            ;MOVE.B  #SNDBULEX,D7
-            ;TRAP    #SNDPLTN
             MOVEM.W (A7)+,D0-D4
             RTS 
 
@@ -288,8 +276,8 @@ BULUPD
             
 ; ----------------------------------------------------------
 BULPLOT
-; PLOT THE BULLET
-; INPUT     : A0 POINTER TO THE INSTANCE VARIABLES
+; DIBUJA LA BALA
+; INPUT     : PUNTERO DE A0 A LAS VARIABLES DE INSTANCIA
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
@@ -323,6 +311,8 @@ BULPLOT
 
             RTS
             
+
+
 
 
 

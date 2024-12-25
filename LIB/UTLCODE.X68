@@ -150,8 +150,35 @@ RELPOS
             RTS
             
 ; -----------------------------------------------------------------------------
+KILLBULS
+; SUBRUTINA QUE DESTRUYE TODAS LAS BALAS QUE EXISTAN 
+; EN LA PILA DE AGENTES
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVEM.L D0,-(A7)
+            
+            MOVE.W  #BULTYPE,D0 
+            JSR     DMMFRSTO
+.BULLOOP            
+            CMP.L   #0,A0
+            BEQ     .NOBULS
+            JSR     AGLKILL
+            JSR     DMMNEXTO
+            BRA     .BULLOOP
+            ; DEVOLVERLE LAS BALAS AL JUGADOR
+            MOVE.W  #TANPLAY,D0 
+            JSR     DMMFRSTO
+            MOVE.W  #PLMAXBUL,18(A0)
+.NOBULS            
+            MOVEM.L (A7)+,D0
+            RTS
+            
+; -----------------------------------------------------------------------------
 PLIMASEL
-; SELECT THE TANK AND CANNON POSITION TO PLOT FOR THE PLAYER
+; SELECCIONA LA POSICIÓN DEL TANQUE Y DEL CAÑÓN PARA 
+; DIBUJAR AL JUGADOR
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - A1
@@ -238,7 +265,8 @@ PLIMASEL
             
 ; -----------------------------------------------------------------------------
 ENIMASEL
-; SELECT THE TANK AND CANNON POSITION TO PLOT FOR THE PLAYER
+; SELECCIONA LA POSICIÓN DEL TANQUE Y DEL CAÑÓN PARA 
+; DIBUJAR AL ENEMIGO
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - A1
@@ -505,6 +533,7 @@ UTLRAND
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
             
+
 
 
 

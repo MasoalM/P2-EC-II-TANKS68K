@@ -22,8 +22,7 @@ SCRCYCCT    DS.B    1       ; CYCLE COUNTER
 
 ; --- TIME RELATED VARIABLES -------------------------------
 
-TIEMPO      DS.L    1       ; CONTADOR DE TIEMPO
-
+TIEMPO      DS.L    2       ; CONTADOR DE TIEMPO
 
 ; --- FPS RELATED VARIABLES --------------------------------
 
@@ -69,6 +68,7 @@ DATENYS     DS.L    1000
 DATENYSE    DS.L    1000
 DATENYSW    DS.L    1000
 DATENYW     DS.L    1000
+
 
 
 
