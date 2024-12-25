@@ -9,11 +9,11 @@
 * BULLEFT (W)             10(A0)
 * TANID   (W)             12(A0)            ; IDENTIFICADOR ?NICO DE CADA TANQUE
 * TANRTFTI(W)             14(A0)            ; TANK RTF TIME (TIEMPO RESTANTE PARA QUE PUEDA VOLVER A DISPARAR)
-* ENEDIR  (W)             16(A0)            ; DIRECCIÓN ALEATORIA TEMPORAL ASIGNADA A UN TANQUE ENEMIGO O BOT
-* POSAPUN (W)             18(A0)            ; POSICIÓN DE APUNTADO DEL ENEMIGO
+* ENEDIR  (W)             16(A0)            ; DIRECCI?N ALEATORIA TEMPORAL ASIGNADA A UN TANQUE ENEMIGO O BOT
+* POSAPUN (W)             18(A0)            ; POSICI?N DE APUNTADO DEL ENEMIGO
 * INITIAL TANK X POSITION D1
 * INITIAL TANK Y POSITION D2
-* ENEMY TANK ID           D3                ; NO IMPLEMENTADO AÚN (SIRVE PARA CREAR MÁS DE UN TIPO DE ENEMIGOS)
+* ENEMY TANK ID           D3                ; NO IMPLEMENTADO A?N (SIRVE PARA CREAR M?S DE UN TIPO DE ENEMIGOS)
 *-----------------------------------------------------------
 
 ; ----------------------------------------------------------
@@ -34,15 +34,15 @@ TANINIT
             MOVE.W  D2,(PLAYPOSY)
             
             ; IF TANK IS NOT A BOT (PLAYER)
-            MOVE.W  #PLYRALIV,(PLYRDEAD)    ; EL JUGADOR NO ESTÁ MUERTO
+            MOVE.W  #PLYRALIV,(PLYRDEAD)    ; EL JUGADOR NO EST? MUERTO
             MOVE.W  #PLRSPEED,4(A0)         
             MOVE.W  #TANPLAY,6(A0)          ; EL TANQUE ES EL JUGADOR 
             MOVE.W  #PLRINILF,8(A0)         ; VIDA INICIAL DEL TANQUE JUGADOR
-            MOVE.W  #PLMAXBUL,10(A0)        ; MÁXIMAS BALAS DISPONIBLES PARA DISPARAR
-            MOVE.W  #0,12(A0)               ; TANID DEL JUGADOR SERÁ 0
+            MOVE.W  #PLMAXBUL,10(A0)        ; M?XIMAS BALAS DISPONIBLES PARA DISPARAR
+            MOVE.W  #0,12(A0)               ; TANID DEL JUGADOR SER? 0
             CMP.W   #1,(DEMO)
             BNE     .NOTDEMO
-            MOVE.W  #ENEMYRTF,14(A0)        ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
+            MOVE.W  #ENEMYRTF,14(A0)        ; CUANDO SEA 0 PODR? VOLVER A DISPARAR
 .NOTDEMO            
             RTS 
             
@@ -52,7 +52,7 @@ TANINIT
             MOVE.W  #TANENEM,6(A0)         ; EL TANQUE ES UN BOT
             MOVE.W  #ENEINILF,8(A0)        ; VIDA INICIAL DEL TANQUE ENEMIGO
             MOVE.W  D3,12(A0)              ; IDENTIFICADOR DEL TANQUE ENEMIGO
-            MOVE.W  #ENEMYRTF,14(A0)       ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
+            MOVE.W  #ENEMYRTF,14(A0)       ; CUANDO SEA 0 PODR? VOLVER A DISPARAR
             RTS
 
 ; ----------------------------------------------------------            
@@ -87,10 +87,12 @@ TANUPD
             BTST.B  #0,(KBDVAL)
             BEQ     .CHKLEFT
             SUB.W   4(A0),D0  ;RESTAMOS LA VELOCIDAD AL EJE X
+            ADDQ.W  #1,(PLCANPOS)
             MOVE.W  #-1,(MOVXTEMP)
 .CHKLEFT    BTST.B  #2,(KBDVAL)
             BEQ     .CONT1
             ADD.W   4(A0),D0  ;SUMAMOS LA VELOCIDAD AL EJE X
+            ADDQ.W  #1,(PLCANPOS)
             MOVE.W  #1,(MOVXTEMP)
 .CONT1            
             BTST.B  #1,(KBDVAL)
@@ -100,9 +102,10 @@ TANUPD
 .CHKDWN     BTST.B  #3,(KBDVAL)
             BEQ     .DISP
             ADD.W   4(A0),D1  ;SUMAMOS LA VELOCIDAD AL EJE Y
+            
             MOVE.W  #1,(MOVYTEMP)
 .DISP          
-            ; COMPROBAR SI ESTÁ DISPARANDO  
+            ; COMPROBAR SI EST? DISPARANDO  
             
             MOVE.B  (MOUEDGE),D2   
             
@@ -137,12 +140,12 @@ TANUPD
             MOVE.W  #0,(MOVYTEMP)
             MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
-            MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no haría falta (por si la velocidad en un futuro la cambiamos a variable según el tanque)
+            MOVE.W  4(A0),D3                ; guardo la velocidad del tanque enemigo aunque no har?a falta (por si la velocidad en un futuro la cambiamos a variable seg?n el tanque)
             
             CMP.W   #1,(DEMO)
             BEQ     .DEMOPLAY
             CMP.W   #60,14(A0)              (EL MOVIMIENTO ALEATORIO DEL TANQUE ENEMIGO DEPENDE DEL RTF, POR AHORA ESO NO NOS AFECTA)              
-            BHI     .FLLOWPLR               ; EN ESTA ITERACIÓN MOVERSE HACIA EL JUGADOR
+            BHI     .FLLOWPLR               ; EN ESTA ITERACI?N MOVERSE HACIA EL JUGADOR
 .DEMOPLAY            
             ; EN CASO DE NO SEGUIR AL JUGADOR, HACEMOS UN MOVIMIENTO RANDOM
 
@@ -150,7 +153,7 @@ TANUPD
             BHI     .DIRASIGN
             MOVEM.L D0/A1,-(A7)
             JSR     UTLRAND
-            AND.L   #$00000006,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 2 (ALEATORIOS)
+            AND.L   #$00000006,D0      ; M?SCARA PARA OBTENER M?LTIPLOS DE 2 (ALEATORIOS)
             LEA     .MOVVEC,A1
             MOVE.L  (A1,D0),16(A0)     ; RANDOM MOVEMENT   
             MOVEM.L (A7)+,D0/A1
@@ -228,11 +231,11 @@ TANUPD
             MOVE.W  D1,D5
             
             CMP.W   #0,14(A0)               
-            BHI     .SUBRTF                 ; ENEMIGO AÚN NO TIENE DISPONIBLE DISPARAR  
+            BHI     .SUBRTF                 ; ENEMIGO A?N NO TIENE DISPONIBLE DISPARAR  
             MOVE.W  #ENEMYRTF,14(A0)        ; REINICIAR CONTADOR   
             
             CMP.W   #2,6(A0)
-            BNE     .ENEDISP                ; SALTAR SI ES EL ENEMIGO (EL JUGADOR PUEDE ESTAR AQUÍ SI ES LA DEMO)
+            BNE     .ENEDISP                ; SALTAR SI ES EL ENEMIGO (EL JUGADOR PUEDE ESTAR AQU? SI ES LA DEMO)
 
             MOVE.W  #1,D7
             JSR     APUNTADOR
@@ -263,7 +266,7 @@ TANUPD
 .CONT2 
             JSR     TANKCOL
             CMP.W   #1,A3
-            BLS     .SEG                    ;SALTA SI NO HAY COLISIÓN
+            BLS     .SEG                    ;SALTA SI NO HAY COLISI?N
             CMP.W   #1,(COLTANKP)
             BNE     .NTRAT                  ;SI NO SE HAN CHOCADO CON EL JUGADOR, SEGUIMOS CON EL TRATAMIENTO NORMAL
             
@@ -271,7 +274,7 @@ TANUPD
             BEQ     .NTRAT
             
             JSR     AGLKILL
-            MOVE.B  #SNDEXPLO,D7             ; SONIDO EXPLOSIÓN
+            MOVE.B  #SNDEXPLO,D7             ; SONIDO EXPLOSI?N
             TRAP    #SNDPLTN  
             ADDQ.W  #1,(SCORE)
             JSR     COLBYKMKZ
@@ -569,21 +572,6 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 *~Font name~Courier New~
