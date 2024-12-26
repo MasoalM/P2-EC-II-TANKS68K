@@ -5,31 +5,31 @@
 *               a otros tanques de color rojo. Se basa en 3 niveles
 *               que debes superar antes de ser derrotado.
 *-----------------------------------------------------------
-        ORG    $1000
+            ORG    $1000
     
-        INCLUDE "SYSCONST.X68"
-        INCLUDE "CONST.X68"
-        INCLUDE "LIB/DMMCONST.X68"
-        INCLUDE "LIB/UTLCONST.X68"
-        INCLUDE "LIB/DMMCODE.X68"
-        INCLUDE "SYSTEM.X68"
-        INCLUDE "LIB/AGLCODE.X68"
-        INCLUDE "LIB/UTLCODE.X68"
-        INCLUDE "LIB/FILELOAD.X68"
-        INCLUDE "BULLET.X68"
-        INCLUDE "TANK.X68"
-        INCLUDE "SCORE.X68"
-        INCLUDE "MAP.X68"         
-        INCLUDE "DATA/MAPDATA.X68"
-        INCLUDE "LEVEL.X68"
-        INCLUDE "FPS.X68"
-        INCLUDE "GAME.X68"
-        INCLUDE "INTRO.X68"
-        INCLUDE "INSTRUCTIONS.X68"
-        INCLUDE "WIN.X68"
-        INCLUDE "GOVER.X68"
-        INCLUDE "STATES.X68"
-        INCLUDE "LOADFILES.X68"
+            INCLUDE "SYSCONST.X68"
+            INCLUDE "CONST.X68"
+            INCLUDE "LIB/DMMCONST.X68"
+            INCLUDE "LIB/UTLCONST.X68"
+            INCLUDE "LIB/DMMCODE.X68"
+            INCLUDE "SYSTEM.X68"
+            INCLUDE "LIB/AGLCODE.X68"
+            INCLUDE "LIB/UTLCODE.X68"
+            INCLUDE "LIB/FILELOAD.X68"
+            INCLUDE "BULLET.X68"
+            INCLUDE "TANK.X68"
+            INCLUDE "SCORE.X68"
+            INCLUDE "MAP.X68"         
+            INCLUDE "DATA/MAPDATA.X68"
+            INCLUDE "LEVEL.X68"
+            INCLUDE "FPS.X68"
+            INCLUDE "GAME.X68"
+            INCLUDE "INTRO.X68"
+            INCLUDE "INSTRUCTIONS.X68"
+            INCLUDE "WIN.X68"
+            INCLUDE "GOVER.X68"
+            INCLUDE "STATES.X68"
+            INCLUDE "LOADFILES.X68"
         
 START:
 
@@ -119,6 +119,7 @@ START:
             END    START
     
       
+
 
 
 

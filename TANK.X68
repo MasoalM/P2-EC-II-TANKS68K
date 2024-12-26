@@ -7,13 +7,13 @@
 * TANTYPE (W)             6(A0)
 * TANLIFE (W)             8(A0)
 * BULLEFT (W)             10(A0)
-* TANID   (W)             12(A0)            ; IDENTIFICADOR ?NICO DE CADA TANQUE
+* TANID   (W)             12(A0)            ; IDENTIFICADOR ÚNICO DE CADA TANQUE
 * TANRTFTI(W)             14(A0)            ; TANK RTF TIME (TIEMPO RESTANTE PARA QUE PUEDA VOLVER A DISPARAR)
-* ENEDIR  (W)             16(A0)            ; DIRECCI?N ALEATORIA TEMPORAL ASIGNADA A UN TANQUE ENEMIGO O BOT
-* POSAPUN (W)             18(A0)            ; POSICI?N DE APUNTADO DEL ENEMIGO
+* ENEDIR  (W)             16(A0)            ; DIRECCIÓN ALEATORIA TEMPORAL ASIGNADA A UN TANQUE ENEMIGO O BOT
+* POSAPUN (W)             18(A0)            ; POSICIÓN DE APUNTADO DEL ENEMIGO
 * INITIAL TANK X POSITION D1
 * INITIAL TANK Y POSITION D2
-* ENEMY TANK ID           D3                ; NO IMPLEMENTADO A?N (SIRVE PARA CREAR M?S DE UN TIPO DE ENEMIGOS)
+* ENEMY TANK ID           D3                ; NO IMPLEMENTADO AÚN (SIRVE PARA CREAR MÁS DE UN TIPO DE ENEMIGOS)
 *-----------------------------------------------------------
 
 ; ----------------------------------------------------------
@@ -34,15 +34,15 @@ TANINIT
             MOVE.W  D2,(PLAYPOSY)
             
             ; IF TANK IS NOT A BOT (PLAYER)
-            MOVE.W  #PLYRALIV,(PLYRDEAD)    ; EL JUGADOR NO EST? MUERTO
+            MOVE.W  #PLYRALIV,(PLYRDEAD)    ; EL JUGADOR NO ESTÁ MUERTO
             MOVE.W  #PLRSPEED,4(A0)         
             MOVE.W  #TANPLAY,6(A0)          ; EL TANQUE ES EL JUGADOR 
             MOVE.W  #PLRINILF,8(A0)         ; VIDA INICIAL DEL TANQUE JUGADOR
-            MOVE.W  #PLMAXBUL,10(A0)        ; M?XIMAS BALAS DISPONIBLES PARA DISPARAR
-            MOVE.W  #0,12(A0)               ; TANID DEL JUGADOR SER? 0
+            MOVE.W  #PLMAXBUL,10(A0)        ; MÁXIMAS BALAS DISPONIBLES PARA DISPARAR
+            MOVE.W  #0,12(A0)               ; TANID DEL JUGADOR SERÁ 0
             CMP.W   #1,(DEMO)
             BNE     .NOTDEMO
-            MOVE.W  #ENEMYRTF,14(A0)        ; CUANDO SEA 0 PODR? VOLVER A DISPARAR
+            MOVE.W  #ENEMYRTF,14(A0)        ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
 .NOTDEMO            
             RTS 
             
@@ -52,7 +52,7 @@ TANINIT
             MOVE.W  #TANENEM,6(A0)         ; EL TANQUE ES UN BOT
             MOVE.W  #ENEINILF,8(A0)        ; VIDA INICIAL DEL TANQUE ENEMIGO
             MOVE.W  D3,12(A0)              ; IDENTIFICADOR DEL TANQUE ENEMIGO
-            MOVE.W  #ENEMYRTF,14(A0)       ; CUANDO SEA 0 PODR? VOLVER A DISPARAR
+            MOVE.W  #ENEMYRTF,14(A0)       ; CUANDO SEA 0 PODRÁ VOLVER A DISPARAR
             RTS
 
 ; ----------------------------------------------------------            
@@ -482,14 +482,9 @@ TANPLOT
 .DRAWPLAY
             JSR     PLIMASEL
 .DRAW                        
-            ;MOVE.W  (A0),D1
             MOVE.W  2(A0),D2
-            ;SUB.W   #TANWIDTH/2,D1
             SUB.W   #TANHEIGH/2,D2
-            ;MOVE.W  D1,D3
             MOVE.W  D2,D4
-            ;ADDQ.W  #1,D3
-            ;ADDQ.W  #1,D4
             SUBQ.W  #1,D2
 .FILA
             MOVE.W  (A0),D1
@@ -547,9 +542,6 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
-
-
-
 
 
 *~Font name~Courier New~

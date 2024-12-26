@@ -42,8 +42,10 @@ ISCMAXTM    EQU     500         ; CICLOS DE ESPERA EN LA PANTALLA DE INTRODUCCIÓ
 ; --- CONSTANTES DE NIVELES --------------------------------
 
 ENEMLVL1        EQU     2
-ENEMLVL2        EQU     4+ENEMLVL1
-ENEMLVL3        EQU     3+ENEMLVL2       ; MÁXIMAS KILLS
+ENEMLVL2        EQU     3+ENEMLVL1
+ENEMLVL3        EQU     3+ENEMLVL2       
+ENEMLVL4        EQU     4+ENEMLVL3
+ENEMLVL5        EQU     4+ENEMLVL4      ; MÁXIMAS KILLS
 
 ; --- CONSTANTES DE VICTORIA/DERROTA -----------------------
      
@@ -72,6 +74,7 @@ IMAWIDTH    EQU     512
 IMAHEIGH    EQU     384
 WINWIDTH    EQU     100
 WINHEIGH    EQU     80
+
 
 
 

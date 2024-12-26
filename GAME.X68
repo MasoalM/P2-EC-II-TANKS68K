@@ -10,18 +10,6 @@ GAMINIT
 ; MODIFIES : NONE
 ; ----------------------------------------------------------
             
-            CLR.L   D0
-            CLR.L   D1
-            CLR.L   D2
-            CLR.L   D3
-            CLR.L   D4
-            CLR.L   D5
-            CLR.L   D6
-            CLR.L   D7
-            
-            CLR.L   (BULPOSORGX)
-            CLR.L   (BULPOSORGY)
-            
             JSR     DMMINIT
             JSR     SCOINIT 
             JSR     LVL1INIT
@@ -44,8 +32,12 @@ GAMUPD
             ; RECORDAR QUE EL NIVEL ES CONCEPTUALMENTE UN NÚMERO MAYOR QUE SU PROPIO CÓDIGO (EL CÓDIGO DEL NIVEL 1 ES 0, DEL NIVEL 2 ES 1, ...)
             ; ESTO ES DEBIDO A QUE MULTIPLICAMOS EL NIVEL POR LO QUE OCUPA CADA MAPA (EL MAPA DEL NIVEL 1 TIENE QUE ESTAR EN LA POSICIÓN 0)
             
+            CMP.W   #4,(LVLNUM) ; COMPROBAR SI YA ESTAMOS EN EL NIVEL 5
+            BGE     .CHKWIN
+            CMP.W   #3,(LVLNUM) ; COMPROBAR SI YA ESTAMOS EN EL NIVEL 4
+            BEQ     .LVL4
             CMP.W   #2,(LVLNUM) ; COMPROBAR SI YA ESTAMOS EN EL NIVEL 3
-            BGE     .CHKWIN     
+            BEQ     .LVL3 
             CMP.W   #1,(LVLNUM) ; COMPROBAR SI YA ESTAMOS EN EL NIVEL 2
             BNE     .LVL1
 
@@ -55,6 +47,20 @@ GAMUPD
             JSR     KILLBULS
             JSR     LVL3INIT
             BRA     .DONE
+.LVL4
+            CMP.W   #ENEMLVL4,(SCORE)
+            BLT     .CHKLOSS
+            ADDQ.W  #1,(LVLNUM)
+            JSR     KILLBULS
+            JSR     LVL5INIT
+            BRA     .DONE
+.LVL3       
+            CMP.W   #ENEMLVL3,(SCORE)
+            BLT     .CHKLOSS
+            ADDQ.W  #1,(LVLNUM)
+            JSR     KILLBULS
+            JSR     LVL4INIT
+            BRA     .DONE  
 .LVL1       
             CMP.W   #1,(DEMO)
             BNE     .CONTLVL1
@@ -75,7 +81,7 @@ GAMUPD
             MOVE.W  #0,(STANEXT)
             RTS         
 .CHKWIN            
-            CMP.W   #ENEMLVL3,(SCORE)
+            CMP.W   #ENEMLVL5,(SCORE)
             BLT     .CHKLOSS
             JSR     KILLBULS
             MOVE.W  #TANPLAY,D0
@@ -131,6 +137,7 @@ GAMPLOT
 .TXT2       DC.B    'DE DEMOSTRACIÓN',0
 .TXT3       DC.B    'PULSA LA BARRA ESPACIADORA PARA VOLVER AL MENÚ PRINCIPAL',0
             DS.W    0
+
 
 
 
