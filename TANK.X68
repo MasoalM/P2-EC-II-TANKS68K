@@ -267,10 +267,10 @@ TANUPD
             CMP.W   #1,A3
             BLS     .SEG                    ;SALTA SI NO HAY COLISI?N
             CMP.W   #1,(COLTANKP)
-            BNE     .NTRAT                  ;SI NO SE HAN CHOCADO CON EL JUGADOR, SEGUIMOS CON EL TRATAMIENTO NORMAL
+            BNE     .SEG                  ;SI NO SE HAN CHOCADO CON EL JUGADOR, SEGUIMOS CON EL TRATAMIENTO NORMAL
             
             CMP.W   #TANPLAY,6(A0)
-            BEQ     .NTRAT
+            BEQ     .SEG
             
             JSR     AGLKILL
             MOVE.B  #SNDEXPLO,D7             ; SONIDO EXPLOSI?N
@@ -279,30 +279,6 @@ TANUPD
             JSR     COLBYKMKZ
             BRA     .FINISH
             
-.NTRAT            
-            CMP.W   #0,(MOVXTEMP)
-            BEQ     .NXTEJE
-            CMP.W   #1,(MOVXTEMP)
-            BNE     .TENX
-            SUB.W   4(A0),D0
-            SUB.W   4(A0),D0
-            BRA     .NXTEJE
-.TENX 
-            ADD.W   4(A0),D0
-            ADD.W   4(A0),D0
-.NXTEJE
-            CMP.W   #0,(MOVYTEMP)
-            BEQ     .NXTEJE2
-            CMP.W   #1,(MOVYTEMP)
-            BNE     .TENY
-            SUB.W   4(A0),D1
-            SUB.W   4(A0),D1            
-            BRA     .NXTEJE2
-.TENY 
-            ADD.W   4(A0),D1
-            ADD.W   4(A0),D1
-.NXTEJE2
-            BRA     .DONE
 
 .SEG        
             ;INICIALIZAMOS
@@ -571,6 +547,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
 
 
 
