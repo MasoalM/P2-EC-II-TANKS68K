@@ -9,11 +9,9 @@ ISCINIT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            MOVEM.L D0-D5/A0-A2,-(A7)
-
             MOVE.W  #0,(DOPLOT)
 
-            MOVE.B  #92,D0                  ;DESACTIVAR DOBLE BUFFER
+            MOVE.B  #92,D0                  ; DESACTIVAR DOBLE BUFFER
             MOVE.B  #16,D1
             TRAP    #15
             
@@ -29,14 +27,50 @@ ISCINIT
             TRAP    #15
             
             CLR.W   (ISCTIMER) 
+            MOVEM.L D0-D6/A0,-(A7)
+            LEA     FILEDATA,A0
             
             CLR.L   D5
             
-            LEA     FILEDATA,A0
-            MOVE.W  #IMAWIDTH/2,(A2)
-            MOVE.W  #IMAHEIGH/2,2(A2)
+            MOVE.W  #SCRWIDTH/2,D1
+            MOVE.W  #SCRHEIGH/2,D2
+            SUB.W   #IMAWIDTH/2,D1          ; PARA CENTRAR LA IMAGEN EN LA PANTALLA
+            SUB.W   #IMAHEIGH/2,D2
+            MOVE.W  D1,D3
+            MOVE.W  D2,D4
+            ADDQ.W  #1,D3
+            ADDQ.W  #1,D4
+
+.FILA
+            MOVE.W  #SCRWIDTH/2,D1
+            SUB.W   #IMAWIDTH/2,D1
+            MOVE.W  D1,D3
             
-            JSR     IMAPLOT
+            ADDQ.W  #1,D2
+            ADDQ.W  #1,D4
+.COLUMNA
+
+            MOVE.L  D1,D5
+            MOVE.L  (A0)+,D1
+            MOVE.B  #80,D0
+            TRAP    #15
+            MOVE.L  D5,D1
+
+            ADDQ.W  #1,D1
+            ADDQ.W  #1,D3
+
+            MOVE.B  #84,D0
+            TRAP    #15
+            
+            MOVE.W  #SCRWIDTH/2,D6
+            ADD.W   #IMAWIDTH/2,D6
+            CMP.W   D6,D3
+            BLT     .COLUMNA
+            
+            MOVE.W  #SCRHEIGH/2,D6
+            ADD.W   #IMAHEIGH/2,D6
+            CMP.W   D6,D4
+            BLT     .FILA
             
             MOVE.L  #$00054B17,D1
             MOVE.B  #81,D0
@@ -54,11 +88,11 @@ ISCINIT
             MOVE.B  #29,D0
             JSR     UTLPRINT
           
+            MOVEM.L (A7)+,D0-D6/A0
+            
             MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
             MOVE.B  #92,D0
             TRAP    #15
-            
-            MOVEM.L (A7)+,D0-D5/A0-A2
             
             RTS  
 
@@ -96,23 +130,6 @@ ISCUPD
 .DONE       MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
