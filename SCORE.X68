@@ -1,20 +1,20 @@
 *-----------------------------------------------------------
-* SCOREBOARD MANAGEMENT
+* GESTIÓN DEL SCORE
 *-----------------------------------------------------------
 
 ; ----------------------------------------------------------
 SCOINIT
-; INITIALITZE SCOREBOARD
+; INICIALIZAR EL SCORE
 ; INPUT     : NONE
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
-            CLR.W   (SCORE)
+            CLR.W   (SCORE)     ; PONER SCORE A 0
             RTS
 
 ; ----------------------------------------------------------
 SCOPLOT
-; PLOT THE SCOREBOARD
+; DIBUJAR EL SCORE
 ; INPUT     : NONE
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
@@ -22,17 +22,17 @@ SCOPLOT
 
             MOVEM.L D0-D1/A1,-(A7)
 
-            ; SET BACKGROUND COLOR
+            ; ASIGNAR COLOR DE FONDO
             MOVE.B  #81,D0
             MOVE.L  #SCOFCOL,D1
             TRAP    #15
             
-            ; SET LINE POSITION
+            ; ASIGNAR POSICIÓN DE LÍNEA
             MOVE.B  #11,D0
             MOVE.W  #SCOLINE,D1
             TRAP    #15
 
-            ; PRINT LINE
+            ; IMPRIMIR LÍNEA
             LEA     .TXT,A1
             CLR.L   D1
             MOVE.W  (SCORE),D1
@@ -44,6 +44,7 @@ SCOPLOT
             RTS
 .TXT        DC.B    'PUNTUACIÓN: ',0   
             DS.W    0                   ; PARA QUE LAS INSTRUCCIONES ESTÉN ALINEADAS
+
 
 
 *~Font name~Courier New~

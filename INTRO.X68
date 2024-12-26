@@ -1,10 +1,10 @@
 ; ==============================================================================
-; INTRO SCREEN
+; PANTALLA DEL MENÚ PRINCIPAL
 ; ==============================================================================
 
 ; ------------------------------------------------------------------------------
 ISCINIT
-; INTRO SCREEN INIT
+; INICIALIZACIÓN DE LA PANTALLA DEL MENÚ PRINCIPAL
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
@@ -15,10 +15,12 @@ ISCINIT
             MOVE.B  #16,D1
             TRAP    #15
             
-            MOVE.L  #$00054B17,D1           ; COLOR FONDO
+            ; COLOR FONDO VERDE
+            MOVE.L  #$00054B17,D1           
             MOVE.B  #81,D0
             TRAP    #15
             
+            ; DIBUJAR FONDO
             MOVE.L  #0,D1
             MOVE.L  #0,D2
             MOVE.L  #SCRWIDTH,D3
@@ -32,6 +34,7 @@ ISCINIT
             
             CLR.L   D5
             
+            ; DIBUJADO DE LA IMAGEN
             MOVE.W  #SCRWIDTH/2,D1
             MOVE.W  #SCRHEIGH/2,D2
             SUB.W   #IMAWIDTH/2,D1          ; PARA CENTRAR LA IMAGEN EN LA PANTALLA
@@ -104,32 +107,37 @@ ISCINIT
 
 ; ------------------------------------------------------------------------------
 ISCUPD
-; INTRO SCREEN UPDATE
+; ACTUALIZACIÓN DE LA PANTALLA DEL MENÚ PRINCIPAL
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
             
+            ; SI SE PULSA EL ESPACIO, COMENZAR PARTIDA
             BTST.B  #4,(KBDEDGE)
             BEQ     .CONT1
             MOVE.W  #2,(STANEXT)
             RTS
             
-.CONT1      BTST.B  #5,(KBDEDGE)
+.CONT1      ; SI SE PULSA LA I, IR AL MENÚ DE INSTRUCCIONES
+            BTST.B  #5,(KBDEDGE)
             BEQ     .CONT2
             MOVE.W  #1,(STANEXT)
             RTS
             
-.CONT2      ADDQ.W  #1,(ISCTIMER)
+.CONT2      ; SI PASA CIERTO TIEMPO (15 SEGUNDOS APROX) IR A LA DEMO
+            ADDQ.W  #1,(ISCTIMER)
             CMP.W   #ISCMAXTM,(ISCTIMER)
             BLT     .DONE
             MOVE.W  #1,(DEMO)
             MOVE.W  #2,(STANEXT)
             RTS
      
-.DONE       MOVE.B  #SNDINTRO,D7
+.DONE       ; SI NO SUCEDE NINGUNO DE LOS 3 EVENTOS ANTERIORES, SEGUIR TOCANDO LA MÚSICA
+            MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 

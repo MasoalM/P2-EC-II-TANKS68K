@@ -1,22 +1,26 @@
 ; ------------------------------------------------------------------------------
 LOADFILES
 ; CARGA TODOS LOS ARCHIVOS NECESARIOS DEL JUEGO. EL PRIMERO ES LA IMAGEN DE LA
-; PANTALLA PRINCIPAL, LOS 16 CONSECUTIVOS SON LAS IMÁGENES DEL JUGADOR Y LOS 16
-; SIGUIENTES SON LAS IMÁGENES DEL ENEMIGO
+; PANTALLA PRINCIPAL, EL SIGUIENTE ES LA IMAGEN DE VICTORIA,
+; LOS 16 CONSECUTIVOS SON LAS IMÁGENES DEL JUGADOR Y LOS 16 SIGUIENTES SON LAS 
+; IMÁGENES DEL ENEMIGO
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
             MOVEM.L  A0-A1,-(A7)            
 
+            ; IMAGEN MENÚ PRINCIPAL
             LEA     FILEDATA,A0             ; DIRECCIÓN DE DESTINO
             LEA     .FILENAME,A1            ; NOMBRE DEL ARCHIVO
             JSR     FILLOAD
             
+            ; IMAGEN VICTORIA
             LEA     WINDATA,A0
             LEA     .FILEWIN,A1
             JSR     FILLOAD
             
+            ; IMÁGENES JUGADOR
             LEA     DATPLXE,A0       
             LEA     .FILPLXE,A1           
             JSR     FILLOAD
@@ -81,6 +85,7 @@ LOADFILES
             LEA     .FILPLYW,A1           
             JSR     FILLOAD
             
+            ; IMÁGENES ENEMIGO
             LEA     DATENXE,A0            
             LEA     .FILENXE,A1           
             JSR     FILLOAD
@@ -185,6 +190,7 @@ LOADFILES
 .FILENYW        DC.B    'pythonProject/OUTPUT/ENEMY_OUTPUT/ENEMY_Y_W.bin',0
                 DS.W    0
             
+
 
 
 *~Font name~Courier New~

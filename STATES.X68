@@ -1,10 +1,10 @@
 ; =============================================================================
-; GAME STATE MANAGEMENT
+; GESTIÓN DE LOS ESTADOS DEL JUEGO
 ; =============================================================================
 
 ; -----------------------------------------------------------------------------
 STAINIT
-; INITALIZES THE STATE MANAGER
+; INICIALIZA EL GESTOR DE ESTADOS
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
@@ -16,7 +16,7 @@ STAINIT
 
 ; -----------------------------------------------------------------------------
 STAUPD
-; PERFORMS STATE UPDATE AND INIT IF NECESSARY
+; REALIZA LA ACTUALIZACIÓN DEL ESTADO E INIT SI ES NECESARIO
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
@@ -26,12 +26,12 @@ STAUPD
             MOVE.W  (STANEXT),D0
             CMP.W   (STACUR),D0
             BEQ     .DOUPD
-            MOVE.W  D0,(STACUR)             ; IF STATE CHANGED, DO INIT
+            MOVE.W  D0,(STACUR)             ; SI EL ESTADO HA CAMBIADO, IR AL INIT
             LSL.L   #2,D0
             MOVE.L  D0,A0
             MOVE.L  .INITBL(A0),A0
             JSR     (A0)
-.DOUPD      CLR.L   D0                      ; IN ANY CASE, DO UPDATE
+.DOUPD      CLR.L   D0                      ; EN CUALQUIER CASO, ACTUALIZAR
             MOVE.W  (STACUR),D0
             LSL.L   #2,D0
             MOVE.L  D0,A0
@@ -44,7 +44,7 @@ STAUPD
 
 ; -----------------------------------------------------------------------------
 STAPLOT
-; PERFORMS STATE PLOT
+; REALIZA EL PLOT DE LOS ESTADOS
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
@@ -62,13 +62,13 @@ STAPLOT
 
 ; -----------------------------------------------------------------------------
 STAEMPTY
-; EMPTY SUBROUTINE FOR CASES WITH NOTHING TO DO
+; SUBRUTINA VACÍA PARA CASOS EN LOS QUE NO HAYA QUE HACER NADA
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
-; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
 ; -----------------------------------------------------------------------------
             RTS
+
 
 
 

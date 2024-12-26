@@ -4,22 +4,25 @@
 
 ; ------------------------------------------------------------------------------
 INSINIT
-; INSTRUCTIONS SCREEN INIT
+; INICIALIZACIÓN DE LA PANTALLA DE INSTRUCCIONES
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
             
-            MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
+            MOVE.B  #17,D1                  ; ACTIVAR DOUBLE BUFFER
             MOVE.B  #92,D0
             TRAP    #15
             TRAP    #SCRUPTN
             
             MOVEM.L D0-D1/A0-A1,-(A7)
-            MOVE.L  #$00054B17,D1           ; COLOR FONDO
+            
+            ; COLOR FONDO VERDE
+            MOVE.L  #$00054B17,D1           
             MOVE.B  #81,D0
             TRAP    #15
 
+            ; DIBUJAR RECTÁNGULO (FONDO)
             MOVE.L  #0,D1
             MOVE.L  #0,D2
             MOVE.L  #SCRWIDTH,D3
@@ -27,10 +30,12 @@ INSINIT
             MOVE.B  #87,D0
             TRAP    #15
 
+            ; TEXTO INICIAL
             LEA     .TXT1,A0
             MOVE.B  #5,D0
             JSR     UTLPRINT
             
+            ; SECUENCIA DE TEXTOS
             MOVE.B  #11,D0
             LEA     .TXTLST,A1
 .LOOP       MOVE.L  (A1)+,D1
@@ -39,6 +44,7 @@ INSINIT
             JSR     UTLPRINT
             BRA     .LOOP
 .LOOPEND           
+            ; TEXTO FINAL
             LEA     .TXT9,A0
             MOVE.B  #25,D0
             JSR     UTLPRINT
@@ -63,19 +69,21 @@ INSINIT
 
 ; ------------------------------------------------------------------------------
 INSUPD
-; INSTRUCTIONS SCREEN UPDATE
+; ACTUALIZACIÓN DE LA PANTALLA DE INSTRUCCIONES
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
+            ; SI SE PULSA EL ESPACIO, VOLVER AL MENÚ PRINCIPAL
             BTST.B  #4,(KBDEDGE)
             BEQ     .CONT
             CLR.W   (STANEXT)
             RTS
-.CONT       
+.CONT       ; CANCIÓN MENÚ INSTRUCCIONES
             MOVE.B  #SNDINSTR,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 

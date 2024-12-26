@@ -1,10 +1,10 @@
 ; ==============================================================================
-; VICTORY SCREEN
+; PANTALLA DE VICTORIA
 ; ==============================================================================
 
 ; ------------------------------------------------------------------------------
 WININIT
-; VICTORY SCREEN INIT
+; INICIALIZACIÓN DE LA PANTALLA DE VICTORIA
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
@@ -16,7 +16,8 @@ WININIT
             MOVE.L  #$000098AD,D1           ; COLOR FONDO
             MOVE.B  #81,D0
             TRAP    #15
-
+            
+            ; DIBUJADO FONDO
             MOVE.L  #0,D1
             MOVE.L  #0,D2
             MOVE.L  #SCRWIDTH,D3
@@ -24,6 +25,7 @@ WININIT
             MOVE.B  #87,D0
             TRAP    #15
             
+            ; DIBUJADO IMAGEN VICTORIA
             LEA     WINDATA,A0
             MOVE.W  #SCRWIDTH/2,D1
             MOVE.W  #SCRHEIGH/2,D2
@@ -65,6 +67,7 @@ WININIT
             CMP.W   D6,D4
             BLT     .FILA
             
+            ; TEXTOS
             LEA     .TXT1,A0
             MOVE.B  #10,D0
             JSR     UTLPRINT
@@ -90,15 +93,16 @@ WINUPD
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            
+            ; SI SE PULSA LA BARRA ESPACIADORA, IR AL MENÚ PRINCIPAL
             BTST.B  #4,(KBDEDGE)
             BEQ     .CONT
             CLR.W   (STANEXT)
             RTS
-
-.CONT       MOVE.B  #SNDWIN,D7
+.CONT       ; SEGUIR TOCANDO LA CANCIÓN
+            MOVE.B  #SNDWIN,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 

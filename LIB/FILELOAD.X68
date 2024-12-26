@@ -1,13 +1,10 @@
 *-----------------------------------------------------------
 * Title      : FILE LOAD
-* Written by :
-* Date       :
-* Description:
 *-----------------------------------------------------------
 
 ; ------------------------------------------------------------------------------
 FILLOAD
-; LOADS AN FILE FROM DISK TO MEMORY
+; LOADS A FILE FROM DISK TO MEMORY
 ; INPUT    : A0 - DESTINATION ADDR. WITH ENOUGH SPACE AVAILABLE.
 ;            A1 - POINTER TO FILE NAME
 ; OUTPUT   : NONE
@@ -41,6 +38,7 @@ FILLOAD
             TRAP    #15
             MOVEM.L (A7)+,D0-D2/A1          ; RESTORE REGISTERS
             RTS
+
 
 
 *~Font name~Courier New~
