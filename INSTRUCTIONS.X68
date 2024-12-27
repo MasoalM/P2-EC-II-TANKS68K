@@ -45,8 +45,8 @@ INSINIT
             BRA     .LOOP
 .LOOPEND           
             ; TEXTO FINAL
-            LEA     .TXT9,A0
-            MOVE.B  #25,D0
+            LEA     .TXT12,A0
+            MOVE.B  #27,D0
             JSR     UTLPRINT
 
             MOVEM.L (A7)+,D0-D1/A0-A1
@@ -62,10 +62,13 @@ INSINIT
 .TXT6       DC.B    'PARA APUNTAR UTILIZA EL RATÓN,',0
 .TXT7       DC.B    'PARA DISPARAR PRESIONA EL CLICK IZQUIERDO,',0
 .TXT8       DC.B    'TIENES UN MÁXIMO DE 3 BALAS SIMULTÁNEAS.',0
-.TXT9       DC.B    'PULSA ESPACIO PARA REGRESAR AL MENÚ PRINCIPAL',0
+.TXT9       DC.B    'ESQUIVA LAS BALAS DE LOS ENEMIGOS, PERO ¡OJO!',0
+.TXT10      DC.B    'ESQUÍVALOS A ELLOS TAMBIÉN PORQUE, SI NO,',0
+.TXT11      DC.B    'AL TOCARTE EXPLOTARÁN Y TE HARÁN MUCHO DAÑO.',0
+.TXT12      DC.B    'PULSA ESPACIO PARA REGRESAR AL MENÚ PRINCIPAL',0
 .VOIDTXT    DC.B    '',0
             DS.W    0
-.TXTLST     DC.L    .TXT2,.TXT3,.TXT4,.VOIDTXT,.VOIDTXT,.TXT5,.TXT6,.TXT7,.TXT8,0            
+.TXTLST     DC.L    .TXT2,.TXT3,.TXT4,.VOIDTXT,.VOIDTXT,.TXT5,.TXT6,.TXT7,.TXT8,.VOIDTXT,.VOIDTXT,.TXT9,.TXT10,.TXT11,0            
 
 ; ------------------------------------------------------------------------------
 INSUPD
@@ -83,6 +86,7 @@ INSUPD
             MOVE.B  #SNDINSTR,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 
