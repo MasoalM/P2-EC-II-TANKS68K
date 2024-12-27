@@ -198,8 +198,8 @@ LVL5INIT
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
             
-            MOVE.W  #320,8(A0)
-            MOVE.W  #360,10(A0)
+            MOVE.W  #128,8(A0)
+            MOVE.W  #320,10(A0)
             MOVE.W  #PLMAXBUL,18(A0)    ; DEVOLVERLE LAS BALAS AL JUGADOR
             
             LEA     TANINIT,A1
@@ -207,26 +207,26 @@ LVL5INIT
             LEA     TANPLOT,A3
             
             MOVE.W  #TANENEM,D0         ; ENEMIGO 1
-            MOVE.W  #SCRWIDTH-64,D1    
-            MOVE.W  #SCRHEIGH-416,D2
+            MOVE.W  #SCRWIDTH-416,D1    
+            MOVE.W  #SCRHEIGH-352,D2
             ADDQ.W  #1,(TANID)
             MOVE.W  (TANID),D3
             JSR     AGLADD
             
-            MOVE.W  #SCRWIDTH-576,D1    ; ENEMIGO 2 
-            MOVE.W  #SCRHEIGH-416,D2
-            ADDQ.W  #1,(TANID)
-            MOVE.W  (TANID),D3
-            JSR     AGLADD
-            
-            MOVE.W  #SCRWIDTH-448,D1    ; ENEMIGO 3
+            MOVE.W  #SCRWIDTH-352,D1    ; ENEMIGO 2 
             MOVE.W  #SCRHEIGH-320,D2
+            ADDQ.W  #1,(TANID)
+            MOVE.W  (TANID),D3
+            JSR     AGLADD
+            
+            MOVE.W  #SCRWIDTH-256,D1    ; ENEMIGO 3
+            MOVE.W  #SCRHEIGH-224,D2
             ADDQ.W  #1,(TANID)
             MOVE.W  (TANID),D3
             JSR     AGLADD
             
             MOVE.W  #SCRWIDTH-192,D1    ; ENEMIGO 4
-            MOVE.W  #SCRHEIGH-320,D2
+            MOVE.W  #SCRHEIGH-160,D2
             ADDQ.W  #1,(TANID)
             MOVE.W  (TANID),D3
             JSR     AGLADD
@@ -235,6 +235,7 @@ LVL5INIT
             
             RTS
             
+
 
 
 
