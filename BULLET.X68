@@ -29,6 +29,11 @@ BULINIT
             MOVE.W  D1,D0
             MOVE.W  D2,D1
             LEA.L   MAPDATA,A1
+            
+            MOVE.W  (LVLNUM),D6
+            MULU.W  #SIZLVL,D6
+            ADD.L   D6,A1
+            
             JSR     RELPOS
             MOVE.W  D1,D2
             MOVE.W  D0,D1
@@ -311,6 +316,7 @@ BULPLOT
 
             RTS
             
+
 
 
 
