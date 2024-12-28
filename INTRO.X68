@@ -1,10 +1,10 @@
 ; ==============================================================================
-; PANTALLA DEL MENÚ PRINCIPAL
+; PANTALLA DEL MENÃš PRINCIPAL
 ; ==============================================================================
 
 ; ------------------------------------------------------------------------------
 ISCINIT
-; INICIALIZACIÓN DE LA PANTALLA DEL MENÚ PRINCIPAL
+; INICIALIZACIÃ“N DE LA PANTALLA DEL MENÃš PRINCIPAL
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
@@ -84,30 +84,36 @@ ISCINIT
             JSR     UTLPRINT
             
             LEA     .TXT2,A0                ; TEXTO 2
-            MOVE.B  #28,D0
+            MOVE.B  #27,D0
             JSR     UTLPRINT
             
             LEA     .TXT3,A0                ; TEXTO 3
             MOVE.B  #29,D0
             JSR     UTLPRINT
+            
+            LEA     .TXT4,A0                ; TEXTO 4
+            MOVE.B  #30,D0
+            JSR     UTLPRINT
           
             MOVEM.L (A7)+,D0-D6/A0
             
-            MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
+            MOVE.B  #17,D1                  ; ACTIVAR DOUBLE BUFFER
             MOVE.B  #92,D0
             TRAP    #15
             
             RTS  
 
-.TXT1       DC.B    '¡PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR!',0
-.TXT2       DC.B    'PRESIONA LA TECLA "i" PARA',0 
-.TXT3       DC.B    'VISITAR EL MENÚ DE INSTRUCCIONES',0
+.TXT1       DC.B    'Â¡PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR!',0
+.TXT2       DC.B    'ESPERA PARA VER UNA DEMOSTRACIÃ“N.',0
+.TXT3       DC.B    'PRESIONA LA TECLA "i" PARA',0 
+.TXT4       DC.B    'VISITAR EL MENÃš DE INSTRUCCIONES.',0
             DS.W    0
+
                               
 
 ; ------------------------------------------------------------------------------
 ISCUPD
-; ACTUALIZACIÓN DE LA PANTALLA DEL MENÚ PRINCIPAL
+; ACTUALIZACIÃ“N DE LA PANTALLA DEL MENÃš PRINCIPAL
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
@@ -119,7 +125,7 @@ ISCUPD
             MOVE.W  #2,(STANEXT)
             RTS
             
-.CONT1      ; SI SE PULSA LA I, IR AL MENÚ DE INSTRUCCIONES
+.CONT1      ; SI SE PULSA LA I, IR AL MENÃš DE INSTRUCCIONES
             BTST.B  #5,(KBDEDGE)
             BEQ     .CONT2
             MOVE.W  #1,(STANEXT)
@@ -133,7 +139,7 @@ ISCUPD
             MOVE.W  #2,(STANEXT)
             RTS
      
-.DONE       ; SI NO SUCEDE NINGUNO DE LOS 3 EVENTOS ANTERIORES, SEGUIR TOCANDO LA MÚSICA
+.DONE       ; SI NO SUCEDE NINGUNO DE LOS 3 EVENTOS ANTERIORES, SEGUIR TOCANDO LA MÃšSICA
             MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
