@@ -478,6 +478,163 @@ UTLRAND
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
             
+; ----------------------------------------------------------------------------           
+APUNTADOR
+; COLOCA LA DIRECCIÓN EN LA CUAL APUNTA EL RATÓN O EL ENEMIGO (LA FOTO, LAS VARS DE LA BALA)
+; INPUT     : D7 (0 indica que es el jugador, 1 el jugador en la demo y 2 el enemigo)
+; OUTPUT    : NONE
+; MODIFIES  : NONE
+;----------------------------------------------------------------------------- 
+
+            MOVEM.L D2-D7,-(A7)
+            
+            CMP.W   #2,D7
+            BEQ     .ENEMY
+            CMP.W   #1,D7
+            BEQ     .DEMOPLAY
+            
+            MOVE.L (MOUPOS),D2
+            MOVE.L  D2,D3            ;PROCESO DE EXTRACCIÓN DE LA COORDENADA X
+            ANDI.L  #$0000FFFF,D3
+            
+            MOVE.L  D2,D4            ;PROCESO DE EXTRACCIÓN DE LA COORDENADA Y
+            ANDI.L  #$FFFF0000,D4
+            LSR.L   #8,D4
+            LSR.L   #8,D4
+            BRA     .CONT
+.ENEMY      
+            MOVE.W  (PLAYPOSX),D3
+            MOVE.W  (PLAYPOSY),D4
+            BRA     .CONT
+.DEMOPLAY   
+            MOVE.W  (ENEMPOSX),D3
+            MOVE.W  (ENEMPOSY),D4 
+.CONT            
+            SUB.W   D0,D3
+            SUB.W   D1,D4
+            
+            MOVE.W  D4,D5
+            EXT.L   D5
+            LSR.L   #1,D5             ;DIVIDIR POR Y 2
+            CMP.W   D3,D5
+            BLT     .UPRECTEI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA EMPINADA INFERIOR
+            
+            MOVE.W  D4,D5
+            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
+            NEG.W   D5                ;NEGAMOS Y
+            CMP.W   D3,D5
+            BLT     .DWRECTSS         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
+
+            MOVE.W  D4,D5
+            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
+            CMP.W   D3,D5
+            BLT     .DWRECTSI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE INFERIOR
+            MOVE.W  #-BULSPEED,(BULVELX)          ;ZONA 6 
+            MOVE.W  #0,(BULVELY)
+            MOVE.W  #-20,(BULPOSORGX)
+            MOVE.W  #0,(BULPOSORGY)
+            
+            MOVE.W  #12,D6
+            BRA     .FINAPU  
+.DWRECTSI            
+            MOVE.W  #-BULSPEED/2,(BULVELX)          ;ZONA 7
+            MOVE.W  #-BULSPEED/2,(BULVELY)
+            MOVE.W  #-20,(BULPOSORGX)
+            MOVE.W  #-20,(BULPOSORGY)
+            
+            MOVE.W  #14,D6
+            BRA     .FINAPU
+            
+.DWRECTSS            
+            MOVE.W  D4,D5
+            EXT.L   D5
+            LSR.L   #1,D5             ;DIVIDIR Y POR 2
+            NEG.W   D5
+            
+            CMP.W   D3,D5
+            BLT     .DWRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
+            MOVE.W  #-BULSPEED/2,(BULVELX)          ;ZONA 5
+            MOVE.W  #BULSPEED/2,(BULVELY)
+            MOVE.W  #-20,(BULPOSORGX)
+            MOVE.W  #20,(BULPOSORGY) 
+            
+            MOVE.W  #10,D6
+            BRA     .FINAPU  
+.DWRECTES            
+            MOVE.W  #BULSPEED,(BULVELY)          ;ZONA 4
+            MOVE.W  #0,(BULVELX)
+            MOVE.W  #20,(BULPOSORGY)
+            MOVE.W  #0,(BULPOSORGX)
+            
+            MOVE.W  #8,D6
+            BRA     .FINAPU
+            
+.UPRECTEI      
+            MOVE.W  D4,D5
+            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
+            NEG.W   D5                 ;NEGAMOS Y
+            CMP.W   D3,D5
+            BGT     .UPRECTSS         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
+
+
+            MOVE.W  D4,D5
+            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
+            CMP.W   D3,D5
+            BLT     .UPRECTSI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE INFERIOR
+            MOVE.W  #BULSPEED/2,(BULVELX)          ;ZONA 3
+            MOVE.W  #BULSPEED/2,(BULVELY)
+            MOVE.W  #20,(BULPOSORGX)
+            MOVE.W  #20,(BULPOSORGY)
+            
+            MOVE.W  #6,D6
+            BRA     .FINAPU  
+.UPRECTSI            
+            MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 2
+            MOVE.W  #0,(BULVELY)
+            MOVE.W  #20,(BULPOSORGX)
+            MOVE.W  #0,(BULPOSORGY)
+            
+            MOVE.W  #4,D6
+            BRA     .FINAPU
+            
+.UPRECTSS            
+            MOVE.W  D4,D5
+            EXT.L   D5
+            LSR.L   #1,D5             ;DIVIDIR Y POR 2
+            NEG.W   D5
+            
+            CMP.W   D3,D5
+            BLT     .UPRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
+            MOVE.W  #-BULSPEED,(BULVELY)          ;ZONA 0
+            MOVE.W  #0,(BULVELX)
+            MOVE.W  #-20,(BULPOSORGY)
+            MOVE.W  #0,(BULPOSORGX)
+            
+            MOVE.W  #0,D6
+            BRA     .FINAPU  
+.UPRECTES            
+            MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 1
+            MOVE.W  #-BULSPEED/2,(BULVELY)
+            MOVE.W  #20,(BULPOSORGX)
+            MOVE.W  #-20,(BULPOSORGY)
+            
+            MOVE.W  #2,D6
+.FINAPU  
+            CMP.W   #1,D7
+            BLS     .FINPLY
+            MOVE.W  D6,(ENCANPOS)
+            BRA     .FINENE
+.FINPLY            
+            MOVE.W  D6,(PLCANPOS)                   
+.FINENE            
+            MOVEM.L (A7)+,D2-D7
+            RTS
+
+
+
+
+            
+
 
 
 
