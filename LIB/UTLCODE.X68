@@ -531,16 +531,16 @@ APUNTADOR
             BLT     .DWRECTSI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE INFERIOR
             MOVE.W  #-BULSPEED,(BULVELX)          ;ZONA 6 
             MOVE.W  #0,(BULVELY)
-            MOVE.W  #-20,(BULPOSORGX)
-            MOVE.W  #0,(BULPOSORGY)
+            MOVE.W  #-20,(BULORGX)
+            MOVE.W  #0,(BULORGY)
             
             MOVE.W  #12,D6
             BRA     .FINAPU  
 .DWRECTSI            
             MOVE.W  #-BULSPEED/2,(BULVELX)          ;ZONA 7
             MOVE.W  #-BULSPEED/2,(BULVELY)
-            MOVE.W  #-20,(BULPOSORGX)
-            MOVE.W  #-20,(BULPOSORGY)
+            MOVE.W  #-20,(BULORGX)
+            MOVE.W  #-20,(BULORGY)
             
             MOVE.W  #14,D6
             BRA     .FINAPU
@@ -555,16 +555,16 @@ APUNTADOR
             BLT     .DWRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
             MOVE.W  #-BULSPEED/2,(BULVELX)          ;ZONA 5
             MOVE.W  #BULSPEED/2,(BULVELY)
-            MOVE.W  #-20,(BULPOSORGX)
-            MOVE.W  #20,(BULPOSORGY) 
+            MOVE.W  #-20,(BULORGX)
+            MOVE.W  #20,(BULORGY) 
             
             MOVE.W  #10,D6
             BRA     .FINAPU  
 .DWRECTES            
             MOVE.W  #BULSPEED,(BULVELY)          ;ZONA 4
             MOVE.W  #0,(BULVELX)
-            MOVE.W  #20,(BULPOSORGY)
-            MOVE.W  #0,(BULPOSORGX)
+            MOVE.W  #20,(BULORGY)
+            MOVE.W  #0,(BULORGX)
             
             MOVE.W  #8,D6
             BRA     .FINAPU
@@ -583,16 +583,16 @@ APUNTADOR
             BLT     .UPRECTSI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE INFERIOR
             MOVE.W  #BULSPEED/2,(BULVELX)          ;ZONA 3
             MOVE.W  #BULSPEED/2,(BULVELY)
-            MOVE.W  #20,(BULPOSORGX)
-            MOVE.W  #20,(BULPOSORGY)
+            MOVE.W  #20,(BULORGX)
+            MOVE.W  #20,(BULORGY)
             
             MOVE.W  #6,D6
             BRA     .FINAPU  
 .UPRECTSI            
             MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 2
             MOVE.W  #0,(BULVELY)
-            MOVE.W  #20,(BULPOSORGX)
-            MOVE.W  #0,(BULPOSORGY)
+            MOVE.W  #20,(BULORGX)
+            MOVE.W  #0,(BULORGY)
             
             MOVE.W  #4,D6
             BRA     .FINAPU
@@ -607,16 +607,16 @@ APUNTADOR
             BLT     .UPRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
             MOVE.W  #-BULSPEED,(BULVELY)          ;ZONA 0
             MOVE.W  #0,(BULVELX)
-            MOVE.W  #-20,(BULPOSORGY)
-            MOVE.W  #0,(BULPOSORGX)
+            MOVE.W  #-20,(BULORGY)
+            MOVE.W  #0,(BULORGX)
             
             MOVE.W  #0,D6
             BRA     .FINAPU  
 .UPRECTES            
             MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 1
             MOVE.W  #-BULSPEED/2,(BULVELY)
-            MOVE.W  #20,(BULPOSORGX)
-            MOVE.W  #-20,(BULPOSORGY)
+            MOVE.W  #20,(BULORGX)
+            MOVE.W  #-20,(BULORGY)
             
             MOVE.W  #2,D6
 .FINAPU  
@@ -634,6 +634,7 @@ APUNTADOR
 
 
             
+
 
 
 

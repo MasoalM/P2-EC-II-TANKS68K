@@ -20,8 +20,8 @@ BULINIT
 ; ----------------------------------------------------------
             
             ; AJUSTAR POSICIÓN INICIAL PARA QUE NO APAREZCA SOBRE EL TANQUE
-            ADD.W   (BULPOSORGX),D1
-            ADD.W   (BULPOSORGY),D2
+            ADD.W   (BULORGX),D1
+            ADD.W   (BULORGY),D2
 
             MOVEM.W D0-D5,-(A7)
             
@@ -316,6 +316,7 @@ BULPLOT
 
             RTS
             
+
 
 
 
