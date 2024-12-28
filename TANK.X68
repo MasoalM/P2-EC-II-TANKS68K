@@ -276,7 +276,7 @@ TANUPD
             MOVE.B  #SNDEXPLO,D7             ; SONIDO EXPLOSI?N
             TRAP    #SNDPLTN  
             ADDQ.W  #1,(SCORE)
-            JSR     COLBYKMKZ
+            JSR     COLBYKMK
             BRA     .FINISH
             
 
@@ -542,6 +542,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
 
 
 *~Font name~Courier New~

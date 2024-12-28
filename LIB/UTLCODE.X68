@@ -408,7 +408,7 @@ TANKCOL
 
 
 ; -----------------------------------------------------------------------------
-COLBYKMKZ
+COLBYKMK
 ; LE QUITA AL JUGADOR LA VIDA POR COLISIÓN DE KAMIKAZE
 ; INPUT    - NONE
 ; OUTPUT   - NONE
@@ -634,6 +634,7 @@ APUNTADOR
 
 
             
+
 
 
 
