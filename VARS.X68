@@ -4,7 +4,7 @@
 
 ; --- VARIABLES RELACIONADAS CON EL MARCADOR ---------------
 
-SCORE       DS.W    1       ; NÚMERO DE TANQUES DESTRUIDOS // (cuidado con si llega a superar 255) // podríamos hacer que se multiplique cada puntuación de tanque destruido con una cte relacionada con el tanque (diferentes tipos de tanque?)
+SCORE       DS.W    1       ; NÚMERO DE TANQUES DESTRUIDOS 
 
 ; --- VARIABLES RELACIONADAS CON EL MAPA -------------------
 
@@ -35,8 +35,8 @@ DOPLOT      DS.W    1
 
 BULVELY     DS.W    1
 BULVELX     DS.W    1
-BULORGY  DS.W    1
-BULORGX  DS.W    1
+BULORGY     DS.W    1
+BULORGX     DS.W    1
 
 ; --- VARIABLES RELACIONADAS CON POSICIONES DE TANQUES -----
 
@@ -58,6 +58,7 @@ ENCANPOS    DS.W    1       ; TANK AND CANNON POSITION OF ENEMY
 ; --- VARIABLES RELACIONADAS CON LA DEMO -------------------
 
 DEMO        DS.W    1       ; SI VALE 1, ESTAMOS EN LA DEMO, SI VALE 0 NO
+
 
 
 

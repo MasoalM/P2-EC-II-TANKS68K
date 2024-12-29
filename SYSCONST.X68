@@ -10,24 +10,24 @@ SCRFPS      EQU     50          ; SCREEN FRAMES PER SECOND, EN NUESTRO CASO 50 F
 
 ; --- KEYCODES ---------------------------------------------
 
-KBDLEFT     EQU     'A'
-KBDUP       EQU     'W'
-KBDRIGHT    EQU     'D'
-KBDDOWN     EQU     'S'
-KBDFIRE     EQU     ' '
-KBDINSTR    EQU     'I'
+KBDLEFT     EQU     'A'         ; TECLA A DEL TECLADO
+KBDUP       EQU     'W'         ; TECLA W DEL TECLADO
+KBDRIGHT    EQU     'D'         ; TECLA D DEL TECLADO
+KBDDOWN     EQU     'S'         ; TECLA S DEL TECLADO
+KBDFIRE     EQU     ' '         ; TECLA ESPACIO DEL TECLADO
+KBDINSTR    EQU     'I'         ; TECLA I DEL TECLADO
 
 ; --- SOUND IDENTIFIERS ------------------------------------
 
-SNDINTRO    EQU     0
-SNDINSTR    EQU     1
-SNDWALL     EQU     2
-SNDHIT      EQU     3
-SNDKILL     EQU     4
-SNDDISP     EQU     5
-SNDGVR1     EQU     6
-SNDWIN      EQU     7
-SNDEXPLO    EQU     8
+SNDINTRO    EQU     0           ; MÚSICA INTRO
+SNDINSTR    EQU     1           ; MÚSICA INSTRUCCIONES
+SNDWALL     EQU     2           ; MÚSICA BALA CON PARED
+SNDHIT      EQU     3           ; MÚSICA BALA CONTRA TANQUE
+SNDKILL     EQU     4           ; MÚSICA TANQUE MUERTO
+SNDDISP     EQU     5           ; MÚSICA BALA DISPARADA
+SNDGVR1     EQU     6           ; MÚSICA DERROTA
+SNDWIN      EQU     7           ; MÚSICA VICTORIA
+SNDEXPLO    EQU     8           ; MÚSICA EXPLOSIVA
 
 ; --- TRAP NUMBERS -----------------------------------------
 
@@ -39,6 +39,7 @@ SNDPLTN     EQU     3           ; SOUND PLAY TRAP NUMBER
 ; --- INTERRUPT NUMBERS ------------------------------------
 
 SCRINTN     EQU     1           ; TIMED INTERRUPT NUMBER
+
 
 
 

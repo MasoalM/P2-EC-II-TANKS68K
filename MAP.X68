@@ -32,6 +32,7 @@ MAPPLOT
 
             MOVEM.L D0/A0,-(A7)
             
+            ; SELECCIONAMOS EL MAPA ACTUAL
             LEA.L   MAPDATA, A0
             MOVE.W  (LVLNUM),D6
             MULU.W  #SIZLVL,D6
@@ -96,35 +97,12 @@ MAPPLOT
             MOVE.B  #87,D0
             TRAP    #15
             
-            ;JSR     CASPLOT
-
-.SOLEADO
-
-                        
+.SOLEADO            
             DBRA D5, .LINEX
             DBRA D6, .LINEY
             
             MOVEM.L (A7)+,D0/A0
-
             RTS
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~0~

@@ -3,37 +3,37 @@
 *-----------------------------------------------------------
 
 
-; --- KEYBOARD RELATED VARIABLES ---------------------------
+; --- VARIABLES RELACIONADAS CON EL TECLADO ----------------
 
-KBDVAL      DS.B    1       ; KEY STATE (1 BYTE -> 8 TECLAS MAX)
-KBDEDGE     DS.B    1       ; KEY EDGE
+KBDVAL      DS.B    1       ; ESTADO DEL TECLADO (1 BYTE -> 8 TECLAS MAX)
+KBDEDGE     DS.B    1       ; TECLADO PULSADO
 
-; --- MOUSE RELATED VARIABLES ------------------------------
+; --- VARIABLES RELACIONADAS CON EL RATÓN ------------------
 
-MOUEDGE     DS.L    1       ; MOUSE EDGE
-MOUBUT      DS.L    1       ; MOUSE LEFT BUTTON
-MOUPOS      DS.L    1       ; MOUSE POSITION
+MOUEDGE     DS.L    1       ; RATÓN PULSADO
+MOUBUT      DS.L    1       ; BOTÓN IZQUIERDO DEL RATÓN PULSADO
+MOUPOS      DS.L    1       ; POSICIÓN DEL RATÓN
 
-; --- TIMED INTERRUPT RELATED VARIABLES --------------------
+; - VARIABLES RELACIONADAS CON LAS INTERRUPCIONES TEMPORALES -
 
-SCRINTCT    DS.B    1       ; INTERRUPT COUNTER
-SCRCYCCT    DS.B    1       ; CYCLE COUNTER
+SCRINTCT    DS.B    1       ; CONTADOR DE INTERRUPCIONES
+SCRCYCCT    DS.B    1       ; CONTADOR DE CICLOS
             DS.W    0
 
-; --- TIME RELATED VARIABLES -------------------------------
+; --- VARIABLES RELACIONADAS CON EL TIEMPO -----------------
 
 TIEMPO      DS.L    2       ; CONTADOR DE TIEMPO
 
-; --- FPS RELATED VARIABLES --------------------------------
+; --- VARIABLES RELACIONADAS CON LOS FPS--------------------
 
 ACTFPS      DS.W    1       ; FPS ACTUALES
 SHWFPS      DS.W    1       ; FPS PARA MOSTRAR
             
             
-; --- FILE RELATED VARIABLES -------------------------------
+; --- VARIABLES RELACIONADAS CON LAS IMÁGENES --------------
 
-FILEDATA    DS.L    400000
-WINDATA     DS.L    40000
+FILEDATA    DS.L    400000 ; IMAGEN DE LA INTRO
+WINDATA     DS.L    40000  ; IMAGEN DE VICTORIA
 
 DATPLXE     DS.L    1000    ; IMÁGENES JUGADOR
 DATPLXN     DS.L    1000
@@ -68,19 +68,6 @@ DATENYS     DS.L    1000
 DATENYSE    DS.L    1000
 DATENYSW    DS.L    1000
 DATENYW     DS.L    1000
-
-
-
-
-
-
-
-
-
-
-
-
-
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~

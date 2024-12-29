@@ -26,6 +26,7 @@ BULINIT
             MOVEM.W D0-D5,-(A7)
             
             ; CALCULAR LA POSICIÓN RELATIVA
+            ; COLOCAMOS LAS VARIABLES EN LOS REGISTROS CORRESPONDIENTES
             MOVE.W  D1,D0
             MOVE.W  D2,D1
             LEA.L   MAPDATA,A1
@@ -35,6 +36,8 @@ BULINIT
             ADD.L   D6,A1
             
             JSR     RELPOS
+            ; DEVOLVEMOS LOS VALORES A SUS REGISTROS PARA SEGUIR CON EL 
+            ; TRATAMIENTO NORMAL
             MOVE.W  D1,D2
             MOVE.W  D0,D1
             
@@ -96,31 +99,38 @@ BULUPD
             ADD.L   D6,A1
             JSR     RELPOS
             
+            ; COMPROBAMOS SI HA TOCADO UNA PARED
             CMP.W   #01,(A1)
             BNE .CHKTAN
-            
+     
+            ; COMPROBAMOS SI HA TOCADO EL BLOQUE POR EL EJE X       
             CMP.W   #PIESIZX/3,D4
             BLO     .COLX
             CMP.W   #2*PIESIZX/3,D4  
             BHI     .COLX
             BRA     .SVPNT
 .COLX
+            ; SI HA TOCADO, CAMBIAMOS LA VELOCIDAD EN X, Y PONEMOS UN MARCADOR
             MOVE.W  #$FF,D2
             NEG.W   4(A0)
 .SVPNT            
+            ; COMPROBAMOS SI HA TOCADO EL BLOQUE POR EL EJE Y
             CMP.W   #PIESIZY/3,D5
             BLO     .COLY
             CMP.W   #2*PIESIZY/3,D5  
             BHI     .COLY
             BRA     .SVPNT2
 .COLY
+            ; SI HA TOCADO, CAMBIAMOS LA VELOCIDAD EN Y, Y PONEMOS UN MARCADOR
             NEG.W   6(A0)
             MOVE.W  #$FF,D3     
 .SVPNT2           
-
+            ;COMPROBAMOS SI HA HABIDO COLISIÓN POR EL EJE X
             CMP.W   #$FF,D2
             BEQ     .TRATCOL
+            ; SI LA COLISIÓN NO HA SIDO EN EL EJE X, HABRÁ SIDO POR EL EJE Y
 .TRATCOLU
+            ; TRATAMIENTO NORMAL POR SI HA COLISIONADO CON UNA SUPERFICIE
             SUBQ.W  #1,10(A0)
             CMP.W   #0,10(A0)
             BNE     .BULWALL
@@ -128,21 +138,29 @@ BULUPD
             JSR     AGLKILL
             BRA     .BULFACHK
 .TRATCOL            
+            ; MIRAMOS SI TAMBIÉN HA TOCADO OTRO EJE
             CMP.W   #$FF,D3
             BNE     .TRATCOLU
+            
+            ;SI HA TOCADO OTRO EJE, COMPROBAMOS CUAL ES PRIORITARIO (TENDRÁ 
+            ; PRIORIDAD EL QUE ESTÉ MÁS CERCA DE LA BALA)
             CMP.W   D5,D4
             BHI     .GAND5
             BLO     .GAND4
             BRA     .TRATCOLU
+            
+            ; PRIORIDAD EJE Y
 .GAND4            
             NEG.W   6(A0)
             BRA     .TRATCOLU
+            
+            ; PRIORIDAD EJE X
 .GAND5
             NEG.W   4(A0)
             BRA     .TRATCOLU
 
-
-            BRA     .CHKTAN
+            ; SI LA BALA HA MUERTO (NO LE QUEDAN REBOTES), LE DEVOLVEMOS AL 
+            ; PADRE SU BALA
 .BULFACHK   CLR.W   D4              ; CONTADOR
             MOVE.W  #TANENEM,D0
             JSR     DMMFRSTO
@@ -151,11 +169,12 @@ BULUPD
             ADDQ.W  #1,D4
             CMP.W   D3,D4
             BNE     .LOOP32
-            ADDQ.W  #1,18(A0)       ; AGREGAR UNA BALA DISPONIBLE AL TANQUE SI ES EL PADRE ; no llega aquí?
-            BRA     .ENDCOLEX
+            ADDQ.W  #1,18(A0)       ; AGREGAR UNA BALA DISPONIBLE AL TANQUE SI
+            BRA     .ENDCOLEX       ; ES EL PADRE
 .LOOP32     JSR     DMMNEXTO
             BRA     .LOOP31
-
+            
+            ; MIRAMOS SI LA BALA ES DEL JUGADOR
 .CHKPLAY2   
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
@@ -163,26 +182,27 @@ BULUPD
             BNE     .ENDCOLEX
             ADDQ.W  #1,18(A0)
             
-.ENDCOLEX   ; FINAL EN EL QUE LA BALA EXPLOTA POR TENER X COLISIONES CON BLOQUES         
+.ENDCOLEX   ; FINAL EN EL QUE LA BALA EXPLOTA POR TENER X COLISIONES CON 
+            ; BLOQUES         
             MOVEM.W (A7)+,D0-D4
             RTS 
 
 
-.BULWALL    MOVE.B  #SNDWALL,D7 ; BULLET WALL SOUND
+.BULWALL    MOVE.B  #SNDWALL,D7 ; SONIDO DE LA BALA CON LA PARED
             TRAP    #SNDPLTN           
             
 .CHKTAN     
-            ; CHECK TANK COLLISIONS
-            ; ENEMY TANK COLLISIONS
+            ; COMPROBAMOS COLISIONES ENTRE TANQUES
+            ; COMPROBAMOS SI EL TANQUE ES ENEMIGO
             MOVEM.L A0-A1/D0-D7,-(A7)
-            MOVE.W  (A0),D2                 ; PREPARE SHOT COORDINATES FOR
-            MOVE.W  2(A0),D3                ; COLLISION CHECK
+            MOVE.W  (A0),D2                 ; PREPARAMOS LAS COORDENADAS PARA
+            MOVE.W  2(A0),D3                ; COMPROBAR LA COLISIÓN
             MOVE.W  #BULRAD,D5
             MOVE.W  #BULRAD,D7
             MOVE.L  A0,A1
             MOVE.W  #TANENEM,D0
             JSR     DMMFRSTO
-.LOOP       CMP.L   #0,A0
+.LOOP       CMP.L   #0,A0                   ; COMPROBAMOS CADA TANQUE ENEMIGO
             BEQ     .CHKPLAY
             MOVE.W  8(A0),D0
             MOVE.W  10(A0),D1
@@ -196,7 +216,7 @@ BULUPD
             MOVE.W  #TANENEM,D0
             JSR     DMMNEXTO
             BRA     .LOOP  
-.CHKPLAY    ; PLAYER TANK COLLISIONS
+.CHKPLAY    ; COMPROBAMOS SI TOCA AL JUGADOR
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
             CMP.L   #0,A0
@@ -212,28 +232,27 @@ BULUPD
             BNE     .EXPLO
             BRA     .END
 
-            ; TANK COLLISION (SUBSTRACT LIFE, DISSAPPEAR THE BULLET)  ; agregar part?culas?         
+            ; SI UNA BALA HA IMPACTADO         
 .EXPLO          
-            SUB.W   #BULDMG,16(A0)
-            
+            SUB.W   #BULDMG,16(A0)          ; LA BALA HACE SU DAÑO
+            ;COMPROBAMOS SI EL TANQUE HA SOBREVIVIDO
             CMP.W   #0,16(A0)
             BHI     .ALIVE
-            ; IF TANK LIFE IS 0
-            
+            ; COMPROBAMOS SI EL TANQUE MUERTO ES EL JUGADOR
             CMP.W   #TANPLAY,14(A0)
             BNE.W   .ENSNDKIL
-            ; IF HIT TANK IS NOT A BOT (PLAYER)
+            ; INDICAMOS QUE EL MUERTO ES EL JUGADOR
             MOVE.W  #KILLPLYR,(PLYRDEAD)
             JSR     AGLKILL
             BRA     .BULFINAL   
-.ENSNDKIL   ; IF TANK IS A BOT 
+.ENSNDKIL   ; SI EL TANQUE MUERTO ES UN BOT 
             ADDQ.W  #1,(SCORE)  ; SUMAMOS 1 A LA PUNTUACI?N 
             MOVE.B  #SNDKILL,D7
             TRAP    #SNDPLTN
             JSR     AGLKILL
             BRA     .BULFINAL
 .ALIVE
-            MOVE.B  #SNDHIT,D7  ; HIT SOUND IF TANK DOESN'T DIE
+            MOVE.B  #SNDHIT,D7  ; SONIDO DE IMPACTO
             TRAP    #SNDPLTN
 .BULFINAL    
             MOVE.L  A1,A0
@@ -245,7 +264,7 @@ BULUPD
             CLR.W   D2          ; CONTADOR
             JSR     DMMFRSTO
 .LOOP21     CMP.L   #0,A0
-            BEQ     .PLAYBULL   ; NO ENCONTRADO NING?N TANQUE ENEMIGO QUE SEA PADRE DE LA BALA, COMPROBAR JUGADOR
+            BEQ     .PLAYBULL   ; NO ENCONTRADO NINGÚN TANQUE ENEMIGO QUE SEA PADRE DE LA BALA, COMPROBAR JUGADOR
             ADDQ.W  #1,D2       ; AGREGAR 1 AL CONTADOR
             
             CMP.W   D2,D3
@@ -264,7 +283,7 @@ BULUPD
             BNE     .KILLBULL
             ADDQ.W  #1,18(A0)
             
-.KILLBULL
+.KILLBULL   ; MATAMOS LA BALA
             MOVE.L  A1,A0             
             JSR     AGLKILL 
             
@@ -288,17 +307,17 @@ BULPLOT
 ; ----------------------------------------------------------
             MOVEM.L D0-D4,-(A7)            
 
-            ; SET PEN COLOR
+            ; COLOR DEL PINCEL
             MOVE.B  #80,D0
             MOVE.L  #BULPCOL,D1
             TRAP    #15
             
-            ; SET FILL COLOR
+            ; COLOR DE RELLENO
             MOVE.B  #81,D0
             MOVE.L  #BULFCOL,D1
             TRAP    #15
             
-            ; DEFINE COORDINATES
+            ; DEFINIMOS LAS COORDENADAS
             MOVE.W  (A0),D1
             SUB.W   #BULRAD,D1
             MOVE.W  2(A0),D2
@@ -308,50 +327,13 @@ BULPLOT
             MOVE.W  D2,D4
             ADD.W   #2*BULRAD,D4
             
-            ; DRAW CIRCLE
+            ; DIBUJAMOS UN CÍRCULO
             MOVE.B  #88,D0
             TRAP    #15 
             
             MOVEM.L (A7)+,D0-D4 
 
             RTS
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~

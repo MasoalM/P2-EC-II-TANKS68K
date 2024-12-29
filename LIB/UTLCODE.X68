@@ -28,12 +28,12 @@ UTLSFIL     MACRO
 
 
 ; =============================================================================
-; UTILITY CODE
+; CÓDIGO AUXILIAR
 ; =============================================================================
 
 ; -----------------------------------------------------------------------------
 UTLINIT
-; INITIALIZES UTILITY CODE
+; INICIALIZA EL CÓDIGO AUXILIAR
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
@@ -47,10 +47,10 @@ UTLINIT
  
 ; -----------------------------------------------------------------------------
 UTLPRINT
-; PRINT SCREEN  CENTERED TEXT
-; INPUT    : A0 POINTER TO ZERO-TERMINATED STRING
-;            D0.B SCREEN ROW TO PRINT TEXT
-; OUTPUT   : D0.B NEXT ROW
+; MUESTRA POR PANTALLA EL TEXTO
+; INPUT    : A0 PUNTERO A UNA STRING TERMINADA EN 0
+;            D0.B FILA EN LA CUÁL MOSTRAR EL TEXTO (EN PANTALLA)
+; OUTPUT   : D0.B SIGUIENTE FILA
 ; MODIFIES : NONE (ASIDE OF OUTPUT)
 ; -----------------------------------------------------------------------------
             MOVEM.L D0-D1/A0-A1,-(A7)
@@ -75,16 +75,16 @@ UTLPRINT
   
 ; -----------------------------------------------------------------------------
 UTLCHCOL
-; CHECKS COLLISION
-; INPUT    - D0.W X0 COORDINATE
-;            D1.W Y0 COORDINATE
-;            D2.W X1 COORDINATE
-;            D3.W Y1 COORDINATE
-;            D4.W WIDTH 0
-;            D5.W WIDTH 1
-;            D6.W HEIGHT 0
-;            D7.W HEIGHT 1
-; OUTPUT   - D0.B=FF - COLLISION, =0 - NO COLLISION
+; COMPRUEBA LAS COLISIONES
+; INPUT    - D0.W X0 COORDENADA
+;            D1.W Y0 COORDENADA
+;            D2.W X1 COORDENADA
+;            D3.W Y1 COORDENADA
+;            D4.W ANCHO 0
+;            D5.W ANCHO 1
+;            D6.W ALTURA 0
+;            D7.W ALTURA 1
+; OUTPUT   - D0.B=FF - COLISIÓN, =0 - NO COLISIÓN
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             MOVEM.W D4-D7,-(A7)
@@ -108,17 +108,19 @@ UTLCHCOL
             
 ; -----------------------------------------------------------------------------
 RELPOS
-; PROVIDES THE RELATIVE POSITION
-; INPUT    - DO.W : POSITION X OF THE AGENT
-;            D1.W : POSITION Y OF THE AGENT
-;            A1.L : ADDRESS OF THE MAP 
-; OUTPUT   - D0.W : POSITION X OF THE AGENT
-;            D1.W : POSITION Y OF THE AGENT
-;            D2.W : DISTANCE BETWEEN 0 AND THE BEGINNING OF THE BLOCK WHERE IS THE TANK (X)
-;            D3.W : DISTANCE BETWEEN 0 AND THE BEGINNING OF THE BLOCK WHERE IS THE TANK (Y)
-;            D4.W : RELATIVE POSITION OF THE TANK IN X
-;            D5.W : RELATIVE POSITION OF THE TANK IN Y
-;            A1.L : POSITION OF THE TANK AT THE MAP (A1)
+; OTORGA LA POSICIÓN RELATIVA DE UN OBJETO
+; INPUT    - DO.W : POSICIÓN X DEL AGENTE
+;            D1.W : POSICIÓN Y DEL AGENTE
+;            A1.L : DIRECCIÓN DEL MAPA 
+; OUTPUT   - D0.W : POSICIÓN X DEL AGENTE
+;            D1.W : POSICIÓN Y DEL AGENTE
+;            D2.W : DISTANCIA ENTRE 0 Y EL INICIO DEL BLOQUE EN EL CUAL SE 
+;                   ENCUENTRA EL TANQUE (EJE X)
+;            D3.W : DISTANCIA ENTRE 0 Y EL INICIO DEL BLOQUE EN EL CUAL SE
+;                   ENCUENTRA EL TANQUE (EJE Y)
+;            D4.W : POSICIÓN RELATIVA DEL TANQUE EN X
+;            D5.W : POSICIÓN RELATIVA DEL TANQUE EN Y
+;            A1.L : POSICIÓN DEL TANQUE EN EL MAPA
 ; MODIFIES - A1.L
 ; -----------------------------------------------------------------------------
 
@@ -184,6 +186,7 @@ PLIMASEL
 ; MODIFIES - A1
 ; -----------------------------------------------------------------------------
             MOVEM.L D0-D7,-(A7)
+            ; ÁRBOL DE DECODIFICACIÓN
             CMP.W   #8,(PLCANPOS)
             BLO     .LOW1     
             CMP.W   #12,(PLCANPOS)
@@ -221,8 +224,6 @@ PLIMASEL
 .NUEVE
             LEA     DATPLXS,A1
             BRA     .ENDDECOD
-
-
             
 .LOW1
             CMP.W   #4,(PLCANPOS)
@@ -273,6 +274,7 @@ ENIMASEL
 ; -----------------------------------------------------------------------------
 
             MOVEM.L D0-D7,-(A7)
+            ; ÁRBOL DE DECODIFICACIÓN (DEL ENEMIGO ESTA VEZ)
             CMP.W   #8,(ENCANPOS)
             BLO     .ELOW1     
             CMP.W   #12,(ENCANPOS)
@@ -351,7 +353,8 @@ ENIMASEL
                         
 ; ----------------------------------------------------------
 TANKCOL
-; COLOCA EN A3 EL NÚMERO DE COLISIONES QUE TENDRÁ EL TANQUE EN EL SIGUIENTE MOVIMIENTO
+; COLOCA EN A3 EL NÚMERO DE COLISIONES QUE TENDRÁ EL TANQUE EN EL SIGUIENTE 
+; MOVIMIENTO
 ; INPUT     : D0: POSICIÓN X DEL TANQUE
 ;             D1: POSICION Y DEL TANQUE 
 ; OUTPUT    : A3: NÚMERO DE COLISIONES DEL TANQUE
@@ -359,19 +362,22 @@ TANKCOL
 ;             POSYTMP
 ; ----------------------------------------------------------
             MOVEM.L A0-A1/D0-D7,-(A7)
+            ; AJUSTAMOS VALORES
             MOVE.W  #0,(COLTANKP)
             MOVE.W  #0,A3
             MOVE.W  D0,(POSXTEMP)
             MOVE.W  D1,(POSYTEMP)
-            MOVE.W  (A0),D2                 ; PREPARE SHOT COORDINATES FOR
-            MOVE.W  2(A0),D3                ; COLLISION CHECK
+            MOVE.W  (A0),D2                 
+            MOVE.W  2(A0),D3                
             MOVE.W  #TANWIDTH/2,D5
             MOVE.W  #TANHEIGH/2,D7
             MOVE.L  A0,A1
+            ; BUSCAMOS LOS TANQUES ENEMIGOS
             MOVE.W  #TANENEM,D0
             JSR     DMMFRSTO
 .LOOP       CMP.L   #0,A0
             BEQ     .CHKPLAY
+            ; TRATAMIENTO E COLISIÓN CON TANQUE
             MOVE.W  8(A0),D0
             MOVE.W  10(A0),D1
             SUB.W   #TANWIDTH/2,D0
@@ -386,7 +392,7 @@ TANKCOL
             MOVE.W  #TANENEM,D0
             JSR     DMMNEXTO
             BRA     .LOOP
-.CHKPLAY    ; PLAYER TANK COLLISIONS
+.CHKPLAY    ; COLISIÓN CON EL TANQUE JUGADOR
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
             CMP.L   #0,A0
@@ -416,10 +422,12 @@ COLBYKMK
 ; -----------------------------------------------------------------------------
 
             MOVEM.L D0-D7/A0-A1,-(A7)
+            ; BUSCAMOS AL JUGADOR
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
             CMP.L   #0,A0
             BEQ     .NTHG1
+            ; LE REALIZAMOS EL TRATAMIENTO DE COLISIÓN CON OTRO TANQUE
             SUB.W   #3*BULDMG,16(A0)
             CMP.W   #0,16(A0)
             BGT     .NTHG1
@@ -480,8 +488,10 @@ UTLRAND
             
 ; ----------------------------------------------------------------------------           
 APUNTADOR
-; COLOCA LA DIRECCIÓN EN LA CUAL APUNTA EL RATÓN O EL ENEMIGO (LA FOTO, LAS VARS DE LA BALA)
-; INPUT     : D7 (0 indica que es el jugador, 1 el jugador en la demo y 2 el enemigo)
+; COLOCA LA DIRECCIÓN EN LA CUAL APUNTA EL RATÓN O EL ENEMIGO (LA FOTO, LAS 
+; VARS DE LA BALA)
+; INPUT     : D7 (0 indica que es el jugador, 1 el jugador en la demo y 2 el 
+;             enemigo)
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ;----------------------------------------------------------------------------- 
@@ -502,14 +512,14 @@ APUNTADOR
             LSR.L   #8,D4
             LSR.L   #8,D4
             BRA     .CONT
-.ENEMY      
+.ENEMY      ; SI ES EL ENEMIGO, DEBE APUNTAR AL JUGADOR
             MOVE.W  (PLAYPOSX),D3
             MOVE.W  (PLAYPOSY),D4
             BRA     .CONT
-.DEMOPLAY   
+.DEMOPLAY   ; SI ES EL BOT DE LA DEMO, DEBE APUNTAR A UN ENEMIGO
             MOVE.W  (ENEMPOSX),D3
             MOVE.W  (ENEMPOSY),D4 
-.CONT            
+.CONT       ; AJUSTAMOS LA POSICIÓN DONDE APUNTAMOS     
             SUB.W   D0,D3
             SUB.W   D1,D4
             
@@ -517,20 +527,21 @@ APUNTADOR
             EXT.L   D5
             LSR.L   #1,D5             ;DIVIDIR POR Y 2
             CMP.W   D3,D5
-            BLT     .UPRECTEI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA EMPINADA INFERIOR
-            
+            BLT     .UPRECTEI         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
+                                      ; RECTA EMPINADA INFERIOR
             MOVE.W  D4,D5
-            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
-            NEG.W   D5                ;NEGAMOS Y
+            LSL.W   #1,D5             ; MULTIPLICAR POR Y 2
+            NEG.W   D5                ; NEGAMOS Y
             CMP.W   D3,D5
-            BLT     .DWRECTSS         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
+            BLT     .DWRECTSS         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
+                                      ; RECTA SUAVE SUPERIOR
 
             MOVE.W  D4,D5
-            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
+            LSL.W   #1,D5             ; MULTIPLICAR POR Y 2
             CMP.W   D3,D5
-            BLT     .DWRECTSI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE INFERIOR
-            MOVE.W  #-BULSPEED,(BULVELX)          ;ZONA 6 
-            MOVE.W  #0,(BULVELY)
+            BLT     .DWRECTSI         ; SI X<Y/2, APUNTAMOS POR DEBAJO DE LA 
+            MOVE.W  #-BULSPEED,(BULVELX) ; RECTA SUAVE INFERIOR          
+            MOVE.W  #0,(BULVELY)      ; ZONA 6
             MOVE.W  #-20,(BULORGX)
             MOVE.W  #0,(BULORGY)
             
@@ -552,9 +563,9 @@ APUNTADOR
             NEG.W   D5
             
             CMP.W   D3,D5
-            BLT     .DWRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
-            MOVE.W  #-BULSPEED/2,(BULVELX)          ;ZONA 5
-            MOVE.W  #BULSPEED/2,(BULVELY)
+            BLT     .DWRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
+            MOVE.W  #-BULSPEED/2,(BULVELX) ; RECTA EMPINADA SUPERIOR         
+            MOVE.W  #BULSPEED/2,(BULVELY)   ; ZONA 5
             MOVE.W  #-20,(BULORGX)
             MOVE.W  #20,(BULORGY) 
             
@@ -571,18 +582,18 @@ APUNTADOR
             
 .UPRECTEI      
             MOVE.W  D4,D5
-            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
-            NEG.W   D5                 ;NEGAMOS Y
+            LSL.W   #1,D5             ; MULTIPLICAR POR Y 2
+            NEG.W   D5                ; NEGAMOS Y
             CMP.W   D3,D5
-            BGT     .UPRECTSS         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
-
+            BGT     .UPRECTSS         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
+                                      ; RECTA SUAVE SUPERIOR
 
             MOVE.W  D4,D5
-            LSL.W   #1,D5             ;MULTIPLICAR POR Y 2
+            LSL.W   #1,D5             ; MULTIPLICAR POR Y 2
             CMP.W   D3,D5
-            BLT     .UPRECTSI         ;SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE INFERIOR
-            MOVE.W  #BULSPEED/2,(BULVELX)          ;ZONA 3
-            MOVE.W  #BULSPEED/2,(BULVELY)
+            BLT     .UPRECTSI         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
+            MOVE.W  #BULSPEED/2,(BULVELX) ; RECTA EMPINADA INFERIOR
+            MOVE.W  #BULSPEED/2,(BULVELY) ; ZONA 3
             MOVE.W  #20,(BULORGX)
             MOVE.W  #20,(BULORGY)
             
@@ -604,9 +615,9 @@ APUNTADOR
             NEG.W   D5
             
             CMP.W   D3,D5
-            BLT     .UPRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA RECTA SUAVE SUPERIOR
-            MOVE.W  #-BULSPEED,(BULVELY)          ;ZONA 0
-            MOVE.W  #0,(BULVELX)
+            BLT     .UPRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
+            MOVE.W  #-BULSPEED,(BULVELY)  ; RECTA EMPINADA SUPERIOR     
+            MOVE.W  #0,(BULVELX)       ; ZONA 0
             MOVE.W  #-20,(BULORGY)
             MOVE.W  #0,(BULORGX)
             
@@ -629,30 +640,6 @@ APUNTADOR
 .FINENE            
             MOVEM.L (A7)+,D2-D7
             RTS
-
-
-
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 *~Font name~Fixedsys~
 *~Font size~24~
 *~Tab type~0~

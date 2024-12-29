@@ -4,17 +4,19 @@
 
 ; ----------------------------------------------------------
 SYSINIT
-; INITIALIZE SYSTEM
+; INICIAMOS EL SISTEMA
 ; INPUT     : NONE
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
             
+            ; GENERAMOS TRAPS QUE NOS SERÁN ÚTILES
             MOVE.L  #SCRPLOT,($80+SCRUPTN*4)
             MOVE.L  #KBDUPD,($80+KBDUPTN*4) 
             MOVE.L  #SNDPLAY,($80+SNDPLTN*4)
             MOVE.L  #SCRTIM,($60+SCRINTN*4) ; INTERRUPCIÓN DE TIPO 1
             
+            ; INICIALIZAMOS LOS ELEMENTOS DEL SISTEMA
             JSR     SCRINIT
             JSR     KBDINIT
             JSR     MOUINIT
@@ -27,17 +29,18 @@ SYSINIT
 
 ; ----------------------------------------------------------            
 SNDINIT
-; SOUND SYSTEM INIT
+; INICIALIZACIÓN DEL SONIDO
 ; INPUT     : NONE
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
 
             MOVEM.L D0-D1/A0-A1,-(A7)
-
+            
             CLR.B   D1
+            ; CARGAMOS CADA SONIDO DE MEMORIA
             LEA     .SNDLIST,A0
-.LOOP       MOVE.L  (A0)+,D0    ; SI HICIESEMOS MOVEA (PASAR DE A0 A A1 DIRECTAMENTE) NO ACTUALIZARÍA EL FLAG Z
+.LOOP       MOVE.L  (A0)+,D0   
             BEQ     .DONE
             MOVE.L  D0,A1
             MOVE.B  #71,D0
@@ -60,8 +63,8 @@ SNDINIT
             
 ; ----------------------------------------------------------
 SNDPLAY
-; PLAY SOUND
-; INPUT     : D7 SOUND ID
+; REPRODUCIMOS EL SONIDO
+; INPUT     : D7 ID DEL SONIDO
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
@@ -74,8 +77,9 @@ SNDPLAY
             
 ; ----------------------------------------------------------
 SCRINIT
-; INIT SCREEN. SET SCREEN RESOLUTION, SET WINDOWED MODE, CLEAR SCREEN,
-; ENABLE DOUBLE BUFFER, ENABLE TIMED INTERRUPT
+; INICIAMOS LA PANTALLA: AJUSTAMOS LA RESOLUCIÓN DE LA PANTALLA, PONEMOS EL 
+; MODO VENTANA, LIMPIAMOS LA PANTALLA, ACTIVAMOS EL DOBLE BUFFER, ACTIVAMOS LAS
+; INTERRUPCIONES DE TIEMPO
 ; INPUT     : NONE
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
@@ -112,23 +116,22 @@ SCRINIT
             ; CLEAR INTERRUPT COUNTER
             CLR.B   (SCRINTCT)   
             
-            MOVEM.L (A7)+,D0-D1
-            
+            MOVEM.L (A7)+,D0-D1            
             RTS
             
 ; ----------------------------------------------------------
 SCRPLOT
-; UPDATE DOUBLE BUFFER
+; ACTUALIZA EL DOBLE BUFFER
 ; INPUT     : NONE
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
 ; ----------------------------------------------------------
             MOVEM.W D0-D1,-(A7)
-            ; SWITCH BUFFERS
+            ; CAMBIAMOS BUFFERS
             MOVE.B  #94,D0
             TRAP    #15
             
-            ; CLEAR HIDDEN BUFFER
+            ; LIMPIAMOS EL BUFFER OCULTO
             MOVE.B  #11,D0
             MOVE.W  #$FF00,D1
             TRAP    #15 
@@ -138,7 +141,7 @@ SCRPLOT
 
 ; ----------------------------------------------------------            
 SCRTIM
-; TIMED INTERRUPT SERVICE ROUTINE
+; RUTINA DE SERVICIO DE LAS INTERRUPCIONES TEMPORALES
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
@@ -150,7 +153,7 @@ SCRTIM
             
 ; ----------------------------------------------------------
 KBDINIT
-; INIT KEYBARD
+; INICIAMOS EL TECLADO
 ; INPUT     : NONE
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
@@ -161,7 +164,7 @@ KBDINIT
             
 ; ----------------------------------------------------------
 KBDUPD
-; UPDATE KEYBOARD INFO
+; ACTUALIZAMOS EL TECLADO
 ; 7 ->
 ; 6 ->
 ; 5 -> INSTRUCTIONS
@@ -214,7 +217,7 @@ KBDUPD
 
 ; ----------------------------------------------------------
 MOUINIT
-; INIT MOUSE
+; INICIAMOS EL RATÓN
 ; INPUT     : NONE
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
@@ -225,7 +228,7 @@ MOUINIT
             
 ; ----------------------------------------------------------
 MOUUPD
-; INIT MOUSE
+; ACTUALIZAMOS EL RATÓN
 ; INPUT     : NONE
 ; OUTPUT    : NONE
 ; MODIFIES  : NONE
@@ -234,16 +237,17 @@ MOUUPD
             MOVE.B  #61,D0
             CLR.B   D1
             TRAP    #15
+            ;GUARDAMOS LOS DATOS DEL RATÓN
             MOVE.L  D1,(MOUPOS)
             MOVE.B  (MOUBUT),D1
             MOVE.B  D0,(MOUBUT)
             NOT.B   D1
             AND.B   D1,D0
             MOVE.B  D0,(MOUEDGE)
-            MOVE.B  (MOUEDGE),D0
             MOVEM.L (A7)+,D0-D1
             RTS
             
+
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~
