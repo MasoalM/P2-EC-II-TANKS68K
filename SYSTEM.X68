@@ -109,7 +109,8 @@ SCRINIT
             ; ENABLE TIMED INTERRUPT
             MOVE.B  #32,D0
             MOVE.B  #6,D1
-            MOVE.B  #$80|SCRINTN,D2 ; BIT 7 = 1 TO ENABLE INDIVIDUAL IRQ, BITS 6-0 = NUMBER OF INTERRUPT (1)
+            MOVE.B  #$80|SCRINTN,D2 ; BIT 7 = 1 TO ENABLE INDIVIDUAL IRQ, 
+                                    ; BITS 6-0 = NUMBER OF INTERRUPT (1)
             MOVE.L  #1000/SCRFPS,D3
             TRAP    #15
             
@@ -247,6 +248,7 @@ MOUUPD
             MOVEM.L (A7)+,D0-D1
             RTS
             
+
 
 *~Font name~Courier New~
 *~Font size~12~

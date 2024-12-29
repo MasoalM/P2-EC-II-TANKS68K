@@ -1,10 +1,10 @@
 ; ==============================================================================
-; PANTALLA DEL MENÃš PRINCIPAL
+; PANTALLA DEL MENÚ PRINCIPAL
 ; ==============================================================================
 
 ; ------------------------------------------------------------------------------
 ISCINIT
-; INICIALIZACIÃ“N DE LA PANTALLA DEL MENÃš PRINCIPAL
+; INICIALIZACIÓN DE LA PANTALLA DEL MENÚ PRINCIPAL
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
@@ -103,17 +103,17 @@ ISCINIT
             
             RTS  
 
-.TXT1       DC.B    'Â¡PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR!',0
-.TXT2       DC.B    'ESPERA PARA VER UNA DEMOSTRACIÃ“N.',0
+.TXT1       DC.B    '¡PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR!',0
+.TXT2       DC.B    'ESPERA PARA VER UNA DEMOSTRACIÓN.',0
 .TXT3       DC.B    'PRESIONA LA TECLA "i" PARA',0 
-.TXT4       DC.B    'VISITAR EL MENÃš DE INSTRUCCIONES.',0
+.TXT4       DC.B    'VISITAR EL MENÚ DE INSTRUCCIONES.',0
             DS.W    0
 
                               
 
 ; ------------------------------------------------------------------------------
 ISCUPD
-; ACTUALIZACIÃ“N DE LA PANTALLA DEL MENÃš PRINCIPAL
+; ACTUALIZACIÓN DE LA PANTALLA DEL MENÚ PRINCIPAL
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
@@ -125,7 +125,7 @@ ISCUPD
             MOVE.W  #2,(STANEXT)
             RTS
             
-.CONT1      ; SI SE PULSA LA I, IR AL MENÃš DE INSTRUCCIONES
+.CONT1      ; SI SE PULSA LA I, IR AL MENÚ DE INSTRUCCIONES
             BTST.B  #5,(KBDEDGE)
             BEQ     .CONT2
             MOVE.W  #1,(STANEXT)
@@ -139,10 +139,13 @@ ISCUPD
             MOVE.W  #2,(STANEXT)
             RTS
      
-.DONE       ; SI NO SUCEDE NINGUNO DE LOS 3 EVENTOS ANTERIORES, SEGUIR TOCANDO LA MÃšSICA
+.DONE       ; SI NO SUCEDE NINGUNO DE LOS 3 EVENTOS ANTERIORES, 
+            ; SEGUIR TOCANDO LA MÚSICA
             MOVE.B  #SNDINTRO,D7
             TRAP    #SNDPLTN
             RTS
+
+
 
 
 

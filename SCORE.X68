@@ -43,7 +43,9 @@ SCOPLOT
 
             RTS
 .TXT        DC.B    'PUNTUACIÓN: ',0   
-            DS.W    0                   ; PARA QUE LAS INSTRUCCIONES ESTÉN ALINEADAS
+            DS.W    0                   ; PARA QUE LAS INSTRUCCIONES 
+                                        ; ESTÉN ALINEADAS
+
 
 
 

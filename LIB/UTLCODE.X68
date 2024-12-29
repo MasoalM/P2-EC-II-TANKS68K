@@ -504,10 +504,12 @@ APUNTADOR
             BEQ     .DEMOPLAY
             
             MOVE.L (MOUPOS),D2
-            MOVE.L  D2,D3            ;PROCESO DE EXTRACCIÓN DE LA COORDENADA X
+            MOVE.L  D2,D3                   ; PROCESO DE EXTRACCIÓN DE 
+                                            ; LA COORDENADA X
             ANDI.L  #$0000FFFF,D3
             
-            MOVE.L  D2,D4            ;PROCESO DE EXTRACCIÓN DE LA COORDENADA Y
+            MOVE.L  D2,D4                   ; PROCESO DE EXTRACCIÓN DE
+                                            ; LA COORDENADA Y
             ANDI.L  #$FFFF0000,D4
             LSR.L   #8,D4
             LSR.L   #8,D4
@@ -525,30 +527,30 @@ APUNTADOR
             
             MOVE.W  D4,D5
             EXT.L   D5
-            LSR.L   #1,D5             ;DIVIDIR POR Y 2
+            LSR.L   #1,D5                   ; DIVIDIR POR Y 2
             CMP.W   D3,D5
-            BLT     .UPRECTEI         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
-                                      ; RECTA EMPINADA INFERIOR
+            BLT     .UPRECTEI               ; SI X<Y/2, APUNTAMOS POR ENCIMA  
+                                            ; DE LA RECTA EMPINADA INFERIOR
             MOVE.W  D4,D5
-            LSL.W   #1,D5             ; MULTIPLICAR POR Y 2
-            NEG.W   D5                ; NEGAMOS Y
+            LSL.W   #1,D5                   ; MULTIPLICAR POR Y 2
+            NEG.W   D5                      ; NEGAMOS Y
             CMP.W   D3,D5
-            BLT     .DWRECTSS         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
-                                      ; RECTA SUAVE SUPERIOR
+            BLT     .DWRECTSS               ; SI X<Y/2, APUNTAMOS POR ENCIMA  
+                                            ; DE LA RECTA SUAVE SUPERIOR
 
             MOVE.W  D4,D5
-            LSL.W   #1,D5             ; MULTIPLICAR POR Y 2
+            LSL.W   #1,D5                   ; MULTIPLICAR POR Y 2
             CMP.W   D3,D5
-            BLT     .DWRECTSI         ; SI X<Y/2, APUNTAMOS POR DEBAJO DE LA 
-            MOVE.W  #-BULSPEED,(BULVELX) ; RECTA SUAVE INFERIOR          
-            MOVE.W  #0,(BULVELY)      ; ZONA 6
+            BLT     .DWRECTSI               ; SI X<Y/2, APUNTAMOS POR DEBAJO 
+            MOVE.W  #-BULSPEED,(BULVELX)    ; DE LA RECTA SUAVE INFERIOR          
+            MOVE.W  #0,(BULVELY)            ; ZONA 6
             MOVE.W  #-20,(BULORGX)
             MOVE.W  #0,(BULORGY)
             
             MOVE.W  #12,D6
             BRA     .FINAPU  
 .DWRECTSI            
-            MOVE.W  #-BULSPEED/2,(BULVELX)          ;ZONA 7
+            MOVE.W  #-BULSPEED/2,(BULVELX)  ; ZONA 7
             MOVE.W  #-BULSPEED/2,(BULVELY)
             MOVE.W  #-20,(BULORGX)
             MOVE.W  #-20,(BULORGY)
@@ -559,12 +561,12 @@ APUNTADOR
 .DWRECTSS            
             MOVE.W  D4,D5
             EXT.L   D5
-            LSR.L   #1,D5             ;DIVIDIR Y POR 2
+            LSR.L   #1,D5                   ;DIVIDIR Y POR 2
             NEG.W   D5
             
             CMP.W   D3,D5
-            BLT     .DWRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
-            MOVE.W  #-BULSPEED/2,(BULVELX) ; RECTA EMPINADA SUPERIOR         
+            BLT     .DWRECTES               ; SI X<Y/2, APUNTAMOS POR ENCIMA 
+            MOVE.W  #-BULSPEED/2,(BULVELX)  ; DE LA RECTA EMPINADA SUPERIOR         
             MOVE.W  #BULSPEED/2,(BULVELY)   ; ZONA 5
             MOVE.W  #-20,(BULORGX)
             MOVE.W  #20,(BULORGY) 
@@ -572,7 +574,7 @@ APUNTADOR
             MOVE.W  #10,D6
             BRA     .FINAPU  
 .DWRECTES            
-            MOVE.W  #BULSPEED,(BULVELY)          ;ZONA 4
+            MOVE.W  #BULSPEED,(BULVELY)     ;ZONA 4
             MOVE.W  #0,(BULVELX)
             MOVE.W  #20,(BULORGY)
             MOVE.W  #0,(BULORGX)
@@ -582,25 +584,25 @@ APUNTADOR
             
 .UPRECTEI      
             MOVE.W  D4,D5
-            LSL.W   #1,D5             ; MULTIPLICAR POR Y 2
-            NEG.W   D5                ; NEGAMOS Y
+            LSL.W   #1,D5                   ; MULTIPLICAR POR Y 2
+            NEG.W   D5                      ; NEGAMOS Y
             CMP.W   D3,D5
-            BGT     .UPRECTSS         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
-                                      ; RECTA SUAVE SUPERIOR
+            BGT     .UPRECTSS               ; SI X<Y/2, APUNTAMOS POR ENCIMA 
+                                            ; DE LA RECTA SUAVE SUPERIOR
 
             MOVE.W  D4,D5
-            LSL.W   #1,D5             ; MULTIPLICAR POR Y 2
+            LSL.W   #1,D5                   ; MULTIPLICAR POR Y 2
             CMP.W   D3,D5
-            BLT     .UPRECTSI         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
-            MOVE.W  #BULSPEED/2,(BULVELX) ; RECTA EMPINADA INFERIOR
-            MOVE.W  #BULSPEED/2,(BULVELY) ; ZONA 3
+            BLT     .UPRECTSI               ; SI X<Y/2, APUNTAMOS POR ENCIMA  
+            MOVE.W  #BULSPEED/2,(BULVELX)   ; DE LA RECTA EMPINADA INFERIOR
+            MOVE.W  #BULSPEED/2,(BULVELY)   ; ZONA 3
             MOVE.W  #20,(BULORGX)
             MOVE.W  #20,(BULORGY)
             
             MOVE.W  #6,D6
             BRA     .FINAPU  
 .UPRECTSI            
-            MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 2
+            MOVE.W  #BULSPEED,(BULVELX)     ; ZONA 2
             MOVE.W  #0,(BULVELY)
             MOVE.W  #20,(BULORGX)
             MOVE.W  #0,(BULORGY)
@@ -611,20 +613,20 @@ APUNTADOR
 .UPRECTSS            
             MOVE.W  D4,D5
             EXT.L   D5
-            LSR.L   #1,D5             ;DIVIDIR Y POR 2
+            LSR.L   #1,D5                   ; DIVIDIR Y POR 2
             NEG.W   D5
             
             CMP.W   D3,D5
-            BLT     .UPRECTES         ; SI X<Y/2, APUNTAMOS POR ENCIMA DE LA 
-            MOVE.W  #-BULSPEED,(BULVELY)  ; RECTA EMPINADA SUPERIOR     
-            MOVE.W  #0,(BULVELX)       ; ZONA 0
+            BLT     .UPRECTES               ; SI X<Y/2, APUNTAMOS POR ENCIMA 
+            MOVE.W  #-BULSPEED,(BULVELY)    ; DE LA RECTA EMPINADA SUPERIOR     
+            MOVE.W  #0,(BULVELX)            ; ZONA 0
             MOVE.W  #-20,(BULORGY)
             MOVE.W  #0,(BULORGX)
             
             MOVE.W  #0,D6
             BRA     .FINAPU  
 .UPRECTES            
-            MOVE.W  #BULSPEED,(BULVELX)          ;ZONA 1
+            MOVE.W  #BULSPEED,(BULVELX)     ; ZONA 1
             MOVE.W  #-BULSPEED/2,(BULVELY)
             MOVE.W  #20,(BULORGX)
             MOVE.W  #-20,(BULORGY)
@@ -640,6 +642,7 @@ APUNTADOR
 .FINENE            
             MOVEM.L (A7)+,D2-D7
             RTS
+
 *~Font name~Fixedsys~
 *~Font size~24~
 *~Tab type~0~

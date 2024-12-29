@@ -13,7 +13,6 @@
 * POSAPUN (W)             18(A0)            ; POSICIÓN DE APUNTADO DEL ENEMIGO
 * INITIAL TANK X POSITION D1
 * INITIAL TANK Y POSITION D2
-* ENEMY TANK ID           D3                ; NO IMPLEMENTADO AÚN (SIRVE PARA CREAR MÁS DE UN TIPO DE ENEMIGOS)
 *-----------------------------------------------------------
 
 ; ----------------------------------------------------------
@@ -161,7 +160,7 @@ TANUPD
             BHI     .DIRASIGN
             MOVEM.L D0/A1,-(A7)
             JSR     UTLRAND
-            AND.L   #$00000006,D0      ; M?SCARA PARA OBTENER M?LTIPLOS DE 2 
+            AND.L   #$00000006,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 2 
             LEA     .MOVVEC,A1         ; (ALEATORIOS)
             MOVE.L  (A1,D0),16(A0)     ; RANDOM MOVEMENT   
             MOVEM.L (A7)+,D0/A1
@@ -239,11 +238,11 @@ TANUPD
             MOVE.W  D1,D5
             
             CMP.W   #0,14(A0)               
-            BHI     .SUBRTF                 ; ENEMIGO A?N NO TIENE DISPONIBLE DISPARAR  
+            BHI     .SUBRTF                 ; ENEMIGO AÚN NO TIENE DISPONIBLE DISPARAR  
             MOVE.W  #ENEMYRTF,14(A0)        ; REINICIAR CONTADOR   
             
             CMP.W   #2,6(A0)
-            BNE     .ENEDISP                ; SALTAR SI ES EL ENEMIGO (EL JUGADOR PUEDE ESTAR AQU? SI ES LA DEMO)
+            BNE     .ENEDISP                ; SALTAR SI ES EL ENEMIGO (EL JUGADOR PUEDE ESTAR AQUÍ SI ES LA DEMO)
 
             MOVE.W  #1,D7
             JSR     APUNTADOR
@@ -555,6 +554,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
 
 
 

@@ -10,7 +10,8 @@ GOVINIT
 ; MODIFIES : DOPLOT
 ; ------------------------------------------------------------------------------
 
-            MOVE.W  #0,(DOPLOT)             ; NO SOBREESCRIBIR EL DIBUJADO DEL MENÚ DE GAME OVER
+            MOVE.W  #0,(DOPLOT)             ; NO SOBREESCRIBIR EL DIBUJADO DEL 
+                                            ; MENÚ DE GAME OVER
             MOVEM.L D0-D1/A0,-(A7)
             
             ; COLOR ROJO OSCURO DE FONDO
@@ -61,6 +62,7 @@ GOVUPD
             CLR.W   (STANEXT)
 .CONT            
             RTS
+
 
 
 

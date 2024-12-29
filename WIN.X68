@@ -29,7 +29,8 @@ WININIT
             LEA     WINDATA,A0
             MOVE.W  #SCRWIDTH/2,D1
             MOVE.W  #SCRHEIGH/2,D2
-            SUB.W   #WINWIDTH/2,D1          ; PARA CENTRAR LA IMAGEN EN LA PANTALLA
+            SUB.W   #WINWIDTH/2,D1          ; PARA CENTRAR LA IMAGEN 
+                                            ; EN LA PANTALLA
             SUB.W   #WINHEIGH/2,D2
             MOVE.W  D1,D3
             MOVE.W  D2,D4
@@ -102,6 +103,7 @@ WINUPD
             MOVE.B  #SNDWIN,D7
             TRAP    #SNDPLTN
             RTS
+
 
 
 

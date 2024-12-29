@@ -26,7 +26,8 @@ STAUPD
             MOVE.W  (STANEXT),D0
             CMP.W   (STACUR),D0
             BEQ     .DOUPD
-            MOVE.W  D0,(STACUR)             ; SI EL ESTADO HA CAMBIADO, IR AL INIT
+            MOVE.W  D0,(STACUR)             ; SI EL ESTADO HA CAMBIADO, 
+                                            ; IR AL INIT
             LSL.L   #2,D0
             MOVE.L  D0,A0
             MOVE.L  .INITBL(A0),A0
@@ -68,6 +69,7 @@ STAEMPTY
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             RTS
+
 
 
 

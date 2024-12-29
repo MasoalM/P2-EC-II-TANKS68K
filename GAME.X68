@@ -10,7 +10,7 @@ GAMINIT
 ; MODIFIES : NONE
 ; ----------------------------------------------------------
             
-            ;INICIALIZAMOS LA MEMORIA DINÁMICA, LA PUNTUACIÓN, Y EL NIEVL 1
+            ;INICIALIZAMOS LA MEMORIA DINÁMICA, LA PUNTUACIÓN, Y EL NIVEL 1
             JSR     DMMINIT
             JSR     SCOINIT 
             JSR     LVL1INIT
@@ -33,7 +33,7 @@ GAMUPD
             JSR     AGLUPD
             
             ; COMPROBAMOS EN QUÉ NIVEL NOS ENCONTRAMOS
-            ; (RECORDAR QUÉ, CADA NIVEL ES REPRESENTADO POR SU NÚMERO-1; EJ: 
+            ; (RECORDAR QUE, CADA NIVEL ES REPRESENTADO POR SU NÚMERO-1; EJ: 
             ; NIVEL4 TIENE EL NÚMERO 3)
             CMP.W   #4,(LVLNUM) ; COMPROBAR SI YA ESTAMOS EN EL NIVEL 5
             BGE     .CHKWIN
@@ -144,6 +144,7 @@ GAMPLOT
 .TXT2       DC.B    'DE DEMOSTRACIÓN',0
 .TXT3       DC.B    'PULSA LA BARRA ESPACIADORA PARA VOLVER AL MENÚ PRINCIPAL',0
             DS.W    0
+
 
 
 

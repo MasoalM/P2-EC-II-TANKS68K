@@ -123,7 +123,7 @@ LVL3INIT
             
             ; INTRODUCIMOS AL ENEMIGO 2
             MOVE.W  #30,D1    
-            MOVE.W  #SCRHEIGH-416,D2
+            MOVE.W  #SCRHEIGH-380,D2
             ADDQ.W  #1,(TANID)
             MOVE.W  (TANID),D3
             JSR     AGLADD
@@ -250,6 +250,7 @@ LVL5INIT
             MOVEM.L (A7)+,D0-D2/A0-A3
             
             RTS
+
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~

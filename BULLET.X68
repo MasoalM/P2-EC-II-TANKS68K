@@ -246,7 +246,7 @@ BULUPD
             JSR     AGLKILL
             BRA     .BULFINAL   
 .ENSNDKIL   ; SI EL TANQUE MUERTO ES UN BOT 
-            ADDQ.W  #1,(SCORE)  ; SUMAMOS 1 A LA PUNTUACI?N 
+            ADDQ.W  #1,(SCORE)  ; SUMAMOS 1 A LA PUNTUACIÓN 
             MOVE.B  #SNDKILL,D7
             TRAP    #SNDPLTN
             JSR     AGLKILL
@@ -259,7 +259,7 @@ BULUPD
             MOVE.W  8(A0),D3    ; ALMACENAR EL FATHER ID
      
             ; SUMARLE UNA BALA DISPONIBLE AL TANQUE
-            ; COMPROBAR SI EL TANQUE PADRE DE LA BALA ES UN BOT, RECORRER TODOS Y COMPROBAR CON CU?L COINCIDE EL TANID
+            ; COMPROBAR SI EL TANQUE PADRE DE LA BALA ES UN BOT, RECORRER TODOS Y COMPROBAR CON CUÁL COINCIDE EL TANID
             MOVE.W  #TANENEM,D0
             CLR.W   D2          ; CONTADOR
             JSR     DMMFRSTO
@@ -334,6 +334,7 @@ BULPLOT
             MOVEM.L (A7)+,D0-D4 
 
             RTS
+
 *~Font name~Courier New~
 *~Font size~12~
 *~Tab type~1~
