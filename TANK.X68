@@ -1,15 +1,15 @@
 *-----------------------------------------------------------
 * CLASE TANQUE (AGENTE)
 *
-* TANPOSX (W)             (A0)
-* TANPOSY (W)             2(A0)
-* TANSPEED(W)             4(A0)
-* TANTYPE (W)             6(A0)
-* TANLIFE (W)             8(A0)
-* BULLEFT (W)             10(A0)
-* TANID   (W)             12(A0)            ; IDENTIFICADOR ÚNICO DE CADA TANQUE
-* TANRTFTI(W)             14(A0)            ; TANK RTF TIME (TIEMPO RESTANTE PARA QUE PUEDA VOLVER A DISPARAR)
-* ENEDIR  (W)             16(A0)            ; DIRECCIÓN ALEATORIA TEMPORAL ASIGNADA A UN TANQUE ENEMIGO O BOT
+* TANPOSX (W)             (A0)              ; POSICIÓN X
+* TANPOSY (W)             2(A0)             ; POSICIÓN Y
+* TANSPEED(W)             4(A0)             ; VELOCIDAD
+* TANTYPE (W)             6(A0)             ; ID DE AGENTE
+* TANLIFE (W)             8(A0)             ; VIDA
+* BULLEFT (W)             10(A0)            ; BALAS DISPONIBLES
+* TANID   (W)             12(A0)            ; ID ÚNICO DE CADA TANQUE
+* TANRTFTI(W)             14(A0)            ; RATE OF FIRE DE LOS BOTS
+* ENEDIR  (W)             16(A0)            ; DIRECCIÓN ALEATORIA ASIGNADA
 * POSAPUN (W)             18(A0)            ; POSICIÓN DE APUNTADO DEL ENEMIGO
 * INITIAL TANK X POSITION D1
 * INITIAL TANK Y POSITION D2
@@ -160,9 +160,9 @@ TANUPD
             BHI     .DIRASIGN
             MOVEM.L D0/A1,-(A7)
             JSR     UTLRAND
-            AND.L   #$00000006,D0      ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 2 
-            LEA     .MOVVEC,A1         ; (ALEATORIOS)
-            MOVE.L  (A1,D0),16(A0)     ; RANDOM MOVEMENT   
+            AND.L   #$00000006,D0           ; MÁSCARA PARA OBTENER MÚLTIPLOS DE 2 (ALEATORIOS)
+            LEA     .MOVVEC,A1        
+            MOVE.L  (A1,D0),16(A0)          ; RANDOM MOVEMENT   
             MOVEM.L (A7)+,D0/A1
             
             ; COMPROBAMOS DONDE DEBEMOS IR
@@ -277,13 +277,13 @@ TANUPD
             CMP.W   #1,A3
             BLS     .SEG                    ; SALTA SI NO HAY COLISIÓN
             CMP.W   #1,(COLTANKP)
-            BNE     .SEG                 ; SI NO SE HAN CHOCADO CON EL JUGADOR,
-                                         ; SEGUIMOS CON EL TRATAMIENTO NORMAL
+            BNE     .SEG                    ; SI NO SE HAN CHOCADO CON EL JUGADOR,
+                                            ; SEGUIMOS CON EL TRATAMIENTO NORMAL
             CMP.W   #TANPLAY,6(A0)       
             BEQ     .SEG
             
             JSR     AGLKILL
-            MOVE.B  #SNDEXPLO,D7             ; SONIDO EXPLOSIÓN
+            MOVE.B  #SNDEXPLO,D7            ; SONIDO EXPLOSIÓN
             TRAP    #SNDPLTN  
             ADDQ.W  #1,(SCORE)
             JSR     COLBYKMK
@@ -300,10 +300,12 @@ TANUPD
             ; SACAMOS LA POSICIÓN RELATIVA
             JSR     RELPOS
             
-            ;DERECHA : 1 
-            ;IZQUIERDA : 2
-            ;ABAJO : 3
-            ;ARRIBA : 5
+            ; LE SUMAMOS A D6 ALGUNOS DE LOS SIGUIENTES VALORES PARA
+            ; IDENTIFICAR QUÉ PARTE DEL BLOQUE HA TOCADO EL TANQUE
+            ; DERECHA : 1 
+            ; IZQUIERDA : 2
+            ; ABAJO : 3
+            ; ARRIBA : 5
             CLR.L   D6
             
             ; COMPROBAMOS LAS COLISIONES HORIZONTALES
@@ -535,8 +537,8 @@ TANPLOT
             
             CMP.W   #BULDMG*3,8(A0)
             BHI     .PLOTLIFE
-            BTST.B  #4,(SCRCYCCT) ; PARPADEO VIDA EN CASO DE QUE QUEDEN TRES 
-            BEQ     .END          ; GOLPES O MENOS
+            BTST.B  #4,(SCRCYCCT)           ; PARPADEO VIDA EN CASO DE QUE QUEDEN TRES 
+            BEQ     .END                    ; GOLPES O MENOS
 .PLOTLIFE
             UTLSPEN #$00FFFFFF 
             UTLSFIL #PLRLIFEC
@@ -554,6 +556,7 @@ TANPLOT
             MOVEM.L (A7)+,D0-D6/A1
             
             RTS    
+
 
 
 

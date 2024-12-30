@@ -50,12 +50,12 @@ BULINIT
             ; GUARDAR EL ID DEL PADRE DE LA BALA
             MOVE.W  D3,8(A0)
             
-            CMP.W   #$01,(A1)   ; COMPROBAR ESTADO DEL MAPA
+            CMP.W   #$01,(A1)           ; COMPROBAR ESTADO DEL MAPA
             BNE     .SEGBULL
             ; LA BALA HA HECHO SPAWN ENCIMA DE UN BLOQUE
             MOVEM.W D4-D5,-(A7)
             
-            CMP.W   #0,8(A0)    ; COMPROBAR SI EL PADRE DE LA BALA ES EL JUGADOR
+            CMP.W   #0,8(A0)            ; COMPROBAR SI EL PADRE DE LA BALA ES EL JUGADOR
             BNE     .NOTPLAYER
             
             ; EL JUGADOR ES EL PADRE DE LA BALA
@@ -63,10 +63,10 @@ BULINIT
             
             MOVE.W  #TANPLAY,D0
             JSR     DMMFRSTO
-            ADDQ.W  #1,18(A0)   ; AGREGARLE UNA BALA DISPONIBLE AL JUGADOR
+            ADDQ.W  #1,18(A0)           ; AGREGARLE UNA BALA DISPONIBLE AL JUGADOR
             MOVE.L  A1,A0            
 .NOTPLAYER
-            JSR     AGLKILL     ; DESTRUIR BALA
+            JSR     AGLKILL             ; DESTRUIR BALA
             MOVEM.W (A7)+,D4-D5
             RTS
              
@@ -142,7 +142,7 @@ BULUPD
             CMP.W   #$FF,D3
             BNE     .TRATCOLU
             
-            ;SI HA TOCADO OTRO EJE, COMPROBAMOS CUAL ES PRIORITARIO (TENDRÁ 
+            ; SI HA TOCADO OTRO EJE, COMPROBAMOS CUAL ES PRIORITARIO (TENDRÁ 
             ; PRIORIDAD EL QUE ESTÉ MÁS CERCA DE LA BALA)
             CMP.W   D5,D4
             BHI     .GAND5
@@ -161,7 +161,7 @@ BULUPD
 
             ; SI LA BALA HA MUERTO (NO LE QUEDAN REBOTES), LE DEVOLVEMOS AL 
             ; PADRE SU BALA
-.BULFACHK   CLR.W   D4              ; CONTADOR
+.BULFACHK   CLR.W   D4                  ; CONTADOR
             MOVE.W  #TANENEM,D0
             JSR     DMMFRSTO
 .LOOP31     CMP.L   #0,A0
@@ -169,8 +169,8 @@ BULUPD
             ADDQ.W  #1,D4
             CMP.W   D3,D4
             BNE     .LOOP32
-            ADDQ.W  #1,18(A0)       ; AGREGAR UNA BALA DISPONIBLE AL TANQUE SI
-            BRA     .ENDCOLEX       ; ES EL PADRE
+            ADDQ.W  #1,18(A0)           ; AGREGAR UNA BALA DISPONIBLE AL
+            BRA     .ENDCOLEX           ; TANQUE SI ES EL PADRE
 .LOOP32     JSR     DMMNEXTO
             BRA     .LOOP31
             
@@ -195,14 +195,14 @@ BULUPD
             ; COMPROBAMOS COLISIONES ENTRE TANQUES
             ; COMPROBAMOS SI EL TANQUE ES ENEMIGO
             MOVEM.L A0-A1/D0-D7,-(A7)
-            MOVE.W  (A0),D2                 ; PREPARAMOS LAS COORDENADAS PARA
-            MOVE.W  2(A0),D3                ; COMPROBAR LA COLISIÓN
+            MOVE.W  (A0),D2             ; PREPARAMOS LAS COORDENADAS PARA
+            MOVE.W  2(A0),D3            ; COMPROBAR LA COLISIÓN
             MOVE.W  #BULRAD,D5
             MOVE.W  #BULRAD,D7
             MOVE.L  A0,A1
             MOVE.W  #TANENEM,D0
             JSR     DMMFRSTO
-.LOOP       CMP.L   #0,A0                   ; COMPROBAMOS CADA TANQUE ENEMIGO
+.LOOP       CMP.L   #0,A0               ; COMPROBAMOS CADA TANQUE ENEMIGO
             BEQ     .CHKPLAY
             MOVE.W  8(A0),D0
             MOVE.W  10(A0),D1
@@ -234,7 +234,7 @@ BULUPD
 
             ; SI UNA BALA HA IMPACTADO         
 .EXPLO          
-            SUB.W   #BULDMG,16(A0)          ; LA BALA HACE SU DAÑO
+            SUB.W   #BULDMG,16(A0)      ; LA BALA HACE SU DAÑO
             ;COMPROBAMOS SI EL TANQUE HA SOBREVIVIDO
             CMP.W   #0,16(A0)
             BHI     .ALIVE
@@ -246,34 +246,35 @@ BULUPD
             JSR     AGLKILL
             BRA     .BULFINAL   
 .ENSNDKIL   ; SI EL TANQUE MUERTO ES UN BOT 
-            ADDQ.W  #1,(SCORE)  ; SUMAMOS 1 A LA PUNTUACIÓN 
+            ADDQ.W  #1,(SCORE)          ; SUMAMOS 1 A LA PUNTUACIÓN 
             MOVE.B  #SNDKILL,D7
             TRAP    #SNDPLTN
             JSR     AGLKILL
             BRA     .BULFINAL
 .ALIVE
-            MOVE.B  #SNDHIT,D7  ; SONIDO DE IMPACTO
+            MOVE.B  #SNDHIT,D7          ; SONIDO DE IMPACTO
             TRAP    #SNDPLTN
 .BULFINAL    
             MOVE.L  A1,A0
-            MOVE.W  8(A0),D3    ; ALMACENAR EL FATHER ID
+            MOVE.W  8(A0),D3            ; ALMACENAR EL FATHER ID
      
             ; SUMARLE UNA BALA DISPONIBLE AL TANQUE
             ; COMPROBAR SI EL TANQUE PADRE DE LA BALA ES UN BOT, RECORRER TODOS Y COMPROBAR CON CUÁL COINCIDE EL TANID
             MOVE.W  #TANENEM,D0
-            CLR.W   D2          ; CONTADOR
+            CLR.W   D2                  ; CONTADOR
             JSR     DMMFRSTO
 .LOOP21     CMP.L   #0,A0
-            BEQ     .PLAYBULL   ; NO ENCONTRADO NINGÚN TANQUE ENEMIGO QUE SEA PADRE DE LA BALA, COMPROBAR JUGADOR
-            ADDQ.W  #1,D2       ; AGREGAR 1 AL CONTADOR
+            BEQ     .PLAYBULL           ; NO ENCONTRADO NINGÚN TANQUE ENEMIGO QUE SEA PADRE DE LA BALA
+            
+            ADDQ.W  #1,D2               ; AGREGAR 1 AL CONTADOR
             
             CMP.W   D2,D3
             BNE     .LOOP22     
-            ADDQ.W  #1,18(A0)   ; SI ES EL PADRE LE SUMAMOS UNA BALA DISPONIBLE
+            ADDQ.W  #1,18(A0)           ; SI ES EL PADRE LE SUMAMOS UNA BALA DISPONIBLE
             BRA     .KILLBULL
 
 .LOOP22     JSR     DMMNEXTO
-            BRA     .LOOP21     ; SEGUIR CON EL BUCLE YA QUE NO ES EL PADRE            
+            BRA     .LOOP21             ; SEGUIR CON EL BUCLE YA QUE NO ES EL PADRE            
 
 
 .PLAYBULL   ; EL TANQUE PADRE DE LA BALA ES EL JUGADOR (O ES UN ENEMIGO QUE HA MUERTO)
@@ -283,7 +284,7 @@ BULUPD
             BNE     .KILLBULL
             ADDQ.W  #1,18(A0)
             
-.KILLBULL   ; MATAMOS LA BALA
+.KILLBULL   ; MATAMOS A LA BALA
             MOVE.L  A1,A0             
             JSR     AGLKILL 
             
@@ -334,6 +335,7 @@ BULPLOT
             MOVEM.L (A7)+,D0-D4 
 
             RTS
+
 
 *~Font name~Courier New~
 *~Font size~12~
